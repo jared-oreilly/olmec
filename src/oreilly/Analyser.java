@@ -16,12 +16,28 @@ import javax.swing.*;
  */
 public class Analyser
 {
+
     private ArrayList<Report> reports;
     private int numReports;
-    
-    public Analyser(String filename) throws FileNotFoundException
+    private OlmecUI parent;
+    private String toDisplay;
+    private boolean[] display;
+
+    public Analyser(String filename, String toDisplay, OlmecUI g) throws FileNotFoundException
     {
         reports = new ArrayList<Report>();
+        parent = g;
+        //make boolean array to check if display or not
+        int numDisplayOptions = 5;
+        display = new boolean[numDisplayOptions];
+        for (int i = 0; i < numDisplayOptions; i++)
+        {
+            display[i] = false;
+            if (toDisplay.contains(i + ""))
+            {
+                display[i] = true;
+            }
+        }
         //put file into arraylist
         Scanner scFile = new Scanner(new File("../../mayan/Mayan/gen/runs/" + filename + ".txt"));
         ArrayList<String> compArr = new ArrayList<String>();
@@ -36,6 +52,7 @@ public class Analyser
 //            {
 //                System.out.println(compArr.get(i));
 //            }
+        parent.appendToFeedback("Starting report capture:");
         //extract report info
         for (int i = 0; i < compArr.size(); i++)
         {
@@ -178,64 +195,470 @@ public class Analyser
             }
         }
 
+        parent.appendToFeedback("Reports captured!");
+
         //reports arraylist now filled
-        for (int i = 0; i < reports.size(); i++)
-        {
-            System.out.println(reports.get(i));
-        }
-        
-        
+//        for (int i = 0; i < reports.size(); i++)
+//        {
+//            System.out.println(reports.get(i));
+//        }
         drawGraph();
 
     }
-    
+
     public void drawGraph()
     {
+        parent.appendToFeedback("Initializing graph and grid:");
         //create frame with settings
         JFrame frame = new JFrame("Graph");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(500, 400);
-        
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.setSize(1300, 700);
+
         //add x and y axes
-        JLabel n2 = new JLabel("Y-axis");
+        int min = (int) getMinFromReports(), max = (int) getMaxFromReports();
+        JLabel n2 = new JLabel("Time in ms");
         frame.add(n2, BorderLayout.WEST);
-        JLabel n1 = new JLabel("X-axis");
+        JLabel n1 = new JLabel(min + "");
         frame.add(n1, BorderLayout.PAGE_END);
-        
+        JLabel n3 = new JLabel(max + "");
+        frame.add(n3, BorderLayout.PAGE_START);
+
         //create panel and gridlayout with it
-        int x = 50, y = 50;
+        //int x = max - min, y = numReports - 1;
+        int x = max - min, y = 100;
+        System.out.println("DIFF: " + x);
         JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(x, y));
-        panel.setSize(350, 250);
-        panel.setBounds(0, 0, 350, 250);
+        panel.setBackground(Color.white);
+        panel.setSize(900, 700);
+        panel.setBounds(0, 0, 900, 1100);
         panel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        panel.setLayout(new GridLayout(x, y));
+        //panel.getLayout().
+
         frame.add(panel);
-        
+        //frame.pack();
+
         //make label array to fill the grid, empty cells
         JLabel lblArr[][] = new JLabel[x][y];
-        for(int i = 0; i < x; i++)
+        for (int i = 0; i < x; i++)
         {
-            for(int j = 0; j < y; j++)
+            for (int j = 0; j < y; j++)
             {
                 lblArr[i][j] = new JLabel("");
-                
                 panel.add(lblArr[i][j]);
             }
         }
-        
-        //draw something
-        for(int i = 0; i < x; i++)
-        {
-            lblArr[i][i].setText(".");
-        }
-        
-        
-        
+
+        parent.appendToFeedback("Graph and grid initialized!");
+
+        drawGraph(lblArr, min, max, x, y);
+
+        parent.appendToFeedback("Rendering graph (please be patient):");
         //show frame
-        frame.setResizable(false);
+        //frame.setResizable(false);
         frame.setVisible(true);
-        System.out.println("hi");
+        parent.appendToFeedback("Graph rendered!");
+        //frame.pack();
+        //System.out.println("hi");
     }
-    
-    
+
+    public void drawGraph(JLabel lblArr[][], int min, int max, int x, int y)
+    {
+        parent.appendToFeedback("Starting to draw graph:");
+
+        //draw first point if need to display
+        if (display[0])
+        {
+            try
+            {
+                //lblArr[x - (((int) reports.get(0).getMin()) - min)][0].setOpaque(true);
+                //lblArr[x - (((int) reports.get(0).getMin()) - min)][0].setBackground(Color.red);
+                lblArr[x - (((int) reports.get(0).getMin()) - min)][0].setText("^");
+                lblArr[x - (((int) reports.get(0).getMin()) - min)][0].setForeground(Color.red);
+            } catch (ArrayIndexOutOfBoundsException e)
+            {
+                lblArr[x - (((int) reports.get(0).getMin()) - min) - 1][0].setText("^");
+                lblArr[x - (((int) reports.get(0).getMin()) - min) - 1][0].setForeground(Color.red);
+            }
+        }
+        if (display[1])
+        {
+            lblArr[x - (((int) reports.get(0).getMedian()) - min)][0].setText("^");
+            lblArr[x - (((int) reports.get(0).getMedian()) - min)][0].setForeground(Color.blue);
+        }
+        if (display[2])
+        {
+            lblArr[x - ((int) reports.get(0).getP95() - min)][0].setText("^");
+            lblArr[x - ((int) reports.get(0).getP95() - min)][0].setForeground(Color.green);
+        }
+        if (display[3])
+        {
+            lblArr[x - ((int) reports.get(0).getP99() - min)][0].setText("^");
+            lblArr[x - ((int) reports.get(0).getP99() - min)][0].setForeground(Color.yellow);
+        }
+        if (display[4])
+        {
+            lblArr[x - (((int) reports.get(0).getMax()) - min)][0].setText("^");
+            lblArr[x - (((int) reports.get(0).getMax()) - min)][0].setForeground(Color.pink);
+        }
+
+        //for each report, draw the lines if they should be drawn
+        for (int i = 1; i < numReports - 1; i++)
+        {
+            //draw a connecting line
+            for (int j = 0; j < 5; j++)
+            {
+                if (display[j])
+                {
+                    drawLine(lblArr, min, max, x, y, i, j);
+                }
+            }
+
+            //draw the next point
+            if (display[0])
+            {
+                try
+                {
+                    lblArr[x - (((int) reports.get(i).getMin()) - min)][(y / (numReports - 1)) * i].setText("^");
+                    lblArr[x - (((int) reports.get(i).getMin()) - min)][(y / (numReports - 1)) * i].setForeground(Color.red);
+                } catch (ArrayIndexOutOfBoundsException e)
+                {
+                    lblArr[x - (((int) reports.get(i).getMin()) - min) - 1][(y / (numReports - 1)) * i].setText("^");
+                    lblArr[x - (((int) reports.get(i).getMin()) - min) - 1][(y / (numReports - 1)) * i].setForeground(Color.red);
+                }
+            }
+            if (display[1])
+            {
+                try
+                {
+                    lblArr[x - (((int) reports.get(i).getMedian()) - min)][(y / (numReports - 1)) * i].setText("^");
+                    lblArr[x - (((int) reports.get(i).getMedian()) - min)][(y / (numReports - 1)) * i].setForeground(Color.blue);
+                } catch (ArrayIndexOutOfBoundsException e)
+                {
+                    lblArr[x - (((int) reports.get(i).getMedian()) - min) - 1][(y / (numReports - 1)) * i].setText("^");
+                    lblArr[x - (((int) reports.get(i).getMedian()) - min) - 1][(y / (numReports - 1)) * i].setForeground(Color.blue);
+                }
+            }
+            if (display[2])
+            {
+                try
+                {
+                    lblArr[x - ((int) reports.get(i).getP95() - min)][(y / (numReports - 1)) * i].setText("^");
+                    lblArr[x - ((int) reports.get(i).getP95() - min)][(y / (numReports - 1)) * i].setForeground(Color.green);
+                } catch (ArrayIndexOutOfBoundsException e)
+                {
+                    lblArr[x - (((int) reports.get(i).getP95()) - min) - 1][(y / (numReports - 1)) * i].setText("^");
+                    lblArr[x - (((int) reports.get(i).getP95()) - min) - 1][(y / (numReports - 1)) * i].setForeground(Color.green);
+                }
+            }
+            if (display[3])
+            {
+                try
+                {
+                    lblArr[x - ((int) reports.get(i).getP99() - min)][(y / (numReports - 1)) * i].setText("^");
+                    lblArr[x - ((int) reports.get(i).getP99() - min)][(y / (numReports - 1)) * i].setForeground(Color.yellow);
+                } catch (ArrayIndexOutOfBoundsException e)
+                {
+                    lblArr[x - (((int) reports.get(i).getP99()) - min) - 1][(y / (numReports - 1)) * i].setText("^");
+                    lblArr[x - (((int) reports.get(i).getP99()) - min) - 1][(y / (numReports - 1)) * i].setForeground(Color.yellow);
+                }
+            }
+            if (display[4])
+            {
+                try
+                {
+                    lblArr[x - (((int) reports.get(i).getMax()) - min)][(y / (numReports - 1)) * i].setText("5");
+                    lblArr[x - (((int) reports.get(i).getMax()) - min)][(y / (numReports - 1)) * i].setForeground(Color.pink);
+                } catch (ArrayIndexOutOfBoundsException e)
+                {
+                    lblArr[x - (((int) reports.get(i).getMax()) - min) - 1][(y / (numReports - 1)) * i].setText("^");
+                    lblArr[x - (((int) reports.get(i).getMax()) - min) - 1][(y / (numReports - 1)) * i].setForeground(Color.pink);
+                }
+            }
+
+        }
+        parent.appendToFeedback("Graph drawn!");
+        //lblArr[0][0].setText("^");
+    }
+
+    public void drawLine(JLabel lblArr[][], int min, int max, int x, int y, int i, int caseOf)
+    {
+        int old1, new1;
+        switch (caseOf)
+        {
+            case 0:
+                old1 = x - (((int) reports.get(i - 1).getMin()) - min);
+                new1 = x - (((int) Math.round(reports.get(i).getMin())) - min);
+                break;
+            case 1:
+                old1 = x - (((int) reports.get(i - 1).getMedian()) - min);
+                new1 = x - (((int) reports.get(i).getMedian()) - min);
+                break;
+            case 2:
+                old1 = x - ((int) reports.get(i - 1).getP95() - min);
+                new1 = x - ((int) reports.get(i).getP95() - min);
+                break;
+            case 3:
+                old1 = x - ((int) reports.get(i - 1).getP99() - min);
+                new1 = x - ((int) reports.get(i).getP99() - min);
+                break;
+            case 4:
+                old1 = x - (((int) reports.get(i - 1).getMax()) - min);
+                new1 = x - (((int) reports.get(i).getMax()) - min);
+                break;
+            default:
+                old1 = x - (((int) reports.get(i - 1).getMedian()) - min);
+                new1 = x - (((int) reports.get(i).getMedian()) - min);
+        }
+
+        int old2 = (int) (double) y / (numReports - 1) * (i - 1);
+        int new2 = (int) (double) y / (numReports - 1) * i;
+        //System.out.println("(" + old1 + "," + old2 + ") to (" + new1 + "," + new2 + ")");
+
+        int dist1 = (new1 - old1);
+        int dist2 = new2 - old2;
+        //System.out.println("d1: " + dist1 + " d2: " + dist2);
+        for (int j = 0; j < dist2; j++)
+        {
+            //System.out.println((old1 + (dist1 / dist2) * (j)) + " " + (old2 + j));
+            try
+            {
+                lblArr[old1 + (dist1 / dist2) * (j)][old2 + j].setText("^");
+                switch (caseOf)
+                {
+                    case 0:
+                        lblArr[old1 + (dist1 / dist2) * (j)][old2 + j].setForeground(Color.red);
+                        //lblArr[old1 + (dist1 / dist2) * (j)][old2 + j].setOpaque(true);
+                        //lblArr[old1 + (dist1 / dist2) * (j)][old2 + j].setBackground(Color.red);
+                        break;
+                    case 1:
+                        lblArr[old1 + (dist1 / dist2) * (j)][old2 + j].setForeground(Color.blue);
+                        break;
+                    case 2:
+                        lblArr[old1 + (dist1 / dist2) * (j)][old2 + j].setForeground(Color.green);
+                        //lblArr[old1 + (dist1 / dist2) * (j)][old2 + j].setOpaque(true);
+                        //lblArr[old1 + (dist1 / dist2) * (j)][old2 + j].setForeground(Color.green);
+                        break;
+                    case 3:
+                        lblArr[old1 + (dist1 / dist2) * (j)][old2 + j].setForeground(Color.yellow);
+                        break;
+                    case 4:
+                        lblArr[old1 + (dist1 / dist2) * (j)][old2 + j].setForeground(Color.pink);
+                        break;
+                    default:
+                        lblArr[old1 + (dist1 / dist2) * (j)][old2 + j].setForeground(Color.orange);
+                }
+
+            } catch (ArrayIndexOutOfBoundsException e)
+            {
+                lblArr[old1 + (dist1 / dist2) * (j) - 1][old2 + j].setText("^");
+                switch (caseOf)
+                {
+                    case 0:
+                        lblArr[old1 + (dist1 / dist2) * (j) - 1][old2 + j].setForeground(Color.red);
+                        break;
+                    case 1:
+                        lblArr[old1 + (dist1 / dist2) * (j) - 1][old2 + j].setForeground(Color.blue);
+                        break;
+                    case 2:
+                        lblArr[old1 + (dist1 / dist2) * (j) - 1][old2 + j].setForeground(Color.green);
+                        break;
+                    case 3:
+                        lblArr[old1 + (dist1 / dist2) * (j) - 1][old2 + j].setForeground(Color.yellow);
+                        break;
+                    case 4:
+                        lblArr[old1 + (dist1 / dist2) * (j) - 1][old2 + j].setForeground(Color.pink);
+                        break;
+                    default:
+                        lblArr[old1 + (dist1 / dist2) * (j) - 1][old2 + j].setForeground(Color.orange);
+                }
+            }
+        }
+        //System.out.println("----------------------------");
+    }
+
+    public double getMinFromReports()
+    {
+        //find lowest needed
+        int j = 0;
+        while (!display[j])
+        {
+            j++;
+        }
+        //j is at thing we should use for min
+        double min = 0;
+        switch (j)
+        {
+            case 0:
+                min = reports.get(0).getMin();
+                for (int i = 1; i < numReports - 1; i++)
+                {
+                    if (min > reports.get(i).getMin())
+                    {
+                        min = reports.get(i).getMin();
+                    }
+                }
+                System.out.println("MIN: " + min);
+                break;
+            case 1:
+                min = reports.get(0).getMedian();
+                for (int i = 1; i < numReports - 1; i++)
+                {
+                    if (min > reports.get(i).getMedian())
+                    {
+                        min = reports.get(i).getMedian();
+                    }
+                }
+                System.out.println("MIN: " + min);
+                break;
+            case 2:
+                min = reports.get(0).getP95();
+                for (int i = 1; i < numReports - 1; i++)
+                {
+                    if (min > reports.get(i).getP95())
+                    {
+                        min = reports.get(i).getP95();
+                    }
+                }
+                System.out.println("MIN: " + min);
+                break;
+            case 3:
+                min = reports.get(0).getP99();
+                for (int i = 1; i < numReports - 1; i++)
+                {
+                    if (min > reports.get(i).getP99())
+                    {
+                        min = reports.get(i).getP99();
+                    }
+                }
+                System.out.println("MIN: " + min);
+                break;
+            case 4:
+                min = reports.get(0).getMax();
+                for (int i = 1; i < numReports - 1; i++)
+                {
+                    if (min > reports.get(i).getMax())
+                    {
+                        min = reports.get(i).getMax();
+                    }
+                }
+                System.out.println("MIN: " + min);
+                break;
+            default:
+                min = reports.get(0).getMin();
+                for (int i = 1; i < numReports - 1; i++)
+                {
+                    if (min > reports.get(i).getMin())
+                    {
+                        min = reports.get(i).getMin();
+                    }
+                }
+                System.out.println("MIN: " + min);
+
+        }
+        return min;
+
+    }
+
+    public double getMaxFromReports()
+    {
+        //find lowest needed
+        int j = display.length - 1;
+        while (!display[j])
+        {
+            j--;
+        }
+        //j is at thing we should use for min
+        double max = 0;
+        switch (j)
+        {
+            case 4:
+                max = reports.get(0).getMax();
+                System.out.println(0);
+                for (int i = 1; i < numReports - 1; i++)
+                {
+                    if (max < reports.get(i).getMax())
+                    {
+                        max = reports.get(i).getMax();
+                    }
+                }
+                System.out.println("MAX: " + max);
+                break;
+            case 3:
+                max = reports.get(0).getP99();
+                System.out.println(0);
+                for (int i = 1; i < numReports - 1; i++)
+                {
+                    if (max < reports.get(i).getP99())
+                    {
+                        max = reports.get(i).getP99();
+                    }
+                }
+                System.out.println("MAX: " + max);
+                break;
+            case 2:
+                max = reports.get(0).getP95();
+                System.out.println(0);
+                for (int i = 1; i < numReports - 1; i++)
+                {
+                    if (max < reports.get(i).getP95())
+                    {
+                        max = reports.get(i).getP95();
+                    }
+                }
+                System.out.println("MAX: " + max);
+                break;
+            case 1:
+                max = reports.get(0).getMedian();
+                System.out.println(0);
+                for (int i = 1; i < numReports - 1; i++)
+                {
+                    if (max < reports.get(i).getMedian())
+                    {
+                        max = reports.get(i).getMedian();
+                    }
+                }
+                System.out.println("MAX: " + max);
+                break;
+            case 0:
+                max = reports.get(0).getMin();
+                System.out.println(0);
+                for (int i = 1; i < numReports - 1; i++)
+                {
+                    if (max < reports.get(i).getMin())
+                    {
+                        max = reports.get(i).getMin();
+                    }
+                }
+                System.out.println("MAX: " + max);
+                break;
+            default:
+                max = reports.get(0).getMax();
+                System.out.println(0);
+                for (int i = 1; i < numReports - 1; i++)
+                {
+                    if (max < reports.get(i).getMax())
+                    {
+                        max = reports.get(i).getMax();
+                    }
+                }
+                System.out.println("MAX: " + max);
+        }
+        return max;
+    }
+
+    public double getMaxP95FromReports()
+    {
+        double max = reports.get(0).getP95();
+        for (int i = 1; i < numReports - 1; i++)
+        {
+            if (max < reports.get(i).getP95())
+            {
+                max = reports.get(i).getP95();
+            }
+        }
+        System.out.println("MAX: " + max);
+        return max;
+    }
+
 }

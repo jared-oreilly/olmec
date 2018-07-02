@@ -21,7 +21,6 @@ public class OlmecUI extends javax.swing.JFrame
     public OlmecUI()
     {
         initComponents();
-        
     }
 
     /**
@@ -39,6 +38,14 @@ public class OlmecUI extends javax.swing.JFrame
         txfAnalyse = new javax.swing.JTextField();
         btnAnalyse = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        txaFeedback = new javax.swing.JTextArea();
+        jLabel4 = new javax.swing.JLabel();
+        cbxMin = new javax.swing.JCheckBox();
+        cbxMedian = new javax.swing.JCheckBox();
+        cbxP95 = new javax.swing.JCheckBox();
+        cbxP99 = new javax.swing.JCheckBox();
+        cbxMax = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -47,7 +54,14 @@ public class OlmecUI extends javax.swing.JFrame
 
         jLabel2.setText("File to Analyse");
 
-        txfAnalyse.setText("mike");
+        txfAnalyse.setText("olmectest");
+        txfAnalyse.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
+                txfAnalyseActionPerformed(evt);
+            }
+        });
 
         btnAnalyse.setText("Analyse");
         btnAnalyse.addActionListener(new java.awt.event.ActionListener()
@@ -60,6 +74,23 @@ public class OlmecUI extends javax.swing.JFrame
 
         jLabel3.setText(".txt");
 
+        txaFeedback.setEditable(false);
+        txaFeedback.setColumns(20);
+        txaFeedback.setRows(5);
+        jScrollPane1.setViewportView(txaFeedback);
+
+        jLabel4.setText("What to Graph");
+
+        cbxMin.setText("Min");
+
+        cbxMedian.setText("Median");
+
+        cbxP95.setText("P95");
+
+        cbxP99.setText("P99");
+
+        cbxMax.setText("Max");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -67,16 +98,32 @@ public class OlmecUI extends javax.swing.JFrame
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel2)
+                        .addComponent(jLabel4)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txfAnalyse, javax.swing.GroupLayout.DEFAULT_SIZE, 209, Short.MAX_VALUE)
+                        .addComponent(cbxMin)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel3)
+                        .addComponent(cbxMedian)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnAnalyse)))
-                .addContainerGap())
+                        .addComponent(cbxP95)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cbxP99)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cbxMax)
+                        .addGap(0, 84, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane1)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel2)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txfAnalyse)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel3)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnAnalyse)))
+                        .addContainerGap())))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -89,7 +136,17 @@ public class OlmecUI extends javax.swing.JFrame
                     .addComponent(txfAnalyse, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnAnalyse)
                     .addComponent(jLabel3))
-                .addContainerGap(246, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel4)
+                    .addComponent(cbxMin)
+                    .addComponent(cbxMedian)
+                    .addComponent(cbxP95)
+                    .addComponent(cbxP99)
+                    .addComponent(cbxMax))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 208, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         pack();
@@ -102,7 +159,36 @@ public class OlmecUI extends javax.swing.JFrame
         {
             try
             {
-                a = new Analyser(txfAnalyse.getText());
+                String s = "";
+                if(cbxMin.isSelected())
+                {
+                    s += "0,";
+                }
+                if(cbxMedian.isSelected())
+                {
+                    s += "1,";
+                }
+                if(cbxP95.isSelected())
+                {
+                    s += "2,";
+                }
+                if(cbxP99.isSelected())
+                {
+                    s += "3,";
+                }
+                if(cbxMax.isSelected())
+                {
+                    s += "4,";
+                }
+                if(s.equals(""))
+                {
+                    JOptionPane.showMessageDialog(null, "Select at least one aspect to graph!");
+                }
+                else
+                {
+                    s = s.substring(0, s.length()-1);
+                }
+                a = new Analyser(txfAnalyse.getText(), s, this);
             }
             catch(FileNotFoundException e)
             {
@@ -115,6 +201,16 @@ public class OlmecUI extends javax.swing.JFrame
         }
     }//GEN-LAST:event_btnAnalyseActionPerformed
 
+    private void txfAnalyseActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_txfAnalyseActionPerformed
+    {//GEN-HEADEREND:event_txfAnalyseActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txfAnalyseActionPerformed
+
+    public void appendToFeedback(String text)
+    {
+        System.out.println(text);
+        txaFeedback.setText(txaFeedback.getText() + "\n" + text);
+    }
     /**
      * @param args the command line arguments
      */
@@ -162,9 +258,17 @@ public class OlmecUI extends javax.swing.JFrame
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAnalyse;
+    private javax.swing.JCheckBox cbxMax;
+    private javax.swing.JCheckBox cbxMedian;
+    private javax.swing.JCheckBox cbxMin;
+    private javax.swing.JCheckBox cbxP95;
+    private javax.swing.JCheckBox cbxP99;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTextArea txaFeedback;
     private javax.swing.JTextField txfAnalyse;
     // End of variables declaration//GEN-END:variables
 }
