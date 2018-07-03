@@ -5,7 +5,10 @@
  */
 package oreilly;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
 import java.io.FileNotFoundException;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 /**
@@ -14,13 +17,19 @@ import javax.swing.JOptionPane;
  */
 public class OlmecUI extends javax.swing.JFrame
 {
+    private Color[] colArr;
     Analyser a;
     /**
      * Creates new form OlmecUI
      */
     public OlmecUI()
     {
+        colArr = new Color[]
+        {
+            Color.red, Color.blue, new Color(0, 153, 0), new Color(255, 102, 0), new Color(102, 0, 153), Color.orange
+        };
         initComponents();
+        
     }
 
     /**
@@ -81,14 +90,24 @@ public class OlmecUI extends javax.swing.JFrame
 
         jLabel4.setText("What to Graph");
 
+        cbxMin.setForeground(colArr[0]);
+        cbxMin.setSelected(true);
         cbxMin.setText("Min");
 
+        cbxMedian.setForeground(colArr[1]);
+        cbxMedian.setSelected(true);
         cbxMedian.setText("Median");
 
+        cbxP95.setForeground(colArr[2]);
+        cbxP95.setSelected(true);
         cbxP95.setText("P95");
 
+        cbxP99.setForeground(colArr[3]);
+        cbxP99.setSelected(true);
         cbxP99.setText("P99");
 
+        cbxMax.setForeground(colArr[4]);
+        cbxMax.setSelected(true);
         cbxMax.setText("Max");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
