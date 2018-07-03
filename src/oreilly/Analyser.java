@@ -18,7 +18,9 @@ public class Analyser
 {
 
     private ArrayList<Report> reports;
+    private ArrayList<Phase> phases;
     private int numReports;
+    private int numPhases;
     private OlmecUI parent;
     //private String toDisplay;
     private boolean[] display;
@@ -29,6 +31,9 @@ public class Analyser
     public Analyser(String filename, String toDisplay, OlmecUI g) throws FileNotFoundException
     {
         reports = new ArrayList<Report>();
+        phases = new ArrayList<Phase>();
+        numReports = 0;
+        numPhases = 0;
         parent = g;
         //make boolean array to check if display or not
         display = new boolean[numDisplayOptions];
@@ -199,6 +204,16 @@ public class Analyser
                     reports.add(temp);
                     numReports++;
                     //System.out.println(temp);
+                } else if (compArr.get(i).substring(0, 7).equals("Started"))
+                {
+                    String s = compArr.get(i);
+                    int pn = Integer.parseInt(s.substring(14, s.indexOf(",")));
+                    int d = Integer.parseInt(s.substring(s.indexOf(":")+2, s.indexOf("s @")));
+                    String td = s.substring(s.indexOf("@")+2);
+                    Phase temp = new Phase(pn, d, td);
+                    System.out.println(temp);
+                    phases.add(temp);
+                    numPhases++;
                 }
             } catch (StringIndexOutOfBoundsException e)
             {
@@ -233,7 +248,6 @@ public class Analyser
         frame.add(n1, BorderLayout.PAGE_END);
         JLabel n3 = new JLabel(max + "");
         frame.add(n3, BorderLayout.PAGE_START);
-        
 
         //create panel and gridlayout with it
         //int x = max - min, y = numReports - 1;
@@ -263,6 +277,8 @@ public class Analyser
 
         parent.appendToFeedback("Graph and grid initialized!");
 
+        drawPhaseLines(lblArr, x, y);
+
         drawGraph(lblArr, min, max, x, y);
 
         parent.appendToFeedback("Rendering graph (please be patient):");
@@ -272,6 +288,35 @@ public class Analyser
         parent.appendToFeedback("Graph rendered!");
         //frame.pack();
         //System.out.println("hi");
+    }
+
+    
+    public void drawPhaseLines(JLabel lblArr[][], int x, int y)
+    {
+        int totalPhase = getTotalPhaseTime();
+        int totalTime = (numReports-1) * 10;
+        System.out.println(totalPhase + " / " + totalTime);
+        int num = y / totalTime; //scale unit / s
+        System.out.println("unit/s = " + num);
+        //(y / (numReports - 1)) * i is 0, 10, 20, 30
+        
+        int last = 0;
+        for(int i = 0; i < numPhases; i++)
+        {
+            Phase cur = phases.get(i);
+            last += cur.getDuration();
+            System.out.println("--" + last + " / " + totalTime);
+            int blah = num * last;
+            System.out.println("=> " + blah);
+            for(int j = 0; j < x; j++)
+            {
+                lblArr[j][blah].setText("^");
+                lblArr[j][blah].setForeground(Color.gray);
+            }
+        }
+
+
+
     }
 
     public void drawGraph(JLabel lblArr[][], int min, int max, int x, int y)
@@ -646,19 +691,15 @@ public class Analyser
         }
         return max;
     }
-
-    public double getMaxP95FromReports()
+    
+    public int getTotalPhaseTime()
     {
-        double max = reports.get(0).getP95();
-        for (int i = 1; i < numReports - 1; i++)
+        int count = 0;
+        for(int i = 0; i < numPhases; i++)
         {
-            if (max < reports.get(i).getP95())
-            {
-                max = reports.get(i).getP95();
-            }
+            count += phases.get(i).getDuration();
         }
-        System.out.println("MAX: " + max);
-        return max;
+        return count;
     }
 
 }

@@ -8,7 +8,6 @@ package oreilly;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.io.FileNotFoundException;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 /**
@@ -63,7 +62,7 @@ public class OlmecUI extends javax.swing.JFrame
 
         jLabel2.setText("File to Analyse");
 
-        txfAnalyse.setText("olmectest");
+        txfAnalyse.setText("dad");
         txfAnalyse.addActionListener(new java.awt.event.ActionListener()
         {
             public void actionPerformed(java.awt.event.ActionEvent evt)
