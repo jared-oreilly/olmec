@@ -211,7 +211,7 @@ public class Analyser
                     int d = Integer.parseInt(s.substring(s.indexOf(":")+2, s.indexOf("s @")));
                     String td = s.substring(s.indexOf("@")+2);
                     Phase temp = new Phase(pn, d, td);
-                    System.out.println(temp);
+                    //System.out.println(temp);
                     phases.add(temp);
                     numPhases++;
                 }
@@ -252,7 +252,7 @@ public class Analyser
         //create panel and gridlayout with it
         //int x = max - min, y = numReports - 1;
         int x = max - min, y = 100;
-        System.out.println("DIFF: " + x);
+        System.out.println(x);
         JPanel panel = new JPanel();
         panel.setBackground(Color.white);
         panel.setSize(900, 700);
@@ -293,26 +293,26 @@ public class Analyser
     
     public void drawPhaseLines(JLabel lblArr[][], int x, int y)
     {
-        int totalPhase = getTotalPhaseTime();
+        //int totalPhase = getTotalPhaseTime();
         int totalTime = (numReports-1) * 10;
-        System.out.println(totalPhase + " / " + totalTime);
+        //System.out.println(totalPhase + " / " + totalTime);
         int num = y / totalTime; //scale unit / s
-        System.out.println("unit/s = " + num);
+        //System.out.println("unit/s = " + num);
         //(y / (numReports - 1)) * i is 0, 10, 20, 30
         
         int last = 0;
         for(int i = 0; i < numPhases; i++)
         {
             Phase cur = phases.get(i);
-            last += cur.getDuration();
-            System.out.println("--" + last + " / " + totalTime);
+            //System.out.println("--" + last + " / " + totalTime);
             int blah = num * last;
-            System.out.println("=> " + blah);
+            //System.out.println("=> " + blah);
             for(int j = 0; j < x; j++)
             {
                 lblArr[j][blah].setText("^");
                 lblArr[j][blah].setForeground(Color.gray);
             }
+            last += cur.getDuration();
         }
 
 
@@ -328,49 +328,49 @@ public class Analyser
         {
             try
             {
-                lblArr[x - (((int) reports.get(0).getMin()) - min)][0].setOpaque(true);
-                lblArr[x - (((int) reports.get(0).getMin()) - min)][0].setBackground(colArr[0]);
+                lblArr[x - (((int) reports.get(0).getMin()) - min)][(y / (numReports - 1))].setOpaque(true);
+                lblArr[x - (((int) reports.get(0).getMin()) - min)][(y / (numReports - 1))].setBackground(colArr[0]);
                 //lblArr[x - (((int) reports.get(0).getMin()) - min)][0].setText("^");
                 //lblArr[x - (((int) reports.get(0).getMin()) - min)][0].setForeground(colArr[0]);
             } catch (ArrayIndexOutOfBoundsException e)
             {
-                lblArr[x - (((int) reports.get(0).getMin()) - min) - 1][0].setOpaque(true);
-                lblArr[x - (((int) reports.get(0).getMin()) - min) - 1][0].setBackground(colArr[0]);
+                lblArr[x - (((int) reports.get(0).getMin()) - min) - 1][(y / (numReports - 1))].setOpaque(true);
+                lblArr[x - (((int) reports.get(0).getMin()) - min) - 1][(y / (numReports - 1))].setBackground(colArr[0]);
                 //lblArr[x - (((int) reports.get(0).getMin()) - min) - 1][0].setText("^");
                 //lblArr[x - (((int) reports.get(0).getMin()) - min) - 1][0].setForeground(colArr[0]);
             }
         }
         if (display[1])
         {
-            lblArr[x - (((int) reports.get(0).getMedian()) - min)][0].setOpaque(true);
-            lblArr[x - (((int) reports.get(0).getMedian()) - min)][0].setBackground(colArr[1]);
+            lblArr[x - (((int) reports.get(0).getMedian()) - min)][(y / (numReports - 1))].setOpaque(true);
+            lblArr[x - (((int) reports.get(0).getMedian()) - min)][(y / (numReports - 1))].setBackground(colArr[1]);
             //lblArr[x - (((int) reports.get(0).getMedian()) - min)][0].setText("^");
             //lblArr[x - (((int) reports.get(0).getMedian()) - min)][0].setForeground(colArr[1]);
         }
         if (display[2])
         {
-            lblArr[x - ((int) reports.get(0).getP95() - min)][0].setOpaque(true);
-            lblArr[x - ((int) reports.get(0).getP95() - min)][0].setBackground(colArr[2]);
+            lblArr[x - ((int) reports.get(0).getP95() - min)][(y / (numReports - 1))].setOpaque(true);
+            lblArr[x - ((int) reports.get(0).getP95() - min)][(y / (numReports - 1))].setBackground(colArr[2]);
             //lblArr[x - ((int) reports.get(0).getP95() - min)][0].setText("^");
             //lblArr[x - ((int) reports.get(0).getP95() - min)][0].setForeground(colArr[2]);
         }
         if (display[3])
         {
-            lblArr[x - ((int) reports.get(0).getP99() - min)][0].setOpaque(true);
-            lblArr[x - ((int) reports.get(0).getP99() - min)][0].setBackground(colArr[3]);
+            lblArr[x - ((int) reports.get(0).getP99() - min)][(y / (numReports - 1))].setOpaque(true);
+            lblArr[x - ((int) reports.get(0).getP99() - min)][(y / (numReports - 1))].setBackground(colArr[3]);
             //lblArr[x - ((int) reports.get(0).getP99() - min)][0].setText("^");
             //lblArr[x - ((int) reports.get(0).getP99() - min)][0].setForeground(colArr[3]);
         }
         if (display[4])
         {
-            lblArr[x - (((int) reports.get(0).getMax()) - min)][0].setOpaque(true);
-            lblArr[x - (((int) reports.get(0).getMax()) - min)][0].setBackground(colArr[4]);
+            lblArr[x - (((int) reports.get(0).getMax()) - min)][(y / (numReports - 1))].setOpaque(true);
+            lblArr[x - (((int) reports.get(0).getMax()) - min)][(y / (numReports - 1))].setBackground(colArr[4]);
             //lblArr[x - (((int) reports.get(0).getMax()) - min)][0].setText("^");
             //lblArr[x - (((int) reports.get(0).getMax()) - min)][0].setForeground(colArr[4]);
         }
 
         //for each report, draw the lines if they should be drawn
-        for (int i = 1; i < numReports - 1; i++)
+        for (int i = 1; i < numReports - 2; i++)
         {
             //draw a connecting line
             for (int j = 0; j < 5; j++)
@@ -386,14 +386,14 @@ public class Analyser
             {
                 try
                 {
-                    lblArr[x - (((int) reports.get(i).getMin()) - min)][(y / (numReports - 1)) * i].setOpaque(true);
-                    lblArr[x - (((int) reports.get(i).getMin()) - min)][(y / (numReports - 1)) * i].setBackground(colArr[0]);
+                    lblArr[x - (((int) reports.get(i).getMin()) - min)][(y / (numReports - 1)) + (y / (numReports - 1)) * i].setOpaque(true);
+                    lblArr[x - (((int) reports.get(i).getMin()) - min)][(y / (numReports - 1)) + (y / (numReports - 1)) * i].setBackground(colArr[0]);
                     //lblArr[x - (((int) reports.get(i).getMin()) - min)][(y / (numReports - 1)) * i].setText("^");
                     //lblArr[x - (((int) reports.get(i).getMin()) - min)][(y / (numReports - 1)) * i].setForeground(colArr[0]);
                 } catch (ArrayIndexOutOfBoundsException e)
                 {
-                    lblArr[x - (((int) reports.get(i).getMin()) - min) - 1][(y / (numReports - 1)) * i].setOpaque(true);
-                    lblArr[x - (((int) reports.get(i).getMin()) - min) - 1][(y / (numReports - 1)) * i].setBackground(colArr[0]);
+                    lblArr[x - (((int) reports.get(i).getMin()) - min) - 1][(y / (numReports - 1)) + (y / (numReports - 1)) * i].setOpaque(true);
+                    lblArr[x - (((int) reports.get(i).getMin()) - min) - 1][(y / (numReports - 1)) + (y / (numReports - 1)) * i].setBackground(colArr[0]);
                     //lblArr[x - (((int) reports.get(i).getMin()) - min) - 1][(y / (numReports - 1)) * i].setText("^");
                     //lblArr[x - (((int) reports.get(i).getMin()) - min) - 1][(y / (numReports - 1)) * i].setForeground(colArr[0]);
                 }
@@ -402,14 +402,14 @@ public class Analyser
             {
                 try
                 {
-                    lblArr[x - (((int) reports.get(i).getMedian()) - min)][(y / (numReports - 1)) * i].setOpaque(true);
-                    lblArr[x - (((int) reports.get(i).getMedian()) - min)][(y / (numReports - 1)) * i].setBackground(colArr[1]);
+                    lblArr[x - (((int) reports.get(i).getMedian()) - min)][(y / (numReports - 1)) + (y / (numReports - 1)) * i].setOpaque(true);
+                    lblArr[x - (((int) reports.get(i).getMedian()) - min)][(y / (numReports - 1)) + (y / (numReports - 1)) * i].setBackground(colArr[1]);
                     //lblArr[x - (((int) reports.get(i).getMedian()) - min)][(y / (numReports - 1)) * i].setText("^");
                     //lblArr[x - (((int) reports.get(i).getMedian()) - min)][(y / (numReports - 1)) * i].setForeground(colArr[1]);
                 } catch (ArrayIndexOutOfBoundsException e)
                 {
-                    lblArr[x - (((int) reports.get(i).getMedian()) - min) - 1][(y / (numReports - 1)) * i].setOpaque(true);
-                    lblArr[x - (((int) reports.get(i).getMedian()) - min) - 1][(y / (numReports - 1)) * i].setBackground(colArr[1]);
+                    lblArr[x - (((int) reports.get(i).getMedian()) - min) - 1][(y / (numReports - 1)) + (y / (numReports - 1)) * i].setOpaque(true);
+                    lblArr[x - (((int) reports.get(i).getMedian()) - min) - 1][(y / (numReports - 1)) + (y / (numReports - 1)) * i].setBackground(colArr[1]);
                     //lblArr[x - (((int) reports.get(i).getMedian()) - min) - 1][(y / (numReports - 1)) * i].setText("^");
                     //lblArr[x - (((int) reports.get(i).getMedian()) - min) - 1][(y / (numReports - 1)) * i].setForeground(colArr[1]);
                 }
@@ -418,14 +418,14 @@ public class Analyser
             {
                 try
                 {
-                    lblArr[x - ((int) reports.get(i).getP95() - min)][(y / (numReports - 1)) * i].setOpaque(true);
-                    lblArr[x - ((int) reports.get(i).getP95() - min)][(y / (numReports - 1)) * i].setBackground(colArr[2]);
+                    lblArr[x - ((int) reports.get(i).getP95() - min)][(y / (numReports - 1)) + (y / (numReports - 1)) * i].setOpaque(true);
+                    lblArr[x - ((int) reports.get(i).getP95() - min)][(y / (numReports - 1)) + (y / (numReports - 1)) * i].setBackground(colArr[2]);
                     //lblArr[x - ((int) reports.get(i).getP95() - min)][(y / (numReports - 1)) * i].setText("^");
                     //lblArr[x - ((int) reports.get(i).getP95() - min)][(y / (numReports - 1)) * i].setForeground(colArr[2]);
                 } catch (ArrayIndexOutOfBoundsException e)
                 {
-                    lblArr[x - ((int) reports.get(i).getP95() - min) - 1][(y / (numReports - 1)) * i].setOpaque(true);
-                    lblArr[x - ((int) reports.get(i).getP95() - min) - 1][(y / (numReports - 1)) * i].setBackground(colArr[2]);
+                    lblArr[x - ((int) reports.get(i).getP95() - min) - 1][(y / (numReports - 1)) + (y / (numReports - 1)) * i].setOpaque(true);
+                    lblArr[x - ((int) reports.get(i).getP95() - min) - 1][(y / (numReports - 1)) + (y / (numReports - 1)) * i].setBackground(colArr[2]);
                     //lblArr[x - (((int) reports.get(i).getP95()) - min) - 1][(y / (numReports - 1)) * i].setText("^");
                     //lblArr[x - (((int) reports.get(i).getP95()) - min) - 1][(y / (numReports - 1)) * i].setForeground(colArr[2]);
                 }
@@ -434,14 +434,14 @@ public class Analyser
             {
                 try
                 {
-                    lblArr[x - ((int) reports.get(i).getP99() - min)][(y / (numReports - 1)) * i].setOpaque(true);
-                    lblArr[x - ((int) reports.get(i).getP99() - min)][(y / (numReports - 1)) * i].setBackground(colArr[3]);
+                    lblArr[x - ((int) reports.get(i).getP99() - min)][(y / (numReports - 1)) + (y / (numReports - 1)) * i].setOpaque(true);
+                    lblArr[x - ((int) reports.get(i).getP99() - min)][(y / (numReports - 1)) + (y / (numReports - 1)) * i].setBackground(colArr[3]);
                     //lblArr[x - ((int) reports.get(i).getP99() - min)][(y / (numReports - 1)) * i].setText("^");
                     //lblArr[x - ((int) reports.get(i).getP99() - min)][(y / (numReports - 1)) * i].setForeground(colArr[3]);
                 } catch (ArrayIndexOutOfBoundsException e)
                 {
-                    lblArr[x - ((int) reports.get(i).getP99() - min) - 1][(y / (numReports - 1)) * i].setOpaque(true);
-                    lblArr[x - ((int) reports.get(i).getP99() - min) - 1][(y / (numReports - 1)) * i].setBackground(colArr[3]);
+                    lblArr[x - ((int) reports.get(i).getP99() - min) - 1][(y / (numReports - 1)) + (y / (numReports - 1)) * i].setOpaque(true);
+                    lblArr[x - ((int) reports.get(i).getP99() - min) - 1][(y / (numReports - 1)) + (y / (numReports - 1)) * i].setBackground(colArr[3]);
                     //lblArr[x - (((int) reports.get(i).getP99()) - min) - 1][(y / (numReports - 1)) * i].setText("^");
                     //lblArr[x - (((int) reports.get(i).getP99()) - min) - 1][(y / (numReports - 1)) * i].setForeground(colArr[3]);
                 }
@@ -450,14 +450,14 @@ public class Analyser
             {
                 try
                 {
-                    lblArr[x - (((int) reports.get(i).getMax()) - min)][(y / (numReports - 1)) * i].setOpaque(true);
-                    lblArr[x - (((int) reports.get(i).getMax()) - min)][(y / (numReports - 1)) * i].setBackground(colArr[4]);
+                    lblArr[x - (((int) reports.get(i).getMax()) - min)][(y / (numReports - 1)) + (y / (numReports - 1)) * i].setOpaque(true);
+                    lblArr[x - (((int) reports.get(i).getMax()) - min)][(y / (numReports - 1)) + (y / (numReports - 1)) * i].setBackground(colArr[4]);
                     //lblArr[x - (((int) reports.get(i).getMax()) - min)][(y / (numReports - 1)) * i].setText("^");
                     //lblArr[x - (((int) reports.get(i).getMax()) - min)][(y / (numReports - 1)) * i].setForeground(colArr[4]);
                 } catch (ArrayIndexOutOfBoundsException e)
                 {
-                    lblArr[x - (((int) reports.get(i).getMax()) - min) - 1][(y / (numReports - 1)) * i].setOpaque(true);
-                    lblArr[x - (((int) reports.get(i).getMax()) - min) - 1][(y / (numReports - 1)) * i].setBackground(colArr[4]);
+                    lblArr[x - (((int) reports.get(i).getMax()) - min) - 1][(y / (numReports - 1)) + (y / (numReports - 1)) * i].setOpaque(true);
+                    lblArr[x - (((int) reports.get(i).getMax()) - min) - 1][(y / (numReports - 1)) + (y / (numReports - 1)) * i].setBackground(colArr[4]);
                     //lblArr[x - (((int) reports.get(i).getMax()) - min) - 1][(y / (numReports - 1)) * i].setText("^");
                     //lblArr[x - (((int) reports.get(i).getMax()) - min) - 1][(y / (numReports - 1)) * i].setForeground(colArr[4]);
                 }
@@ -498,8 +498,8 @@ public class Analyser
                 new1 = x - (((int) reports.get(i).getMedian()) - min);
         }
 
-        int old2 = (int) (double) y / (numReports - 1) * (i - 1);
-        int new2 = (int) (double) y / (numReports - 1) * i;
+        int old2 = (int) ((y / (numReports - 1)) + (double) y / (numReports - 1) * (i - 1));
+        int new2 = (int) ((y / (numReports - 1)) + (double) y / (numReports - 1) * i);
         //System.out.println("(" + old1 + "," + old2 + ") to (" + new1 + "," + new2 + ")");
 
         int dist1 = (new1 - old1);
@@ -543,7 +543,7 @@ public class Analyser
                         min = reports.get(i).getMin();
                     }
                 }
-                System.out.println("MIN: " + min);
+                System.out.print("-" + min + " + ");
                 break;
             case 1:
                 min = reports.get(0).getMedian();
@@ -554,7 +554,7 @@ public class Analyser
                         min = reports.get(i).getMedian();
                     }
                 }
-                System.out.println("MIN: " + min);
+                System.out.print("-" + min + " + ");
                 break;
             case 2:
                 min = reports.get(0).getP95();
@@ -565,7 +565,7 @@ public class Analyser
                         min = reports.get(i).getP95();
                     }
                 }
-                System.out.println("MIN: " + min);
+                System.out.print("-" + min + " + ");
                 break;
             case 3:
                 min = reports.get(0).getP99();
@@ -576,7 +576,7 @@ public class Analyser
                         min = reports.get(i).getP99();
                     }
                 }
-                System.out.println("MIN: " + min);
+                System.out.print("-" + min + " + ");
                 break;
             case 4:
                 min = reports.get(0).getMax();
@@ -587,7 +587,7 @@ public class Analyser
                         min = reports.get(i).getMax();
                     }
                 }
-                System.out.println("MIN: " + min);
+                System.out.print("-" + min + " + ");
                 break;
             default:
                 min = reports.get(0).getMin();
@@ -598,7 +598,7 @@ public class Analyser
                         min = reports.get(i).getMin();
                     }
                 }
-                System.out.println("MIN: " + min);
+                System.out.print("-" + min + " + ");
 
         }
         return min;
@@ -619,7 +619,7 @@ public class Analyser
         {
             case 4:
                 max = reports.get(0).getMax();
-                System.out.println(0);
+                //(0);
                 for (int i = 1; i < numReports - 1; i++)
                 {
                     if (max < reports.get(i).getMax())
@@ -627,11 +627,11 @@ public class Analyser
                         max = reports.get(i).getMax();
                     }
                 }
-                System.out.println("MAX: " + max);
+                System.out.print(max + " = ");
                 break;
             case 3:
                 max = reports.get(0).getP99();
-                System.out.println(0);
+                //System.out.println(0);
                 for (int i = 1; i < numReports - 1; i++)
                 {
                     if (max < reports.get(i).getP99())
@@ -639,11 +639,11 @@ public class Analyser
                         max = reports.get(i).getP99();
                     }
                 }
-                System.out.println("MAX: " + max);
+                System.out.print(max + " = ");
                 break;
             case 2:
                 max = reports.get(0).getP95();
-                System.out.println(0);
+                //System.out.println(0);
                 for (int i = 1; i < numReports - 1; i++)
                 {
                     if (max < reports.get(i).getP95())
@@ -651,11 +651,11 @@ public class Analyser
                         max = reports.get(i).getP95();
                     }
                 }
-                System.out.println("MAX: " + max);
+                System.out.print(max + " = ");
                 break;
             case 1:
                 max = reports.get(0).getMedian();
-                System.out.println(0);
+                //System.out.println(0);
                 for (int i = 1; i < numReports - 1; i++)
                 {
                     if (max < reports.get(i).getMedian())
@@ -663,11 +663,11 @@ public class Analyser
                         max = reports.get(i).getMedian();
                     }
                 }
-                System.out.println("MAX: " + max);
+                System.out.print(max + " = ");
                 break;
             case 0:
                 max = reports.get(0).getMin();
-                System.out.println(0);
+                //System.out.println(0);
                 for (int i = 1; i < numReports - 1; i++)
                 {
                     if (max < reports.get(i).getMin())
@@ -675,11 +675,11 @@ public class Analyser
                         max = reports.get(i).getMin();
                     }
                 }
-                System.out.println("MAX: " + max);
+                System.out.print(max + " = ");
                 break;
             default:
                 max = reports.get(0).getMax();
-                System.out.println(0);
+                //System.out.println(0);
                 for (int i = 1; i < numReports - 1; i++)
                 {
                     if (max < reports.get(i).getMax())
@@ -687,7 +687,7 @@ public class Analyser
                         max = reports.get(i).getMax();
                     }
                 }
-                System.out.println("MAX: " + max);
+                System.out.print(max + " = ");
         }
         return max;
     }
