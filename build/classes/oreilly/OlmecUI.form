@@ -210,18 +210,27 @@
     </Component>
     <Component class="javax.swing.JCheckBox" name="cbxSL">
       <Properties>
+        <Property name="foreground" type="java.awt.Color" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection code="colArr[0]" type="code"/>
+        </Property>
         <Property name="selected" type="boolean" value="true"/>
         <Property name="text" type="java.lang.String" value="S Launched"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JCheckBox" name="cbxSC">
       <Properties>
+        <Property name="foreground" type="java.awt.Color" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection code="colArr[1]" type="code"/>
+        </Property>
         <Property name="selected" type="boolean" value="true"/>
         <Property name="text" type="java.lang.String" value="S Completed"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JCheckBox" name="cbxRC">
       <Properties>
+        <Property name="foreground" type="java.awt.Color" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection code="colArr[2]" type="code"/>
+        </Property>
         <Property name="selected" type="boolean" value="true"/>
         <Property name="text" type="java.lang.String" value="R Completed"/>
       </Properties>

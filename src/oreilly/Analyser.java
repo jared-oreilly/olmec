@@ -24,15 +24,24 @@ public class Analyser
     private int numReports;
     private int numPhases;
     private OlmecUI parent;
+    
     private String toDisplay1;
     private boolean[] display1;
     private final int numDisplayOptions1 = 5;
+    
     private String toDisplay2;
     private boolean[] display2;
     private final int numDisplayOptions2 = 3;
-    private Color[] colArr;
-    private Color[] colArro;
-    //private String[] displayDescArr;
+    
+    public static final Color[] colArr = new Color[]
+    {
+        Color.red, Color.blue, new Color(0, 153, 0), new Color(255, 102, 0), new Color(102, 0, 153), Color.orange
+    };
+    
+    public static final Color[] colArro = new Color[]
+    {
+        new Color(255, 0, 0, 50), new Color(0, 0, 255, 50), new Color(0, 153, 0, 50), new Color(255, 102, 0, 50), new Color(102, 0, 153, 50), Color.orange
+    };
     
     private final int x = 200, y = 200;
     private int min, max;
@@ -44,15 +53,6 @@ public class Analyser
         numReports = 0;
         numPhases = 0;
         parent = g;
-        
-        colArr = new Color[]
-        {
-            Color.red, Color.blue, new Color(0, 153, 0), new Color(255, 102, 0), new Color(102, 0, 153), Color.orange
-        };
-        colArro = new Color[]
-        {
-            new Color(255, 0, 0, 50), new Color(0, 0, 255, 50), new Color(0, 153, 0, 50), new Color(255, 102, 0, 50), new Color(102, 0, 153, 50), Color.orange
-        };
 
         //put file into arraylist
         Scanner scFile = new Scanner(new File("../../mayan/Mayan/gen/runs/" + filename + ".txt"));
@@ -194,7 +194,7 @@ public class Analyser
                     Report temp = new Report(h, Integer.parseInt(sl), Integer.parseInt(sc), Integer.parseInt(rc), Double.parseDouble(rps), Double.parseDouble(min), Double.parseDouble(max), Double.parseDouble(med), Double.parseDouble(p95), Double.parseDouble(p99), scenarioCounts, codes);
                     reports.add(temp);
                     numReports++;
-                    
+
                 } else if (compArr.get(i).substring(0, 7).equals("Started"))
                 {
                     String s = compArr.get(i);
@@ -214,8 +214,6 @@ public class Analyser
 
         parent.appendToFeedback("Reports and phases captured!");
 
-        
-
     }
 
     public void drawGraph1(String s)
@@ -231,7 +229,7 @@ public class Analyser
                 display1[i] = true;
             }
         }
-        
+
         parent.appendToFeedback("Initializing graph and grid:");
         //create frame with settings
         JFrame frame = new JFrame("Graph");
@@ -307,8 +305,8 @@ public class Analyser
             }
             last += cur.getDuration();
         }
-        
-        int blah =  (last / totalTime) * y;
+
+        int blah = (last / totalTime) * y;
         for (int j = 0; j < x; j++)
         {
             lblArr[j][blah].setOpaque(true);
@@ -372,7 +370,7 @@ public class Analyser
         {
             cur = reports.get(i);
             //draw a connecting line
-            for (int j = 0; j < 5; j++)
+            for (int j = 0; j < numDisplayOptions1; j++)
             {
                 if (display1[j])
                 {
@@ -658,7 +656,7 @@ public class Analyser
                     }
                 }
         }
-        System.out.print(max + " = ");
+        System.out.println(max + " = ");
         return max;
     }
 
@@ -671,7 +669,7 @@ public class Analyser
         }
         return count;
     }
-    
+
     public void drawGraph2(String s)
     {
         //decide what to display
@@ -685,7 +683,7 @@ public class Analyser
                 display2[i] = true;
             }
         }
-        
+
         parent.appendToFeedback("Initializing graph and grid:");
         //create frame with settings
         JFrame frame = new JFrame("Graph");
@@ -695,7 +693,7 @@ public class Analyser
         //add x and y axes
         min = (int) getMinFromReports2();
         max = (int) getMaxFromReports2();
-        JLabel n2 = new JLabel("Time in ms");
+        JLabel n2 = new JLabel("Number of requests or scenarios");
         frame.add(n2, BorderLayout.WEST);
         JLabel n1 = new JLabel(min + "");
         frame.add(n1, BorderLayout.PAGE_END);
@@ -761,8 +759,8 @@ public class Analyser
             }
             last += cur.getDuration();
         }
-        
-        int blah =  (last / totalTime) * y;
+
+        int blah = (last / totalTime) * y;
         for (int j = 0; j < x; j++)
         {
             lblArr[j][blah].setOpaque(true);
@@ -779,10 +777,11 @@ public class Analyser
         //draw first point if need to display
         if (display2[0])
         {
-            //System.out.println("(" + cur.getMin() + ", 1) -> (" + transX(cur.getMin()) + "," + transY(1) + ")");
-            lblArr[transX2(cur.getMin())][transY2(1)].setOpaque(true);
-            lblArr[transX2(cur.getMin())][transY2(1)].setBackground(colArr[0]);
-            lblArr[transX2(cur.getMin())][transY2(1)].addMouseListener(new MouseAdapter()
+            //System.out.println("(" + cur.getScenariosLaunched() + ", 1) -> (" + transX(cur.getScenariosLaunched()) + "," + transY(1) + ")");
+            lblArr[transX2(cur.getScenariosLaunched())][transY2(1)].setOpaque(true);
+            lblArr[transX2(cur.getScenariosLaunched())][transY2(1)].setBackground(colArr[0]);
+            /*
+            lblArr[transX2(cur.getScenariosLaunched())][transY2(1)].addMouseListener(new MouseAdapter()
             {
                 @Override
                 public void mouseClicked(MouseEvent e)
@@ -790,35 +789,22 @@ public class Analyser
                     System.out.println("Yay you clicked me");
                 }
             });
+             */
         }
         if (display2[1])
         {
-            lblArr[transX2(cur.getMedian())][transY2(1)].setOpaque(true);
-            lblArr[transX2(cur.getMedian())][transY2(1)].setBackground(colArr[1]);
-            //lblArr[transX(cur.getMedian())][0].setText("^");
-            //lblArr[transX(cur.getMedian())][0].setForeground(colArr[1]);
+            lblArr[transX2(cur.getScenariosCompleted())][transY2(1)].setOpaque(true);
+            lblArr[transX2(cur.getScenariosCompleted())][transY2(1)].setBackground(colArr[1]);
+            //lblArr[transX(cur.getScenariosCompleted())][0].setText("^");
+            //lblArr[transX(cur.getScenariosCompleted())][0].setForeground(colArr[1]);
         }
         if (display2[2])
         {
-            //System.out.println(transX(cur.getP95()) + " " + transY(1));
-            lblArr[transX2(cur.getP95())][transY2(1)].setOpaque(true);
-            lblArr[transX2(cur.getP95())][transY2(1)].setBackground(colArr[2]);
-            //lblArr[transX(cur.getP95()][0].setText("^");
-            //lblArr[transX(cur.getP95()][0].setForeground(colArr[2]);
-        }
-        if (display2[3])
-        {
-            lblArr[transX2(cur.getP99())][transY2(1)].setOpaque(true);
-            lblArr[transX2(cur.getP99())][transY2(1)].setBackground(colArr[3]);
-            //lblArr[transX(cur.getP99()][0].setText("^");
-            //lblArr[transX(cur.getP99()][0].setForeground(colArr[3]);
-        }
-        if (display2[4])
-        {
-            lblArr[transX2(cur.getMax())][transY2(1)].setOpaque(true);
-            lblArr[transX2(cur.getMax())][transY2(1)].setBackground(colArr[4]);
-            //lblArr[transX(cur.getMax())][0].setText("^");
-            //lblArr[transX(cur.getMax())][0].setForeground(colArr[4]);
+            //System.out.println(transX(cur.getRequestsCompleted()) + " " + transY(1));
+            lblArr[transX2(cur.getRequestsCompleted())][transY2(1)].setOpaque(true);
+            lblArr[transX2(cur.getRequestsCompleted())][transY2(1)].setBackground(colArr[2]);
+            //lblArr[transX(cur.getRequestsCompleted()][0].setText("^");
+            //lblArr[transX(cur.getRequestsCompleted()][0].setForeground(colArr[2]);
         }
 
         //for each report, draw the lines if they should be drawn
@@ -826,7 +812,7 @@ public class Analyser
         {
             cur = reports.get(i);
             //draw a connecting line
-            for (int j = 0; j < 5; j++)
+            for (int j = 0; j < numDisplayOptions2; j++)
             {
                 if (display2[j])
                 {
@@ -837,40 +823,26 @@ public class Analyser
             //draw the next point
             if (display2[0])
             {
-                lblArr[transX2(cur.getMin())][transY2(i + 1)].setOpaque(true);
-                lblArr[transX2(cur.getMin())][transY2(i + 1)].setBackground(colArr[0]);
-                //lblArr[x - (((int) cur.getMin()) - min)][(y / (numReports - 1)) * i].setText("^");
-                //lblArr[x - (((int) cur.getMin()) - min)][(y / (numReports - 1)) * i].setForeground(colArr[0]);
+                lblArr[transX2(cur.getScenariosLaunched())][transY2(i + 1)].setOpaque(true);
+                lblArr[transX2(cur.getScenariosLaunched())][transY2(i + 1)].setBackground(colArr[0]);
+                //lblArr[x - (((int) cur.getScenariosLaunched()) - min)][(y / (numReports - 1)) * i].setText("^");
+                //lblArr[x - (((int) cur.getScenariosLaunched()) - min)][(y / (numReports - 1)) * i].setForeground(colArr[0]);
             }
             if (display2[1])
             {
-                //System.out.println("MEDIAN: (" + cur.getMedian() + ", " + (i + 1) + ") -> (" + transX(cur.getMedian()) + "," + transY(i + 1) + ")");
-                lblArr[transX2(cur.getMedian())][transY2(i + 1)].setOpaque(true);
-                lblArr[transX2(cur.getMedian())][transY2(i + 1)].setBackground(colArr[1]);
-                //lblArr[x - (((int) cur.getMedian()) - min)][(y / (numReports - 1)) * i].setText("^");
-                //lblArr[x - (((int) cur.getMedian()) - min)][(y / (numReports - 1)) * i].setForeground(colArr[1]);
+                //System.out.println("MEDIAN: (" + cur.getScenariosCompleted() + ", " + (i + 1) + ") -> (" + transX(cur.getScenariosCompleted()) + "," + transY(i + 1) + ")");
+                lblArr[transX2(cur.getScenariosCompleted())][transY2(i + 1)].setOpaque(true);
+                lblArr[transX2(cur.getScenariosCompleted())][transY2(i + 1)].setBackground(colArr[1]);
+                //lblArr[x - (((int) cur.getScenariosCompleted()) - min)][(y / (numReports - 1)) * i].setText("^");
+                //lblArr[x - (((int) cur.getScenariosCompleted()) - min)][(y / (numReports - 1)) * i].setForeground(colArr[1]);
             }
             if (display2[2])
             {
-                //System.out.println("P95: (" + cur.getP95() + ", " + (i + 1) + ") -> (" + transX(cur.getP95()) + "," + transY(i + 1) + ")");
-                lblArr[transX2(cur.getP95())][transY2(i + 1)].setOpaque(true);
-                lblArr[transX2(cur.getP95())][transY2(i + 1)].setBackground(colArr[2]);
-                //lblArr[transX(cur.getP95() - min)][(y / (numReports - 1)) * i].setText("^");
-                //lblArr[transX(cur.getP95() - min)][(y / (numReports - 1)) * i].setForeground(colArr[2]);
-            }
-            if (display2[3])
-            {
-                lblArr[transX2(cur.getP99())][transY2(i + 1)].setOpaque(true);
-                lblArr[transX2(cur.getP99())][transY2(i + 1)].setBackground(colArr[3]);
-                //lblArr[transX(cur.getP99() - min)][(y / (numReports - 1)) * i].setText("^");
-                //lblArr[transX(cur.getP99() - min)][(y / (numReports - 1)) * i].setForeground(colArr[3]);
-            }
-            if (display2[4])
-            {
-                lblArr[transX2(cur.getMax())][transY2(i + 1)].setOpaque(true);
-                lblArr[transX2(cur.getMax())][transY2(i + 1)].setBackground(colArr[4]);
-                //lblArr[x - (((int) cur.getMax()) - min)][(y / (numReports - 1)) * i].setText("^");
-                //lblArr[x - (((int) cur.getMax()) - min)][(y / (numReports - 1)) * i].setForeground(colArr[4]);
+                //System.out.println("P95: (" + cur.getRequestsCompleted() + ", " + (i + 1) + ") -> (" + transX(cur.getRequestsCompleted()) + "," + transY(i + 1) + ")");
+                lblArr[transX2(cur.getRequestsCompleted())][transY2(i + 1)].setOpaque(true);
+                lblArr[transX2(cur.getRequestsCompleted())][transY2(i + 1)].setBackground(colArr[2]);
+                //lblArr[transX(cur.getRequestsCompleted() - min)][(y / (numReports - 1)) * i].setText("^");
+                //lblArr[transX(cur.getRequestsCompleted() - min)][(y / (numReports - 1)) * i].setForeground(colArr[2]);
             }
 
         }
@@ -912,28 +884,20 @@ public class Analyser
         switch (caseOf)
         {
             case 0:
-                old1 = transX2(reports.get(i - 1).getMin());
-                new1 = transX2(Math.round(reports.get(i).getMin()));
+                old1 = transX2(reports.get(i - 1).getScenariosLaunched());
+                new1 = transX2(Math.round(reports.get(i).getScenariosLaunched()));
                 break;
             case 1:
-                old1 = transX2(reports.get(i - 1).getMedian());
-                new1 = transX2(reports.get(i).getMedian());
+                old1 = transX2(reports.get(i - 1).getScenariosCompleted());
+                new1 = transX2(reports.get(i).getScenariosCompleted());
                 break;
             case 2:
-                old1 = transX2(reports.get(i - 1).getP95());
-                new1 = transX2(reports.get(i).getP95());
-                break;
-            case 3:
-                old1 = transX2(reports.get(i - 1).getP99());
-                new1 = transX2(reports.get(i).getP99());
-                break;
-            case 4:
-                old1 = transX2(reports.get(i - 1).getMax());
-                new1 = transX2(reports.get(i).getMax());
+                old1 = transX2(reports.get(i - 1).getRequestsCompleted());
+                new1 = transX2(reports.get(i).getRequestsCompleted());
                 break;
             default:
-                old1 = transX2(reports.get(i - 1).getMedian());
-                new1 = transX2(reports.get(i).getMedian());
+                old1 = transX2(reports.get(i - 1).getScenariosCompleted());
+                new1 = transX2(reports.get(i).getScenariosCompleted());
         }
 
         int old2 = (int) ((y / (numReports - 1)) + (double) y / (numReports - 1) * (i - 1));
@@ -969,62 +933,42 @@ public class Analyser
         switch (j)
         {
             case 0:
-                min = reports.get(0).getMin();
+                min = reports.get(0).getScenariosLaunched();
                 for (int i = 1; i < numReports - 1; i++)
                 {
-                    if (min > reports.get(i).getMin())
+                    if (min > reports.get(i).getScenariosLaunched())
                     {
-                        min = reports.get(i).getMin();
+                        min = reports.get(i).getScenariosLaunched();
                     }
                 }
                 break;
             case 1:
-                min = reports.get(0).getMedian();
+                min = reports.get(0).getScenariosCompleted();
                 for (int i = 1; i < numReports - 1; i++)
                 {
-                    if (min > reports.get(i).getMedian())
+                    if (min > reports.get(i).getScenariosCompleted())
                     {
-                        min = reports.get(i).getMedian();
+                        min = reports.get(i).getScenariosCompleted();
                     }
                 }
                 break;
             case 2:
-                min = reports.get(0).getP95();
+                min = reports.get(0).getRequestsCompleted();
                 for (int i = 1; i < numReports - 1; i++)
                 {
-                    if (min > reports.get(i).getP95())
+                    if (min > reports.get(i).getRequestsCompleted())
                     {
-                        min = reports.get(i).getP95();
-                    }
-                }
-                break;
-            case 3:
-                min = reports.get(0).getP99();
-                for (int i = 1; i < numReports - 1; i++)
-                {
-                    if (min > reports.get(i).getP99())
-                    {
-                        min = reports.get(i).getP99();
-                    }
-                }
-                break;
-            case 4:
-                min = reports.get(0).getMax();
-                for (int i = 1; i < numReports - 1; i++)
-                {
-                    if (min > reports.get(i).getMax())
-                    {
-                        min = reports.get(i).getMax();
+                        min = reports.get(i).getRequestsCompleted();
                     }
                 }
                 break;
             default:
-                min = reports.get(0).getMin();
+                min = reports.get(0).getScenariosLaunched();
                 for (int i = 1; i < numReports - 1; i++)
                 {
-                    if (min > reports.get(i).getMin())
+                    if (min > reports.get(i).getScenariosLaunched())
                     {
-                        min = reports.get(i).getMin();
+                        min = reports.get(i).getScenariosLaunched();
                     }
                 }
 
@@ -1046,73 +990,51 @@ public class Analyser
         double max = 0;
         switch (j)
         {
-            case 4:
-                max = reports.get(0).getMax();
-                //(0);
-                for (int i = 1; i < numReports - 1; i++)
-                {
-                    if (max < reports.get(i).getMax())
-                    {
-                        max = reports.get(i).getMax();
-                    }
-                }
-                break;
-            case 3:
-                max = reports.get(0).getP99();
-                //System.out.println(0);
-                for (int i = 1; i < numReports - 1; i++)
-                {
-                    if (max < reports.get(i).getP99())
-                    {
-                        max = reports.get(i).getP99();
-                    }
-                }
-                break;
             case 2:
-                max = reports.get(0).getP95();
+                max = reports.get(0).getRequestsCompleted();
                 //System.out.println(0);
                 for (int i = 1; i < numReports - 1; i++)
                 {
-                    if (max < reports.get(i).getP95())
+                    if (max < reports.get(i).getRequestsCompleted())
                     {
-                        max = reports.get(i).getP95();
+                        max = reports.get(i).getRequestsCompleted();
                     }
                 }
                 break;
             case 1:
-                max = reports.get(0).getMedian();
+                max = reports.get(0).getScenariosCompleted();
                 //System.out.println(0);
                 for (int i = 1; i < numReports - 1; i++)
                 {
-                    if (max < reports.get(i).getMedian())
+                    if (max < reports.get(i).getScenariosCompleted())
                     {
-                        max = reports.get(i).getMedian();
+                        max = reports.get(i).getScenariosCompleted();
                     }
                 }
                 break;
             case 0:
-                max = reports.get(0).getMin();
+                max = reports.get(0).getScenariosLaunched();
                 //System.out.println(0);
                 for (int i = 1; i < numReports - 1; i++)
                 {
-                    if (max < reports.get(i).getMin())
+                    if (max < reports.get(i).getScenariosLaunched())
                     {
-                        max = reports.get(i).getMin();
+                        max = reports.get(i).getScenariosLaunched();
                     }
                 }
                 break;
             default:
-                max = reports.get(0).getMax();
+                max = reports.get(0).getRequestsCompleted();
                 //System.out.println(0);
                 for (int i = 1; i < numReports - 1; i++)
                 {
-                    if (max < reports.get(i).getMax())
+                    if (max < reports.get(i).getRequestsCompleted())
                     {
-                        max = reports.get(i).getMax();
+                        max = reports.get(i).getRequestsCompleted();
                     }
                 }
         }
-        System.out.print(max + " = ");
+        System.out.println(max + " = ");
         return max;
     }
 

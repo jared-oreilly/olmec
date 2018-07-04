@@ -6,17 +6,15 @@ import javax.swing.JOptionPane;
 
 public class OlmecUI extends javax.swing.JFrame
 {
-
-    private Color[] colArr;
     Analyser a;
     private String filename;
+    public static final Color[] colArr = new Color[]
+    {
+        Color.red, Color.blue, new Color(0, 153, 0), new Color(255, 102, 0), new Color(102, 0, 153), Color.orange
+    };
 
     public OlmecUI(String filename) throws FileNotFoundException
     {
-        colArr = new Color[]
-        {
-            Color.red, Color.blue, new Color(0, 153, 0), new Color(255, 102, 0), new Color(102, 0, 153), Color.orange
-        };
         initComponents();
         this.filename = filename;
         a = new Analyser(filename, this);
@@ -107,12 +105,15 @@ public class OlmecUI extends javax.swing.JFrame
 
         jLabel7.setText("What to Graph");
 
+        cbxSL.setForeground(colArr[0]);
         cbxSL.setSelected(true);
         cbxSL.setText("S Launched");
 
+        cbxSC.setForeground(colArr[1]);
         cbxSC.setSelected(true);
         cbxSC.setText("S Completed");
 
+        cbxRC.setForeground(colArr[2]);
         cbxRC.setSelected(true);
         cbxRC.setText("R Completed");
 
