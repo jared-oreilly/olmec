@@ -1,34 +1,25 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package oreilly;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.io.FileNotFoundException;
 import javax.swing.JOptionPane;
 
-/**
- *
- * @author jared.oreilly
- */
 public class OlmecUI extends javax.swing.JFrame
 {
+
     private Color[] colArr;
     Analyser a;
-    /**
-     * Creates new form OlmecUI
-     */
-    public OlmecUI()
+    private String filename;
+
+    public OlmecUI(String filename) throws FileNotFoundException
     {
         colArr = new Color[]
         {
             Color.red, Color.blue, new Color(0, 153, 0), new Color(255, 102, 0), new Color(102, 0, 153), Color.orange
         };
         initComponents();
-        
+        this.filename = filename;
+        a = new Analyser(filename, this);
     }
 
     /**
@@ -42,10 +33,7 @@ public class OlmecUI extends javax.swing.JFrame
     {
 
         jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        txfAnalyse = new javax.swing.JTextField();
-        btnAnalyse = new javax.swing.JButton();
-        jLabel3 = new javax.swing.JLabel();
+        btnGraphResponseTimes = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         txaFeedback = new javax.swing.JTextArea();
         jLabel4 = new javax.swing.JLabel();
@@ -54,33 +42,22 @@ public class OlmecUI extends javax.swing.JFrame
         cbxP95 = new javax.swing.JCheckBox();
         cbxP99 = new javax.swing.JCheckBox();
         cbxMax = new javax.swing.JCheckBox();
+        jLabel5 = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
+        jLabel1.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText("OLMEC");
+        jLabel1.setText("OLMEC ANALYSER");
 
-        jLabel2.setText("File to Analyse");
-
-        txfAnalyse.setText("dad");
-        txfAnalyse.addActionListener(new java.awt.event.ActionListener()
+        btnGraphResponseTimes.setText("Graph");
+        btnGraphResponseTimes.addActionListener(new java.awt.event.ActionListener()
         {
             public void actionPerformed(java.awt.event.ActionEvent evt)
             {
-                txfAnalyseActionPerformed(evt);
+                btnGraphResponseTimesActionPerformed(evt);
             }
         });
-
-        btnAnalyse.setText("Analyse");
-        btnAnalyse.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
-                btnAnalyseActionPerformed(evt);
-            }
-        });
-
-        jLabel3.setText(".txt");
 
         txaFeedback.setEditable(false);
         txaFeedback.setColumns(20);
@@ -109,6 +86,8 @@ public class OlmecUI extends javax.swing.JFrame
         cbxMax.setSelected(true);
         cbxMax.setText("Max");
 
+        jLabel5.setText("RESPONSE TIMES");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -116,6 +95,8 @@ public class OlmecUI extends javax.swing.JFrame
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 376, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel4)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -128,20 +109,12 @@ public class OlmecUI extends javax.swing.JFrame
                         .addComponent(cbxP99)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(cbxMax)
-                        .addGap(0, 84, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnGraphResponseTimes, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane1)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel2)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txfAnalyse)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel3)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnAnalyse)))
-                        .addContainerGap())))
+                        .addComponent(jLabel5)
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -149,11 +122,7 @@ public class OlmecUI extends javax.swing.JFrame
                 .addContainerGap()
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(txfAnalyse, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnAnalyse)
-                    .addComponent(jLabel3))
+                .addComponent(jLabel5)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
@@ -161,132 +130,68 @@ public class OlmecUI extends javax.swing.JFrame
                     .addComponent(cbxMedian)
                     .addComponent(cbxP95)
                     .addComponent(cbxP99)
-                    .addComponent(cbxMax))
+                    .addComponent(cbxMax)
+                    .addComponent(btnGraphResponseTimes))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 208, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 268, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnAnalyseActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_btnAnalyseActionPerformed
-    {//GEN-HEADEREND:event_btnAnalyseActionPerformed
-        if(!txfAnalyse.getText().equals(""))
+    private void btnGraphResponseTimesActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_btnGraphResponseTimesActionPerformed
+    {//GEN-HEADEREND:event_btnGraphResponseTimesActionPerformed
+        String s = "";
+        if (cbxMin.isSelected())
         {
-            try
-            {
-                String s = "";
-                if(cbxMin.isSelected())
-                {
-                    s += "0,";
-                }
-                if(cbxMedian.isSelected())
-                {
-                    s += "1,";
-                }
-                if(cbxP95.isSelected())
-                {
-                    s += "2,";
-                }
-                if(cbxP99.isSelected())
-                {
-                    s += "3,";
-                }
-                if(cbxMax.isSelected())
-                {
-                    s += "4,";
-                }
-                if(s.equals(""))
-                {
-                    JOptionPane.showMessageDialog(null, "Select at least one aspect to graph!");
-                }
-                else
-                {
-                    s = s.substring(0, s.length()-1);
-                }
-                a = new Analyser(txfAnalyse.getText(), s, this);
-            }
-            catch(FileNotFoundException e)
-            {
-                JOptionPane.showMessageDialog(null, "There is no file with that name!");
-            }
+            s += "0,";
         }
-        else
+        if (cbxMedian.isSelected())
         {
-            JOptionPane.showMessageDialog(null, "Enter a valid filename!");
+            s += "1,";
         }
-    }//GEN-LAST:event_btnAnalyseActionPerformed
+        if (cbxP95.isSelected())
+        {
+            s += "2,";
+        }
+        if (cbxP99.isSelected())
+        {
+            s += "3,";
+        }
+        if (cbxMax.isSelected())
+        {
+            s += "4,";
+        }
+        if (s.equals(""))
+        {
+            JOptionPane.showMessageDialog(null, "Select at least one aspect to graph!");
+        } else
+        {
+            s = s.substring(0, s.length() - 1);
+        }
 
-    private void txfAnalyseActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_txfAnalyseActionPerformed
-    {//GEN-HEADEREND:event_txfAnalyseActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txfAnalyseActionPerformed
+        a.drawResponseTimeGraph(s);
+    }//GEN-LAST:event_btnGraphResponseTimesActionPerformed
 
     public void appendToFeedback(String text)
     {
         System.out.println(text);
         txaFeedback.setText(txaFeedback.getText() + "\n" + text);
     }
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[])
-    {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try
-        {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels())
-            {
-                if ("Nimbus".equals(info.getName()))
-                {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex)
-        {
-            java.util.logging.Logger.getLogger(OlmecUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex)
-        {
-            java.util.logging.Logger.getLogger(OlmecUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex)
-        {
-            java.util.logging.Logger.getLogger(OlmecUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex)
-        {
-            java.util.logging.Logger.getLogger(OlmecUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable()
-        {
-            public void run()
-            {
-                new OlmecUI().setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnAnalyse;
+    private javax.swing.JButton btnGraphResponseTimes;
     private javax.swing.JCheckBox cbxMax;
     private javax.swing.JCheckBox cbxMedian;
     private javax.swing.JCheckBox cbxMin;
     private javax.swing.JCheckBox cbxP95;
     private javax.swing.JCheckBox cbxP99;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextArea txaFeedback;
-    private javax.swing.JTextField txfAnalyse;
     // End of variables declaration//GEN-END:variables
 }

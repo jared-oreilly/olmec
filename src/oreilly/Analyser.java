@@ -24,7 +24,7 @@ public class Analyser
     private int numReports;
     private int numPhases;
     private OlmecUI parent;
-    //private String toDisplay;
+    private String toDisplay;
     private boolean[] display;
     private Color[] colArr;
     private Color[] colArro;
@@ -33,35 +33,22 @@ public class Analyser
     private final int x = 200, y = 200;
     private int min, max;
 
-    public Analyser(String filename, String toDisplay, OlmecUI g) throws FileNotFoundException
+    public Analyser(String filename, OlmecUI g) throws FileNotFoundException
     {
         reports = new ArrayList<Report>();
         phases = new ArrayList<Phase>();
         numReports = 0;
         numPhases = 0;
         parent = g;
-        //make boolean array to check if display or not
-        display = new boolean[numDisplayOptions];
-        for (int i = 0; i < numDisplayOptions; i++)
-        {
-            display[i] = false;
-            if (toDisplay.contains(i + ""))
-            {
-                display[i] = true;
-            }
-        }
+        
         colArr = new Color[]
         {
             Color.red, Color.blue, new Color(0, 153, 0), new Color(255, 102, 0), new Color(102, 0, 153), Color.orange
         };
         colArro = new Color[]
         {
-            new Color(255, 0, 0, 127), new Color(0, 0, 255, 127), new Color(0, 153, 0, 127), new Color(255, 102, 0, 127), new Color(102, 0, 153, 127), Color.orange
+            new Color(255, 0, 0, 50), new Color(0, 0, 255, 50), new Color(0, 153, 0, 50), new Color(255, 102, 0, 50), new Color(102, 0, 153, 50), Color.orange
         };
-//        displayDescArr = new String[]
-//        {
-//            "Min", "Median", "P95", "P99", "Max"
-//        };
 
         //put file into arraylist
         Scanner scFile = new Scanner(new File("../../mayan/Mayan/gen/runs/" + filename + ".txt"));
@@ -72,12 +59,8 @@ public class Analyser
         }
         scFile.close();
 
-        //print out arraylist
-//            for (int i = 0; i < compArr.size(); i++)
-//            {
-//                System.out.println(compArr.get(i));
-//            }
-        parent.appendToFeedback("Starting report capture:");
+        parent.appendToFeedback("Starting report and phase capture:");
+
         //extract report info
         for (int i = 0; i < compArr.size(); i++)
         {
@@ -86,46 +69,45 @@ public class Analyser
                 if (compArr.get(i).substring(0, 6).equals("Report"))
                 {
                     String h = compArr.get(i).trim();
-                    //System.out.println("---" + h);
                     i++;
+
                     String sl = compArr.get(i).trim();
                     sl = sl.substring(21);
-                    //System.out.println("---" + sl);
                     i++;
+
                     String sc = compArr.get(i).trim();
                     sc = sc.substring(21);
-                    //System.out.println("---" + sc);
                     i++;
+
                     String rc = compArr.get(i).trim();
                     rc = rc.substring(21);
-                    //System.out.println("---" + rc);
                     i++;
+
                     String rps = compArr.get(i).trim();
-                    //System.out.println(rps.indexOf(":")+2);
                     rps = rps.substring(10);
-                    //System.out.println("---" + rps);
                     i++;
                     i++;
+
                     String min = compArr.get(i).trim();
                     min = min.substring(5);
-                    //System.out.println("---" + min);
                     i++;
+
                     String max = compArr.get(i).trim();
                     max = max.substring(5);
-                    //.out.println("---" + max);
                     i++;
+
                     String med = compArr.get(i).trim();
                     med = med.substring(8);
-                    //System.out.println("---" + med);
                     i++;
+
                     String p95 = compArr.get(i).trim();
                     p95 = p95.substring(5);
-                    //System.out.println("---" + p95);
                     i++;
+
                     String p99 = compArr.get(i).trim();
                     p99 = p99.substring(5);
-                    //System.out.println("---" + p99);
                     i++;
+
                     String codes = "";
                     i++;
                     String nextLine = compArr.get(i).trim();
@@ -136,54 +118,51 @@ public class Analyser
                         nextLine = compArr.get(i).trim();
                     }
                     codes = codes.substring(0, codes.length() - 1);
-                    //System.out.println(codes);
+
                     Report temp = new Report(h, Integer.parseInt(sl), Integer.parseInt(sc), Integer.parseInt(rc), Double.parseDouble(rps), Double.parseDouble(min), Double.parseDouble(max), Double.parseDouble(med), Double.parseDouble(p95), Double.parseDouble(p99), codes);
                     reports.add(temp);
                     numReports++;
-                    //System.out.println(temp);
 
                 } else if (compArr.get(i).substring(0, 14).equals("Summary report"))
                 {
                     String h = compArr.get(i).trim();
-                    //System.out.println("---" + h);
                     i++;
+
                     String sl = compArr.get(i).trim();
                     sl = sl.substring(21);
-                    //System.out.println("---" + sl);
                     i++;
+
                     String sc = compArr.get(i).trim();
                     sc = sc.substring(21);
-                    //System.out.println("---" + sc);
                     i++;
+
                     String rc = compArr.get(i).trim();
                     rc = rc.substring(21);
-                    //System.out.println("---" + rc);
                     i++;
+
                     String rps = compArr.get(i).trim();
-                    //System.out.println(rps.indexOf(":")+2);
                     rps = rps.substring(10);
-                    //System.out.println("---" + rps);
                     i++;
                     i++;
+
                     String min = compArr.get(i).trim();
                     min = min.substring(5);
-                    //System.out.println("---" + min);
                     i++;
+
                     String max = compArr.get(i).trim();
                     max = max.substring(5);
-                    //.out.println("---" + max);
                     i++;
+
                     String med = compArr.get(i).trim();
                     med = med.substring(8);
-                    //System.out.println("---" + med);
                     i++;
+
                     String p95 = compArr.get(i).trim();
                     p95 = p95.substring(5);
-                    //System.out.println("---" + p95);
                     i++;
+
                     String p99 = compArr.get(i).trim();
                     p99 = p99.substring(5);
-                    //System.out.println("---" + p99);
                     i++;
 
                     String scenarioCounts = "";
@@ -208,11 +187,10 @@ public class Analyser
                     }
                     codes = codes.substring(0, codes.length() - 1);
 
-                    //System.out.println(codes);
                     Report temp = new Report(h, Integer.parseInt(sl), Integer.parseInt(sc), Integer.parseInt(rc), Double.parseDouble(rps), Double.parseDouble(min), Double.parseDouble(max), Double.parseDouble(med), Double.parseDouble(p95), Double.parseDouble(p99), scenarioCounts, codes);
                     reports.add(temp);
                     numReports++;
-                    //System.out.println(temp);
+                    
                 } else if (compArr.get(i).substring(0, 7).equals("Started"))
                 {
                     String s = compArr.get(i);
@@ -230,19 +208,27 @@ public class Analyser
             }
         }
 
-        parent.appendToFeedback("Reports captured!");
+        parent.appendToFeedback("Reports and phases captured!");
 
-        //reports arraylist now filled
-//        for (int i = 0; i < reports.size(); i++)
-//        {
-//            System.out.println(reports.get(i));
-//        }
-        drawGraph();
+        
 
     }
+    
 
-    public void drawGraph()
+    public void drawResponseTimeGraph(String s)
     {
+        //decide what to display
+        toDisplay = s;
+        display = new boolean[numDisplayOptions];
+        for (int i = 0; i < numDisplayOptions; i++)
+        {
+            display[i] = false;
+            if (toDisplay.contains(i + ""))
+            {
+                display[i] = true;
+            }
+        }
+        
         parent.appendToFeedback("Initializing graph and grid:");
         //create frame with settings
         JFrame frame = new JFrame("Graph");
@@ -289,7 +275,7 @@ public class Analyser
 
         drawPhaseLines(lblArr);
 
-        drawGraph(lblArr);
+        drawResponseTimeGraph(lblArr);
 
         parent.appendToFeedback("Rendering graph (please be patient):");
         //show frame
@@ -340,7 +326,7 @@ public class Analyser
 
     }
 
-    public void drawGraph(JLabel lblArr[][])
+    public void drawResponseTimeGraph(JLabel lblArr[][])
     {
         parent.appendToFeedback("Starting to draw graph:");
 

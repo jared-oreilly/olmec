@@ -13,6 +13,6 @@ public class Main
 {
     public static void main(String[] args)
     {
-        new OlmecUI().setVisible(true);
+        new StartUI().setVisible(true);
     }
 }
