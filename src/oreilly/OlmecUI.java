@@ -43,6 +43,12 @@ public class OlmecUI extends javax.swing.JFrame
         cbxP99 = new javax.swing.JCheckBox();
         cbxMax = new javax.swing.JCheckBox();
         jLabel5 = new javax.swing.JLabel();
+        btnGraphScenReq = new javax.swing.JButton();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        cbxSL = new javax.swing.JCheckBox();
+        cbxSC = new javax.swing.JCheckBox();
+        cbxRC = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -88,6 +94,28 @@ public class OlmecUI extends javax.swing.JFrame
 
         jLabel5.setText("RESPONSE TIMES");
 
+        btnGraphScenReq.setText("Graph");
+        btnGraphScenReq.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
+                btnGraphScenReqActionPerformed(evt);
+            }
+        });
+
+        jLabel6.setText("SCENARIOS AND REQUESTS");
+
+        jLabel7.setText("What to Graph");
+
+        cbxSL.setSelected(true);
+        cbxSL.setText("S Launched");
+
+        cbxSC.setSelected(true);
+        cbxSC.setText("S Completed");
+
+        cbxRC.setSelected(true);
+        cbxRC.setText("R Completed");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -95,25 +123,37 @@ public class OlmecUI extends javax.swing.JFrame
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 376, Short.MAX_VALUE)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jScrollPane1)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel4)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cbxMin)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cbxMedian)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cbxP95)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cbxP99)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cbxMax)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnGraphResponseTimes, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel4)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(cbxMin)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(cbxMedian)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(cbxP95)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(cbxP99)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(cbxMax))
+                            .addComponent(jLabel5)
+                            .addComponent(jLabel6))
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel5)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addComponent(jLabel7)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cbxSL)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cbxSC)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cbxRC)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btnGraphResponseTimes, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnGraphScenReq, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -132,6 +172,15 @@ public class OlmecUI extends javax.swing.JFrame
                     .addComponent(cbxP99)
                     .addComponent(cbxMax)
                     .addComponent(btnGraphResponseTimes))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel6)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel7)
+                    .addComponent(btnGraphScenReq)
+                    .addComponent(cbxSL)
+                    .addComponent(cbxSC)
+                    .addComponent(cbxRC))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 268, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -172,8 +221,34 @@ public class OlmecUI extends javax.swing.JFrame
             s = s.substring(0, s.length() - 1);
         }
 
-        a.drawResponseTimeGraph(s);
+        a.drawGraph1(s);
     }//GEN-LAST:event_btnGraphResponseTimesActionPerformed
+
+    private void btnGraphScenReqActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_btnGraphScenReqActionPerformed
+    {//GEN-HEADEREND:event_btnGraphScenReqActionPerformed
+        String s = "";
+        if (cbxSL.isSelected())
+        {
+            s += "0,";
+        }
+        if (cbxSC.isSelected())
+        {
+            s += "1,";
+        }
+        if (cbxRC.isSelected())
+        {
+            s += "2,";
+        }
+        if (s.equals(""))
+        {
+            JOptionPane.showMessageDialog(null, "Select at least one aspect to graph!");
+        } else
+        {
+            s = s.substring(0, s.length() - 1);
+        }
+
+        a.drawGraph2(s);
+    }//GEN-LAST:event_btnGraphScenReqActionPerformed
 
     public void appendToFeedback(String text)
     {
@@ -183,14 +258,20 @@ public class OlmecUI extends javax.swing.JFrame
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnGraphResponseTimes;
+    private javax.swing.JButton btnGraphScenReq;
     private javax.swing.JCheckBox cbxMax;
     private javax.swing.JCheckBox cbxMedian;
     private javax.swing.JCheckBox cbxMin;
     private javax.swing.JCheckBox cbxP95;
     private javax.swing.JCheckBox cbxP99;
+    private javax.swing.JCheckBox cbxRC;
+    private javax.swing.JCheckBox cbxSC;
+    private javax.swing.JCheckBox cbxSL;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextArea txaFeedback;
     // End of variables declaration//GEN-END:variables

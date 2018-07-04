@@ -24,6 +24,7 @@ public class Report
 
     public Report(String header, int scenariosLaunched, int scenariosCompleted, int requestsCompleted, double rpsSent, double min, double max, double median, double p95, double p99, String scenarioCounts, String codes)
     {
+        //summary
         this.summary = true;
         this.header = header;
         this.scenariosLaunched = scenariosLaunched;
@@ -53,6 +54,7 @@ public class Report
 
     public Report(String header, int scenariosLaunched, int scenariosCompleted, int requestsCompleted, double rpsSent, double min, double max, double median, double p95, double p99, String codes)
     {
+        //normal
         this.summary = false;
         this.header = header;
         this.scenariosLaunched = scenariosLaunched;
