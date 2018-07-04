@@ -55,7 +55,7 @@ public class Analyser
         parent = g;
 
         //put file into arraylist
-        Scanner scFile = new Scanner(new File("../../mayan/Mayan/gen/runs/" + filename + ".txt"));
+        Scanner scFile = new Scanner(new File("../../mayan/Mayan/gen/runs/" + filename + "/" + filename + ".txt"));
         ArrayList<String> compArr = new ArrayList<String>();
         while (scFile.hasNextLine())
         {
