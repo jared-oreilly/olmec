@@ -6,6 +6,8 @@
 package oreilly;
 
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.*;
 import java.util.*;
 import javax.swing.*;
@@ -28,7 +30,7 @@ public class Analyser
     private Color[] colArro;
     //private String[] displayDescArr;
     private final int numDisplayOptions = 5;
-    private int x = 200, y = 200;
+    private final int x = 200, y = 200;
     private int min, max;
 
     public Analyser(String filename, String toDisplay, OlmecUI g) throws FileNotFoundException
@@ -218,7 +220,7 @@ public class Analyser
                     int d = Integer.parseInt(s.substring(s.indexOf(":") + 2, s.indexOf("s @")));
                     String td = s.substring(s.indexOf("@") + 2);
                     Phase temp = new Phase(pn, d, td);
-                    //System.out.println(temp);
+                    System.out.println(temp);
                     phases.add(temp);
                     numPhases++;
                 }
@@ -316,10 +318,24 @@ public class Analyser
             //System.out.println("=> " + blah);
             for (int j = 0; j < x; j++)
             {
-                lblArr[j][blah].setText("^");
-                lblArr[j][blah].setForeground(Color.gray);
+                //System.out.println(j + " " + blah);
+                lblArr[j][blah].setOpaque(true);
+                lblArr[j][blah].setBackground(Color.lightGray);
+                //lblArr[j][blah].setText("^");
+                //lblArr[j][blah].setForeground(Color.gray);
             }
             last += cur.getDuration();
+        }
+        //System.out.println("--" + last + " / " + totalTime);
+        int blah = num * last;
+        //System.out.println("=> " + blah);
+        for (int j = 0; j < x; j++)
+        {
+            //System.out.println(j + " " + blah);
+            lblArr[j][blah].setOpaque(true);
+            lblArr[j][blah].setBackground(Color.lightGray);
+            //lblArr[j][blah].setText("^");
+            //lblArr[j][blah].setForeground(Color.gray);
         }
 
     }
@@ -337,6 +353,15 @@ public class Analyser
                 //System.out.println("(" + cur.getMin() + ", 1) -> (" + transX(cur.getMin()) + "," + transY(1) + ")");
                 lblArr[transX(cur.getMin())][transY(1)].setOpaque(true);
                 lblArr[transX(cur.getMin())][transY(1)].setBackground(colArr[0]);
+                lblArr[transX(cur.getMin())][transY(1)].addMouseListener(new MouseAdapter()
+                {
+                    @Override
+                    public void mouseClicked(MouseEvent e)
+                    {
+                        System.out.println("Yay you clicked me");
+                    }
+
+                });
                 //lblArr[transX(cur.getMin())][0].setText("^");
                 //lblArr[transX(cur.getMin())][0].setForeground(colArr[0]);
             } catch (ArrayIndexOutOfBoundsException e)
@@ -356,6 +381,7 @@ public class Analyser
         }
         if (display[2])
         {
+            //System.out.println(transX(cur.getP95()) + " " + transY(1));
             lblArr[transX(cur.getP95())][transY(1)].setOpaque(true);
             lblArr[transX(cur.getP95())][transY(1)].setBackground(colArr[2]);
             //lblArr[transX(cur.getP95()][0].setText("^");
@@ -482,12 +508,24 @@ public class Analyser
     public int transX(double in)
     {
         //old = return x - (((int) in) - min);
-
+        //System.out.println("--" + in);
         //in is the ms
         //to get it to right level, in - min
         //then, calc percentage of (max-min), so (in-min)/(max-min)
         //then, times that into x, so ((in-min)/(max-min))*x
-        return x - ((int) (((Math.round(in) - min) / (double) (max - min)) * x));
+        int r = x - ((int) (((Math.round(in) - min) / (double) (max - min)) * x));
+        if(r < 0)
+        {
+            return 0;
+        }
+        else if(r >= x)
+        {
+            return x-1;
+        }
+        else
+        {
+            return r;
+        }
 
     }
 
@@ -528,26 +566,26 @@ public class Analyser
 
         int old2 = (int) ((y / (numReports - 1)) + (double) y / (numReports - 1) * (i - 1));
         int new2 = (int) ((y / (numReports - 1)) + (double) y / (numReports - 1) * i);
-        System.out.println("(" + old1 + "," + old2 + ") to (" + new1 + "," + new2 + ")");
+        //System.out.println("(" + old1 + "," + old2 + ") to (" + new1 + "," + new2 + ")");
 
         int dist1 = (new1 - old1);
         int dist2 = new2 - old2;
-        System.out.println("d1: " + dist1 + " d2: " + dist2);
+        //System.out.println("d1: " + dist1 + " d2: " + dist2);
         for (int j = 1; j < dist2; j++)
         {
-            System.out.println((old1 + (dist1 / dist2) * (j)) + " " + (old2 + j));
+            //System.out.println((old1 + (dist1 / dist2) * (j)) + " " + (old2 + j));
             try
             {
-                lblArr[(int) Math.round(old1 + ((double)dist1 / dist2) * (j))][old2 + j].setOpaque(true);
-                lblArr[(int) Math.round(old1 + ((double)dist1 / dist2) * (j))][old2 + j].setBackground(colArro[caseOf]);
+                lblArr[(int) Math.round(old1 + ((double) dist1 / dist2) * (j))][old2 + j].setOpaque(true);
+                lblArr[(int) Math.round(old1 + ((double) dist1 / dist2) * (j))][old2 + j].setBackground(colArro[caseOf]);
                 //lblArr[old1 + (dist1 / dist2) * (j)][old2 + j].setText("^");
                 //lblArr[old1 + (dist1 / dist2) * (j)][old2 + j].setForeground(colArr[caseOf]);
                 //lblArr[old1 + (dist1 / dist2) * (j)][old2 + j].setVerticalAlignment(SwingConstants.TOP);
 
             } catch (ArrayIndexOutOfBoundsException e)
             {
-                lblArr[old1 + (dist1 / dist2) * (j) - 1][old2 + j].setOpaque(true);
-                lblArr[old1 + (dist1 / dist2) * (j) - 1][old2 + j].setBackground(colArro[caseOf]);
+                lblArr[(int) Math.round(old1 + ((double) dist1 / dist2) * (j) - 1)][old2 + j].setOpaque(true);
+                lblArr[(int) Math.round(old1 + ((double) dist1 / dist2) * (j) - 1)][old2 + j].setBackground(colArro[caseOf]);
                 //lblArr[old1 + (dist1 / dist2) * (j) - 1][old2 + j].setText("^");
                 //lblArr[old1 + (dist1 / dist2) * (j) - 1][old2 + j].setForeground(colArr[caseOf]);
                 //lblArr[old1 + (dist1 / dist2) * (j) - 1][old2 + j].setVerticalAlignment(SwingConstants.TOP);
@@ -577,7 +615,6 @@ public class Analyser
                         min = reports.get(i).getMin();
                     }
                 }
-                System.out.print("-" + min + " + ");
                 break;
             case 1:
                 min = reports.get(0).getMedian();
@@ -588,7 +625,6 @@ public class Analyser
                         min = reports.get(i).getMedian();
                     }
                 }
-                System.out.print("-" + min + " + ");
                 break;
             case 2:
                 min = reports.get(0).getP95();
@@ -599,7 +635,6 @@ public class Analyser
                         min = reports.get(i).getP95();
                     }
                 }
-                System.out.print("-" + min + " + ");
                 break;
             case 3:
                 min = reports.get(0).getP99();
@@ -610,7 +645,6 @@ public class Analyser
                         min = reports.get(i).getP99();
                     }
                 }
-                System.out.print("-" + min + " + ");
                 break;
             case 4:
                 min = reports.get(0).getMax();
@@ -621,7 +655,6 @@ public class Analyser
                         min = reports.get(i).getMax();
                     }
                 }
-                System.out.print("-" + min + " + ");
                 break;
             default:
                 min = reports.get(0).getMin();
@@ -632,9 +665,9 @@ public class Analyser
                         min = reports.get(i).getMin();
                     }
                 }
-                System.out.print("-" + min + " + ");
 
         }
+        System.out.print("-" + min + " + ");
         return min;
 
     }
@@ -661,7 +694,6 @@ public class Analyser
                         max = reports.get(i).getMax();
                     }
                 }
-                System.out.print(max + " = ");
                 break;
             case 3:
                 max = reports.get(0).getP99();
@@ -673,7 +705,6 @@ public class Analyser
                         max = reports.get(i).getP99();
                     }
                 }
-                System.out.print(max + " = ");
                 break;
             case 2:
                 max = reports.get(0).getP95();
@@ -685,7 +716,6 @@ public class Analyser
                         max = reports.get(i).getP95();
                     }
                 }
-                System.out.print(max + " = ");
                 break;
             case 1:
                 max = reports.get(0).getMedian();
@@ -697,7 +727,6 @@ public class Analyser
                         max = reports.get(i).getMedian();
                     }
                 }
-                System.out.print(max + " = ");
                 break;
             case 0:
                 max = reports.get(0).getMin();
@@ -709,7 +738,6 @@ public class Analyser
                         max = reports.get(i).getMin();
                     }
                 }
-                System.out.print(max + " = ");
                 break;
             default:
                 max = reports.get(0).getMax();
@@ -721,8 +749,8 @@ public class Analyser
                         max = reports.get(i).getMax();
                     }
                 }
-                System.out.print(max + " = ");
         }
+        System.out.print(max + " = ");
         return max;
     }
 
