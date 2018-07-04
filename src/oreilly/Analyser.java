@@ -25,8 +25,11 @@ public class Analyser
     //private String toDisplay;
     private boolean[] display;
     private Color[] colArr;
+    private Color[] colArro;
     //private String[] displayDescArr;
     private final int numDisplayOptions = 5;
+    private int x = 200, y = 200;
+    private int min, max;
 
     public Analyser(String filename, String toDisplay, OlmecUI g) throws FileNotFoundException
     {
@@ -48,6 +51,10 @@ public class Analyser
         colArr = new Color[]
         {
             Color.red, Color.blue, new Color(0, 153, 0), new Color(255, 102, 0), new Color(102, 0, 153), Color.orange
+        };
+        colArro = new Color[]
+        {
+            new Color(255, 0, 0, 127), new Color(0, 0, 255, 127), new Color(0, 153, 0, 127), new Color(255, 102, 0, 127), new Color(102, 0, 153, 127), Color.orange
         };
 //        displayDescArr = new String[]
 //        {
@@ -208,8 +215,8 @@ public class Analyser
                 {
                     String s = compArr.get(i);
                     int pn = Integer.parseInt(s.substring(14, s.indexOf(",")));
-                    int d = Integer.parseInt(s.substring(s.indexOf(":")+2, s.indexOf("s @")));
-                    String td = s.substring(s.indexOf("@")+2);
+                    int d = Integer.parseInt(s.substring(s.indexOf(":") + 2, s.indexOf("s @")));
+                    String td = s.substring(s.indexOf("@") + 2);
                     Phase temp = new Phase(pn, d, td);
                     //System.out.println(temp);
                     phases.add(temp);
@@ -241,7 +248,8 @@ public class Analyser
         frame.setSize(1300, 700);
 
         //add x and y axes
-        int min = (int) getMinFromReports(), max = (int) getMaxFromReports();
+        min = (int) getMinFromReports();
+        max = (int) getMaxFromReports();
         JLabel n2 = new JLabel("Time in ms");
         frame.add(n2, BorderLayout.WEST);
         JLabel n1 = new JLabel(min + "");
@@ -251,8 +259,8 @@ public class Analyser
 
         //create panel and gridlayout with it
         //int x = max - min, y = numReports - 1;
-        int x = max - min, y = 100;
-        System.out.println(x);
+        //int x = max - min, y = 200;
+        //x = max - min;
         JPanel panel = new JPanel();
         panel.setBackground(Color.white);
         panel.setSize(900, 700);
@@ -277,9 +285,9 @@ public class Analyser
 
         parent.appendToFeedback("Graph and grid initialized!");
 
-        drawPhaseLines(lblArr, x, y);
+        drawPhaseLines(lblArr);
 
-        drawGraph(lblArr, min, max, x, y);
+        drawGraph(lblArr);
 
         parent.appendToFeedback("Rendering graph (please be patient):");
         //show frame
@@ -290,24 +298,23 @@ public class Analyser
         //System.out.println("hi");
     }
 
-    
-    public void drawPhaseLines(JLabel lblArr[][], int x, int y)
+    public void drawPhaseLines(JLabel lblArr[][])
     {
         //int totalPhase = getTotalPhaseTime();
-        int totalTime = (numReports-1) * 10;
+        int totalTime = (numReports - 1) * 10;
         //System.out.println(totalPhase + " / " + totalTime);
         int num = y / totalTime; //scale unit / s
         //System.out.println("unit/s = " + num);
         //(y / (numReports - 1)) * i is 0, 10, 20, 30
-        
+
         int last = 0;
-        for(int i = 0; i < numPhases; i++)
+        for (int i = 0; i < numPhases; i++)
         {
             Phase cur = phases.get(i);
             //System.out.println("--" + last + " / " + totalTime);
             int blah = num * last;
             //System.out.println("=> " + blah);
-            for(int j = 0; j < x; j++)
+            for (int j = 0; j < x; j++)
             {
                 lblArr[j][blah].setText("^");
                 lblArr[j][blah].setForeground(Color.gray);
@@ -315,69 +322,70 @@ public class Analyser
             last += cur.getDuration();
         }
 
-
-
     }
 
-    public void drawGraph(JLabel lblArr[][], int min, int max, int x, int y)
+    public void drawGraph(JLabel lblArr[][])
     {
         parent.appendToFeedback("Starting to draw graph:");
 
+        Report cur = reports.get(0);
         //draw first point if need to display
         if (display[0])
         {
             try
             {
-                lblArr[x - (((int) reports.get(0).getMin()) - min)][(y / (numReports - 1))].setOpaque(true);
-                lblArr[x - (((int) reports.get(0).getMin()) - min)][(y / (numReports - 1))].setBackground(colArr[0]);
-                //lblArr[x - (((int) reports.get(0).getMin()) - min)][0].setText("^");
-                //lblArr[x - (((int) reports.get(0).getMin()) - min)][0].setForeground(colArr[0]);
+                //System.out.println("(" + cur.getMin() + ", 1) -> (" + transX(cur.getMin()) + "," + transY(1) + ")");
+                lblArr[transX(cur.getMin())][transY(1)].setOpaque(true);
+                lblArr[transX(cur.getMin())][transY(1)].setBackground(colArr[0]);
+                //lblArr[transX(cur.getMin())][0].setText("^");
+                //lblArr[transX(cur.getMin())][0].setForeground(colArr[0]);
             } catch (ArrayIndexOutOfBoundsException e)
             {
-                lblArr[x - (((int) reports.get(0).getMin()) - min) - 1][(y / (numReports - 1))].setOpaque(true);
-                lblArr[x - (((int) reports.get(0).getMin()) - min) - 1][(y / (numReports - 1))].setBackground(colArr[0]);
-                //lblArr[x - (((int) reports.get(0).getMin()) - min) - 1][0].setText("^");
-                //lblArr[x - (((int) reports.get(0).getMin()) - min) - 1][0].setForeground(colArr[0]);
+                lblArr[transX(cur.getMin()) - 1][transY(1)].setOpaque(true);
+                lblArr[transX(cur.getMin()) - 1][transY(1)].setBackground(colArr[0]);
+                //lblArr[transX(cur.getMin()) - 1][0].setText("^");
+                //lblArr[transX(cur.getMin()) - 1][0].setForeground(colArr[0]);
             }
         }
         if (display[1])
         {
-            lblArr[x - (((int) reports.get(0).getMedian()) - min)][(y / (numReports - 1))].setOpaque(true);
-            lblArr[x - (((int) reports.get(0).getMedian()) - min)][(y / (numReports - 1))].setBackground(colArr[1]);
-            //lblArr[x - (((int) reports.get(0).getMedian()) - min)][0].setText("^");
-            //lblArr[x - (((int) reports.get(0).getMedian()) - min)][0].setForeground(colArr[1]);
+            lblArr[transX(cur.getMedian())][transY(1)].setOpaque(true);
+            lblArr[transX(cur.getMedian())][transY(1)].setBackground(colArr[1]);
+            //lblArr[transX(cur.getMedian())][0].setText("^");
+            //lblArr[transX(cur.getMedian())][0].setForeground(colArr[1]);
         }
         if (display[2])
         {
-            lblArr[x - ((int) reports.get(0).getP95() - min)][(y / (numReports - 1))].setOpaque(true);
-            lblArr[x - ((int) reports.get(0).getP95() - min)][(y / (numReports - 1))].setBackground(colArr[2]);
-            //lblArr[x - ((int) reports.get(0).getP95() - min)][0].setText("^");
-            //lblArr[x - ((int) reports.get(0).getP95() - min)][0].setForeground(colArr[2]);
+            lblArr[transX(cur.getP95())][transY(1)].setOpaque(true);
+            lblArr[transX(cur.getP95())][transY(1)].setBackground(colArr[2]);
+            //lblArr[transX(cur.getP95()][0].setText("^");
+            //lblArr[transX(cur.getP95()][0].setForeground(colArr[2]);
         }
         if (display[3])
         {
-            lblArr[x - ((int) reports.get(0).getP99() - min)][(y / (numReports - 1))].setOpaque(true);
-            lblArr[x - ((int) reports.get(0).getP99() - min)][(y / (numReports - 1))].setBackground(colArr[3]);
-            //lblArr[x - ((int) reports.get(0).getP99() - min)][0].setText("^");
-            //lblArr[x - ((int) reports.get(0).getP99() - min)][0].setForeground(colArr[3]);
+            lblArr[transX(cur.getP99())][transY(1)].setOpaque(true);
+            lblArr[transX(cur.getP99())][transY(1)].setBackground(colArr[3]);
+            //lblArr[transX(cur.getP99()][0].setText("^");
+            //lblArr[transX(cur.getP99()][0].setForeground(colArr[3]);
         }
         if (display[4])
         {
-            lblArr[x - (((int) reports.get(0).getMax()) - min)][(y / (numReports - 1))].setOpaque(true);
-            lblArr[x - (((int) reports.get(0).getMax()) - min)][(y / (numReports - 1))].setBackground(colArr[4]);
-            //lblArr[x - (((int) reports.get(0).getMax()) - min)][0].setText("^");
-            //lblArr[x - (((int) reports.get(0).getMax()) - min)][0].setForeground(colArr[4]);
+            lblArr[transX(cur.getMax())][transY(1)].setOpaque(true);
+            lblArr[transX(cur.getMax())][transY(1)].setBackground(colArr[4]);
+            //lblArr[transX(cur.getMax())][0].setText("^");
+            //lblArr[transX(cur.getMax())][0].setForeground(colArr[4]);
         }
 
         //for each report, draw the lines if they should be drawn
         for (int i = 1; i < numReports - 2; i++)
         {
+            cur = reports.get(i);
             //draw a connecting line
             for (int j = 0; j < 5; j++)
             {
                 if (display[j])
                 {
-                    drawLine(lblArr, min, max, x, y, i, j);
+                    drawLine(lblArr, i, j);
                 }
             }
 
@@ -386,80 +394,83 @@ public class Analyser
             {
                 try
                 {
-                    lblArr[x - (((int) reports.get(i).getMin()) - min)][(y / (numReports - 1)) + (y / (numReports - 1)) * i].setOpaque(true);
-                    lblArr[x - (((int) reports.get(i).getMin()) - min)][(y / (numReports - 1)) + (y / (numReports - 1)) * i].setBackground(colArr[0]);
-                    //lblArr[x - (((int) reports.get(i).getMin()) - min)][(y / (numReports - 1)) * i].setText("^");
-                    //lblArr[x - (((int) reports.get(i).getMin()) - min)][(y / (numReports - 1)) * i].setForeground(colArr[0]);
+                    //System.out.println("MIN: (" + cur.getMin() + ", " + (i + 1) + ") -> (" + transX(cur.getMin()) + "," + transY(i + 1) + ")");
+                    lblArr[transX(cur.getMin())][transY(i + 1)].setOpaque(true);
+                    lblArr[transX(cur.getMin())][transY(i + 1)].setBackground(colArr[0]);
+                    //lblArr[x - (((int) cur.getMin()) - min)][(y / (numReports - 1)) * i].setText("^");
+                    //lblArr[x - (((int) cur.getMin()) - min)][(y / (numReports - 1)) * i].setForeground(colArr[0]);
                 } catch (ArrayIndexOutOfBoundsException e)
                 {
-                    lblArr[x - (((int) reports.get(i).getMin()) - min) - 1][(y / (numReports - 1)) + (y / (numReports - 1)) * i].setOpaque(true);
-                    lblArr[x - (((int) reports.get(i).getMin()) - min) - 1][(y / (numReports - 1)) + (y / (numReports - 1)) * i].setBackground(colArr[0]);
-                    //lblArr[x - (((int) reports.get(i).getMin()) - min) - 1][(y / (numReports - 1)) * i].setText("^");
-                    //lblArr[x - (((int) reports.get(i).getMin()) - min) - 1][(y / (numReports - 1)) * i].setForeground(colArr[0]);
+                    lblArr[transX(cur.getMin()) - 1][transY(i + 1)].setOpaque(true);
+                    lblArr[transX(cur.getMin()) - 1][transY(i + 1)].setBackground(colArr[0]);
+                    //lblArr[x - (((int) cur.getMin()) - min) - 1][(y / (numReports - 1)) * i].setText("^");
+                    //lblArr[x - (((int) cur.getMin()) - min) - 1][(y / (numReports - 1)) * i].setForeground(colArr[0]);
                 }
             }
             if (display[1])
             {
                 try
                 {
-                    lblArr[x - (((int) reports.get(i).getMedian()) - min)][(y / (numReports - 1)) + (y / (numReports - 1)) * i].setOpaque(true);
-                    lblArr[x - (((int) reports.get(i).getMedian()) - min)][(y / (numReports - 1)) + (y / (numReports - 1)) * i].setBackground(colArr[1]);
-                    //lblArr[x - (((int) reports.get(i).getMedian()) - min)][(y / (numReports - 1)) * i].setText("^");
-                    //lblArr[x - (((int) reports.get(i).getMedian()) - min)][(y / (numReports - 1)) * i].setForeground(colArr[1]);
+                    //System.out.println("MEDIAN: (" + cur.getMedian() + ", " + (i + 1) + ") -> (" + transX(cur.getMedian()) + "," + transY(i + 1) + ")");
+                    lblArr[transX(cur.getMedian())][transY(i + 1)].setOpaque(true);
+                    lblArr[transX(cur.getMedian())][transY(i + 1)].setBackground(colArr[1]);
+                    //lblArr[x - (((int) cur.getMedian()) - min)][(y / (numReports - 1)) * i].setText("^");
+                    //lblArr[x - (((int) cur.getMedian()) - min)][(y / (numReports - 1)) * i].setForeground(colArr[1]);
                 } catch (ArrayIndexOutOfBoundsException e)
                 {
-                    lblArr[x - (((int) reports.get(i).getMedian()) - min) - 1][(y / (numReports - 1)) + (y / (numReports - 1)) * i].setOpaque(true);
-                    lblArr[x - (((int) reports.get(i).getMedian()) - min) - 1][(y / (numReports - 1)) + (y / (numReports - 1)) * i].setBackground(colArr[1]);
-                    //lblArr[x - (((int) reports.get(i).getMedian()) - min) - 1][(y / (numReports - 1)) * i].setText("^");
-                    //lblArr[x - (((int) reports.get(i).getMedian()) - min) - 1][(y / (numReports - 1)) * i].setForeground(colArr[1]);
+                    lblArr[transX(cur.getMedian()) - 1][transY(i + 1)].setOpaque(true);
+                    lblArr[transX(cur.getMedian()) - 1][transY(i + 1)].setBackground(colArr[1]);
+                    //lblArr[x - (((int) cur.getMedian()) - min) - 1][(y / (numReports - 1)) * i].setText("^");
+                    //lblArr[x - (((int) cur.getMedian()) - min) - 1][(y / (numReports - 1)) * i].setForeground(colArr[1]);
                 }
             }
             if (display[2])
             {
                 try
                 {
-                    lblArr[x - ((int) reports.get(i).getP95() - min)][(y / (numReports - 1)) + (y / (numReports - 1)) * i].setOpaque(true);
-                    lblArr[x - ((int) reports.get(i).getP95() - min)][(y / (numReports - 1)) + (y / (numReports - 1)) * i].setBackground(colArr[2]);
-                    //lblArr[x - ((int) reports.get(i).getP95() - min)][(y / (numReports - 1)) * i].setText("^");
-                    //lblArr[x - ((int) reports.get(i).getP95() - min)][(y / (numReports - 1)) * i].setForeground(colArr[2]);
+                    //System.out.println("P95: (" + cur.getP95() + ", " + (i + 1) + ") -> (" + transX(cur.getP95()) + "," + transY(i + 1) + ")");
+                    lblArr[transX(cur.getP95())][transY(i + 1)].setOpaque(true);
+                    lblArr[transX(cur.getP95())][transY(i + 1)].setBackground(colArr[2]);
+                    //lblArr[transX(cur.getP95() - min)][(y / (numReports - 1)) * i].setText("^");
+                    //lblArr[transX(cur.getP95() - min)][(y / (numReports - 1)) * i].setForeground(colArr[2]);
                 } catch (ArrayIndexOutOfBoundsException e)
                 {
-                    lblArr[x - ((int) reports.get(i).getP95() - min) - 1][(y / (numReports - 1)) + (y / (numReports - 1)) * i].setOpaque(true);
-                    lblArr[x - ((int) reports.get(i).getP95() - min) - 1][(y / (numReports - 1)) + (y / (numReports - 1)) * i].setBackground(colArr[2]);
-                    //lblArr[x - (((int) reports.get(i).getP95()) - min) - 1][(y / (numReports - 1)) * i].setText("^");
-                    //lblArr[x - (((int) reports.get(i).getP95()) - min) - 1][(y / (numReports - 1)) * i].setForeground(colArr[2]);
+                    lblArr[transX(cur.getP95()) - 1][transY(i + 1)].setOpaque(true);
+                    lblArr[transX(cur.getP95()) - 1][transY(i + 1)].setBackground(colArr[2]);
+                    //lblArr[x - (((int) cur.getP95()) - min) - 1][(y / (numReports - 1)) * i].setText("^");
+                    //lblArr[x - (((int) cur.getP95()) - min) - 1][(y / (numReports - 1)) * i].setForeground(colArr[2]);
                 }
             }
             if (display[3])
             {
                 try
                 {
-                    lblArr[x - ((int) reports.get(i).getP99() - min)][(y / (numReports - 1)) + (y / (numReports - 1)) * i].setOpaque(true);
-                    lblArr[x - ((int) reports.get(i).getP99() - min)][(y / (numReports - 1)) + (y / (numReports - 1)) * i].setBackground(colArr[3]);
-                    //lblArr[x - ((int) reports.get(i).getP99() - min)][(y / (numReports - 1)) * i].setText("^");
-                    //lblArr[x - ((int) reports.get(i).getP99() - min)][(y / (numReports - 1)) * i].setForeground(colArr[3]);
+                    lblArr[transX(cur.getP99())][transY(i + 1)].setOpaque(true);
+                    lblArr[transX(cur.getP99())][transY(i + 1)].setBackground(colArr[3]);
+                    //lblArr[transX(cur.getP99() - min)][(y / (numReports - 1)) * i].setText("^");
+                    //lblArr[transX(cur.getP99() - min)][(y / (numReports - 1)) * i].setForeground(colArr[3]);
                 } catch (ArrayIndexOutOfBoundsException e)
                 {
-                    lblArr[x - ((int) reports.get(i).getP99() - min) - 1][(y / (numReports - 1)) + (y / (numReports - 1)) * i].setOpaque(true);
-                    lblArr[x - ((int) reports.get(i).getP99() - min) - 1][(y / (numReports - 1)) + (y / (numReports - 1)) * i].setBackground(colArr[3]);
-                    //lblArr[x - (((int) reports.get(i).getP99()) - min) - 1][(y / (numReports - 1)) * i].setText("^");
-                    //lblArr[x - (((int) reports.get(i).getP99()) - min) - 1][(y / (numReports - 1)) * i].setForeground(colArr[3]);
+                    lblArr[transX(cur.getP99()) - 1][transY(i + 1)].setOpaque(true);
+                    lblArr[transX(cur.getP99()) - 1][transY(i + 1)].setBackground(colArr[3]);
+                    //lblArr[x - (((int) cur.getP99()) - min) - 1][(y / (numReports - 1)) * i].setText("^");
+                    //lblArr[x - (((int) cur.getP99()) - min) - 1][(y / (numReports - 1)) * i].setForeground(colArr[3]);
                 }
             }
             if (display[4])
             {
                 try
                 {
-                    lblArr[x - (((int) reports.get(i).getMax()) - min)][(y / (numReports - 1)) + (y / (numReports - 1)) * i].setOpaque(true);
-                    lblArr[x - (((int) reports.get(i).getMax()) - min)][(y / (numReports - 1)) + (y / (numReports - 1)) * i].setBackground(colArr[4]);
-                    //lblArr[x - (((int) reports.get(i).getMax()) - min)][(y / (numReports - 1)) * i].setText("^");
-                    //lblArr[x - (((int) reports.get(i).getMax()) - min)][(y / (numReports - 1)) * i].setForeground(colArr[4]);
+                    lblArr[transX(cur.getMax())][transY(i + 1)].setOpaque(true);
+                    lblArr[transX(cur.getMax())][transY(i + 1)].setBackground(colArr[4]);
+                    //lblArr[x - (((int) cur.getMax()) - min)][(y / (numReports - 1)) * i].setText("^");
+                    //lblArr[x - (((int) cur.getMax()) - min)][(y / (numReports - 1)) * i].setForeground(colArr[4]);
                 } catch (ArrayIndexOutOfBoundsException e)
                 {
-                    lblArr[x - (((int) reports.get(i).getMax()) - min) - 1][(y / (numReports - 1)) + (y / (numReports - 1)) * i].setOpaque(true);
-                    lblArr[x - (((int) reports.get(i).getMax()) - min) - 1][(y / (numReports - 1)) + (y / (numReports - 1)) * i].setBackground(colArr[4]);
-                    //lblArr[x - (((int) reports.get(i).getMax()) - min) - 1][(y / (numReports - 1)) * i].setText("^");
-                    //lblArr[x - (((int) reports.get(i).getMax()) - min) - 1][(y / (numReports - 1)) * i].setForeground(colArr[4]);
+                    lblArr[transX(cur.getMax()) - 1][transY(i + 1)].setOpaque(true);
+                    lblArr[transX(cur.getMax()) - 1][transY(i + 1)].setBackground(colArr[4]);
+                    //lblArr[x - (((int) cur.getMax()) - min) - 1][(y / (numReports - 1)) * i].setText("^");
+                    //lblArr[x - (((int) cur.getMax()) - min) - 1][(y / (numReports - 1)) * i].setForeground(colArr[4]);
                 }
             }
 
@@ -468,55 +479,78 @@ public class Analyser
         //lblArr[0][0].setText("^");
     }
 
-    public void drawLine(JLabel lblArr[][], int min, int max, int x, int y, int i, int caseOf)
+    public int transX(double in)
+    {
+        //old = return x - (((int) in) - min);
+
+        //in is the ms
+        //to get it to right level, in - min
+        //then, calc percentage of (max-min), so (in-min)/(max-min)
+        //then, times that into x, so ((in-min)/(max-min))*x
+        return x - ((int) (((Math.round(in) - min) / (double) (max - min)) * x));
+
+    }
+
+    public int transY(int i)
+    {
+        return (y / (numReports - 1)) * i;
+    }
+
+    public void drawLine(JLabel lblArr[][], int i, int caseOf)
     {
         int old1, new1;
         switch (caseOf)
         {
             case 0:
-                old1 = x - (((int) reports.get(i - 1).getMin()) - min);
-                new1 = x - (((int) Math.round(reports.get(i).getMin())) - min);
+                old1 = transX(reports.get(i - 1).getMin());
+                new1 = transX(Math.round(reports.get(i).getMin()));
                 break;
             case 1:
-                old1 = x - (((int) reports.get(i - 1).getMedian()) - min);
-                new1 = x - (((int) reports.get(i).getMedian()) - min);
+                old1 = transX(reports.get(i - 1).getMedian());
+                new1 = transX(reports.get(i).getMedian());
                 break;
             case 2:
-                old1 = x - ((int) reports.get(i - 1).getP95() - min);
-                new1 = x - ((int) reports.get(i).getP95() - min);
+                old1 = transX(reports.get(i - 1).getP95());
+                new1 = transX(reports.get(i).getP95());
                 break;
             case 3:
-                old1 = x - ((int) reports.get(i - 1).getP99() - min);
-                new1 = x - ((int) reports.get(i).getP99() - min);
+                old1 = transX(reports.get(i - 1).getP99());
+                new1 = transX(reports.get(i).getP99());
                 break;
             case 4:
-                old1 = x - (((int) reports.get(i - 1).getMax()) - min);
-                new1 = x - (((int) reports.get(i).getMax()) - min);
+                old1 = transX(reports.get(i - 1).getMax());
+                new1 = transX(reports.get(i).getMax());
                 break;
             default:
-                old1 = x - (((int) reports.get(i - 1).getMedian()) - min);
-                new1 = x - (((int) reports.get(i).getMedian()) - min);
+                old1 = transX(reports.get(i - 1).getMedian());
+                new1 = transX(reports.get(i).getMedian());
         }
 
         int old2 = (int) ((y / (numReports - 1)) + (double) y / (numReports - 1) * (i - 1));
         int new2 = (int) ((y / (numReports - 1)) + (double) y / (numReports - 1) * i);
-        //System.out.println("(" + old1 + "," + old2 + ") to (" + new1 + "," + new2 + ")");
+        System.out.println("(" + old1 + "," + old2 + ") to (" + new1 + "," + new2 + ")");
 
         int dist1 = (new1 - old1);
         int dist2 = new2 - old2;
-        //System.out.println("d1: " + dist1 + " d2: " + dist2);
-        for (int j = 0; j < dist2; j++)
+        System.out.println("d1: " + dist1 + " d2: " + dist2);
+        for (int j = 1; j < dist2; j++)
         {
-            //System.out.println((old1 + (dist1 / dist2) * (j)) + " " + (old2 + j));
+            System.out.println((old1 + (dist1 / dist2) * (j)) + " " + (old2 + j));
             try
             {
-                lblArr[old1 + (dist1 / dist2) * (j)][old2 + j].setText("^");
-                lblArr[old1 + (dist1 / dist2) * (j)][old2 + j].setForeground(colArr[caseOf]);
+                lblArr[(int) Math.round(old1 + ((double)dist1 / dist2) * (j))][old2 + j].setOpaque(true);
+                lblArr[(int) Math.round(old1 + ((double)dist1 / dist2) * (j))][old2 + j].setBackground(colArro[caseOf]);
+                //lblArr[old1 + (dist1 / dist2) * (j)][old2 + j].setText("^");
+                //lblArr[old1 + (dist1 / dist2) * (j)][old2 + j].setForeground(colArr[caseOf]);
+                //lblArr[old1 + (dist1 / dist2) * (j)][old2 + j].setVerticalAlignment(SwingConstants.TOP);
 
             } catch (ArrayIndexOutOfBoundsException e)
             {
-                lblArr[old1 + (dist1 / dist2) * (j) - 1][old2 + j].setText("^");
-                lblArr[old1 + (dist1 / dist2) * (j) - 1][old2 + j].setForeground(colArr[caseOf]);
+                lblArr[old1 + (dist1 / dist2) * (j) - 1][old2 + j].setOpaque(true);
+                lblArr[old1 + (dist1 / dist2) * (j) - 1][old2 + j].setBackground(colArro[caseOf]);
+                //lblArr[old1 + (dist1 / dist2) * (j) - 1][old2 + j].setText("^");
+                //lblArr[old1 + (dist1 / dist2) * (j) - 1][old2 + j].setForeground(colArr[caseOf]);
+                //lblArr[old1 + (dist1 / dist2) * (j) - 1][old2 + j].setVerticalAlignment(SwingConstants.TOP);
             }
         }
         //System.out.println("----------------------------");
@@ -691,11 +725,11 @@ public class Analyser
         }
         return max;
     }
-    
+
     public int getTotalPhaseTime()
     {
         int count = 0;
-        for(int i = 0; i < numPhases; i++)
+        for (int i = 0; i < numPhases; i++)
         {
             count += phases.get(i).getDuration();
         }
