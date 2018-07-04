@@ -253,6 +253,7 @@ public class Report
         for (int i = 0; i < codes.size(); i++)
         {
             String cur = codes.get(i);
+            System.out.println(cur);
             b += cur.substring(0, cur.indexOf(":") + 1) + "\t" + cur.substring(cur.indexOf(":") + 2) + "\n";
         }
         b += "\n";
