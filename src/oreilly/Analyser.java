@@ -124,6 +124,7 @@ public class Analyser
                     codes = codes.substring(0, codes.length() - 1);
 
                     Report temp = new Report(h, Integer.parseInt(sl), Integer.parseInt(sc), Integer.parseInt(rc), Double.parseDouble(rps), Double.parseDouble(min), Double.parseDouble(max), Double.parseDouble(med), Double.parseDouble(p95), Double.parseDouble(p99), codes);
+                    //System.out.println(temp);
                     reports.add(temp);
                     numReports++;
 
@@ -192,6 +193,7 @@ public class Analyser
                     codes = codes.substring(0, codes.length() - 1);
 
                     Report temp = new Report(h, Integer.parseInt(sl), Integer.parseInt(sc), Integer.parseInt(rc), Double.parseDouble(rps), Double.parseDouble(min), Double.parseDouble(max), Double.parseDouble(med), Double.parseDouble(p95), Double.parseDouble(p99), scenarioCounts, codes);
+                    //System.out.println(temp);
                     reports.add(temp);
                     numReports++;
 
@@ -239,8 +241,8 @@ public class Analyser
         //add x and y axes
         min = (int) getMinFromReports1();
         max = (int) getMaxFromReports1();
-        JLabel n2 = new JLabel("Time in ms");
-        frame.add(n2, BorderLayout.WEST);
+        //JLabel n2 = new JLabel("Time in ms");
+        //frame.add(n2, BorderLayout.WEST);
         JLabel n1 = new JLabel(min + "");
         frame.add(n1, BorderLayout.PAGE_END);
         JLabel n3 = new JLabel(max + "");
@@ -306,12 +308,14 @@ public class Analyser
             last += cur.getDuration();
         }
 
-        int blah = (last / totalTime) * y;
+        
+        int blah = (int) Math.round((last / (double) totalTime) * y);
         for (int j = 0; j < x; j++)
         {
             lblArr[j][blah].setOpaque(true);
             lblArr[j][blah].setBackground(Color.lightGray);
         }
+        
 
     }
 
@@ -366,7 +370,7 @@ public class Analyser
         }
 
         //for each report, draw the lines if they should be drawn
-        for (int i = 1; i < numReports - 2; i++)
+        for (int i = 1; i < numReports - 1; i++)
         {
             cur = reports.get(i);
             //draw a connecting line
@@ -447,7 +451,16 @@ public class Analyser
     public int transY1(int i)
     {
         //returns 10s intervals * i
-        return (y / (numReports - 1)) * i;
+        int r = (y / (numReports - 1)) * i;
+        if(r < 0)
+        {
+            r = 0;
+        }
+        else if(r >= y)
+        {
+            r = y-1;
+        }
+        return r;
     }
 
     public void drawLine1(JLabel lblArr[][], int i, int caseOf)
@@ -693,8 +706,8 @@ public class Analyser
         //add x and y axes
         min = (int) getMinFromReports2();
         max = (int) getMaxFromReports2();
-        JLabel n2 = new JLabel("Number of requests or scenarios");
-        frame.add(n2, BorderLayout.WEST);
+        //JLabel n2 = new JLabel("Number of requests or scenarios");
+        //frame.add(n2, BorderLayout.WEST);
         JLabel n1 = new JLabel(min + "");
         frame.add(n1, BorderLayout.PAGE_END);
         JLabel n3 = new JLabel(max + "");
@@ -760,12 +773,14 @@ public class Analyser
             last += cur.getDuration();
         }
 
-        int blah = (last / totalTime) * y;
+        
+        int blah = (int) Math.round((last / (double) totalTime) * y);
         for (int j = 0; j < x; j++)
         {
             lblArr[j][blah].setOpaque(true);
             lblArr[j][blah].setBackground(Color.lightGray);
         }
+        
 
     }
 
@@ -808,7 +823,7 @@ public class Analyser
         }
 
         //for each report, draw the lines if they should be drawn
-        for (int i = 1; i < numReports - 2; i++)
+        for (int i = 1; i < numReports - 1; i++)
         {
             cur = reports.get(i);
             //draw a connecting line
@@ -875,7 +890,16 @@ public class Analyser
     public int transY2(int i)
     {
         //returns 10s intervals * i
-        return (y / (numReports - 1)) * i;
+        int r = (y / (numReports - 1)) * i;
+        if(r < 0)
+        {
+            r = 0;
+        }
+        else if(r >= y)
+        {
+            r = y-1;
+        }
+        return r;
     }
 
     public void drawLine2(JLabel lblArr[][], int i, int caseOf)
@@ -1036,6 +1060,11 @@ public class Analyser
         }
         System.out.println(max + " = ");
         return max;
+    }
+    
+    public Report getSummaryReport()
+    {
+        return reports.get(numReports-1);
     }
 
 }

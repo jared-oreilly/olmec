@@ -17,6 +17,7 @@ public class OlmecUI extends javax.swing.JFrame
     {
         initComponents();
         this.filename = filename;
+        lblDesc.setText("The overall report for the entire Artillery run of " + filename + ".txt");
         a = new Analyser(filename, this);
     }
 
@@ -47,6 +48,9 @@ public class OlmecUI extends javax.swing.JFrame
         cbxSL = new javax.swing.JCheckBox();
         cbxSC = new javax.swing.JCheckBox();
         cbxRC = new javax.swing.JCheckBox();
+        btnShow = new javax.swing.JButton();
+        jLabel8 = new javax.swing.JLabel();
+        lblDesc = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -117,6 +121,19 @@ public class OlmecUI extends javax.swing.JFrame
         cbxRC.setSelected(true);
         cbxRC.setText("R Completed");
 
+        btnShow.setText("Show");
+        btnShow.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
+                btnShowActionPerformed(evt);
+            }
+        });
+
+        jLabel8.setText("SUMMARY REPORT");
+
+        lblDesc.setText("jLabel2");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -141,19 +158,24 @@ public class OlmecUI extends javax.swing.JFrame
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(cbxMax))
                             .addComponent(jLabel5)
-                            .addComponent(jLabel6))
+                            .addComponent(jLabel6)
+                            .addComponent(jLabel8))
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel7)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cbxSL)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cbxSC)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cbxRC)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel7)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(cbxSL)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(cbxSC)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(cbxRC))
+                            .addComponent(lblDesc))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btnGraphResponseTimes, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnShow, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnGraphResponseTimes, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 80, Short.MAX_VALUE)
                             .addComponent(btnGraphScenReq, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap())
         );
@@ -183,8 +205,14 @@ public class OlmecUI extends javax.swing.JFrame
                     .addComponent(cbxSC)
                     .addComponent(cbxRC))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 268, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jLabel8)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnShow)
+                    .addComponent(lblDesc))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 283, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         pack();
@@ -251,6 +279,11 @@ public class OlmecUI extends javax.swing.JFrame
         a.drawGraph2(s);
     }//GEN-LAST:event_btnGraphScenReqActionPerformed
 
+    private void btnShowActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_btnShowActionPerformed
+    {//GEN-HEADEREND:event_btnShowActionPerformed
+        new SummaryUI(a.getSummaryReport(), filename).setVisible(true);
+    }//GEN-LAST:event_btnShowActionPerformed
+
     public void appendToFeedback(String text)
     {
         System.out.println(text);
@@ -260,6 +293,7 @@ public class OlmecUI extends javax.swing.JFrame
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnGraphResponseTimes;
     private javax.swing.JButton btnGraphScenReq;
+    private javax.swing.JButton btnShow;
     private javax.swing.JCheckBox cbxMax;
     private javax.swing.JCheckBox cbxMedian;
     private javax.swing.JCheckBox cbxMin;
@@ -273,7 +307,9 @@ public class OlmecUI extends javax.swing.JFrame
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel lblDesc;
     private javax.swing.JTextArea txaFeedback;
     // End of variables declaration//GEN-END:variables
 }
