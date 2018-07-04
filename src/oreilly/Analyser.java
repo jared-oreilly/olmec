@@ -348,29 +348,17 @@ public class Analyser
         //draw first point if need to display
         if (display[0])
         {
-            try
+            //System.out.println("(" + cur.getMin() + ", 1) -> (" + transX(cur.getMin()) + "," + transY(1) + ")");
+            lblArr[transX(cur.getMin())][transY(1)].setOpaque(true);
+            lblArr[transX(cur.getMin())][transY(1)].setBackground(colArr[0]);
+            lblArr[transX(cur.getMin())][transY(1)].addMouseListener(new MouseAdapter()
             {
-                //System.out.println("(" + cur.getMin() + ", 1) -> (" + transX(cur.getMin()) + "," + transY(1) + ")");
-                lblArr[transX(cur.getMin())][transY(1)].setOpaque(true);
-                lblArr[transX(cur.getMin())][transY(1)].setBackground(colArr[0]);
-                lblArr[transX(cur.getMin())][transY(1)].addMouseListener(new MouseAdapter()
+                @Override
+                public void mouseClicked(MouseEvent e)
                 {
-                    @Override
-                    public void mouseClicked(MouseEvent e)
-                    {
-                        System.out.println("Yay you clicked me");
-                    }
-
-                });
-                //lblArr[transX(cur.getMin())][0].setText("^");
-                //lblArr[transX(cur.getMin())][0].setForeground(colArr[0]);
-            } catch (ArrayIndexOutOfBoundsException e)
-            {
-                lblArr[transX(cur.getMin()) - 1][transY(1)].setOpaque(true);
-                lblArr[transX(cur.getMin()) - 1][transY(1)].setBackground(colArr[0]);
-                //lblArr[transX(cur.getMin()) - 1][0].setText("^");
-                //lblArr[transX(cur.getMin()) - 1][0].setForeground(colArr[0]);
-            }
+                    System.out.println("Yay you clicked me");
+                }
+            });
         }
         if (display[1])
         {
@@ -418,86 +406,40 @@ public class Analyser
             //draw the next point
             if (display[0])
             {
-                try
-                {
-                    //System.out.println("MIN: (" + cur.getMin() + ", " + (i + 1) + ") -> (" + transX(cur.getMin()) + "," + transY(i + 1) + ")");
-                    lblArr[transX(cur.getMin())][transY(i + 1)].setOpaque(true);
-                    lblArr[transX(cur.getMin())][transY(i + 1)].setBackground(colArr[0]);
-                    //lblArr[x - (((int) cur.getMin()) - min)][(y / (numReports - 1)) * i].setText("^");
-                    //lblArr[x - (((int) cur.getMin()) - min)][(y / (numReports - 1)) * i].setForeground(colArr[0]);
-                } catch (ArrayIndexOutOfBoundsException e)
-                {
-                    lblArr[transX(cur.getMin()) - 1][transY(i + 1)].setOpaque(true);
-                    lblArr[transX(cur.getMin()) - 1][transY(i + 1)].setBackground(colArr[0]);
-                    //lblArr[x - (((int) cur.getMin()) - min) - 1][(y / (numReports - 1)) * i].setText("^");
-                    //lblArr[x - (((int) cur.getMin()) - min) - 1][(y / (numReports - 1)) * i].setForeground(colArr[0]);
-                }
+                lblArr[transX(cur.getMin())][transY(i + 1)].setOpaque(true);
+                lblArr[transX(cur.getMin())][transY(i + 1)].setBackground(colArr[0]);
+                //lblArr[x - (((int) cur.getMin()) - min)][(y / (numReports - 1)) * i].setText("^");
+                //lblArr[x - (((int) cur.getMin()) - min)][(y / (numReports - 1)) * i].setForeground(colArr[0]);
             }
             if (display[1])
             {
-                try
-                {
-                    //System.out.println("MEDIAN: (" + cur.getMedian() + ", " + (i + 1) + ") -> (" + transX(cur.getMedian()) + "," + transY(i + 1) + ")");
-                    lblArr[transX(cur.getMedian())][transY(i + 1)].setOpaque(true);
-                    lblArr[transX(cur.getMedian())][transY(i + 1)].setBackground(colArr[1]);
-                    //lblArr[x - (((int) cur.getMedian()) - min)][(y / (numReports - 1)) * i].setText("^");
-                    //lblArr[x - (((int) cur.getMedian()) - min)][(y / (numReports - 1)) * i].setForeground(colArr[1]);
-                } catch (ArrayIndexOutOfBoundsException e)
-                {
-                    lblArr[transX(cur.getMedian()) - 1][transY(i + 1)].setOpaque(true);
-                    lblArr[transX(cur.getMedian()) - 1][transY(i + 1)].setBackground(colArr[1]);
-                    //lblArr[x - (((int) cur.getMedian()) - min) - 1][(y / (numReports - 1)) * i].setText("^");
-                    //lblArr[x - (((int) cur.getMedian()) - min) - 1][(y / (numReports - 1)) * i].setForeground(colArr[1]);
-                }
+                //System.out.println("MEDIAN: (" + cur.getMedian() + ", " + (i + 1) + ") -> (" + transX(cur.getMedian()) + "," + transY(i + 1) + ")");
+                lblArr[transX(cur.getMedian())][transY(i + 1)].setOpaque(true);
+                lblArr[transX(cur.getMedian())][transY(i + 1)].setBackground(colArr[1]);
+                //lblArr[x - (((int) cur.getMedian()) - min)][(y / (numReports - 1)) * i].setText("^");
+                //lblArr[x - (((int) cur.getMedian()) - min)][(y / (numReports - 1)) * i].setForeground(colArr[1]);
             }
             if (display[2])
             {
-                try
-                {
-                    //System.out.println("P95: (" + cur.getP95() + ", " + (i + 1) + ") -> (" + transX(cur.getP95()) + "," + transY(i + 1) + ")");
-                    lblArr[transX(cur.getP95())][transY(i + 1)].setOpaque(true);
-                    lblArr[transX(cur.getP95())][transY(i + 1)].setBackground(colArr[2]);
-                    //lblArr[transX(cur.getP95() - min)][(y / (numReports - 1)) * i].setText("^");
-                    //lblArr[transX(cur.getP95() - min)][(y / (numReports - 1)) * i].setForeground(colArr[2]);
-                } catch (ArrayIndexOutOfBoundsException e)
-                {
-                    lblArr[transX(cur.getP95()) - 1][transY(i + 1)].setOpaque(true);
-                    lblArr[transX(cur.getP95()) - 1][transY(i + 1)].setBackground(colArr[2]);
-                    //lblArr[x - (((int) cur.getP95()) - min) - 1][(y / (numReports - 1)) * i].setText("^");
-                    //lblArr[x - (((int) cur.getP95()) - min) - 1][(y / (numReports - 1)) * i].setForeground(colArr[2]);
-                }
+                //System.out.println("P95: (" + cur.getP95() + ", " + (i + 1) + ") -> (" + transX(cur.getP95()) + "," + transY(i + 1) + ")");
+                lblArr[transX(cur.getP95())][transY(i + 1)].setOpaque(true);
+                lblArr[transX(cur.getP95())][transY(i + 1)].setBackground(colArr[2]);
+                //lblArr[transX(cur.getP95() - min)][(y / (numReports - 1)) * i].setText("^");
+                //lblArr[transX(cur.getP95() - min)][(y / (numReports - 1)) * i].setForeground(colArr[2]);
             }
             if (display[3])
             {
-                try
-                {
-                    lblArr[transX(cur.getP99())][transY(i + 1)].setOpaque(true);
-                    lblArr[transX(cur.getP99())][transY(i + 1)].setBackground(colArr[3]);
-                    //lblArr[transX(cur.getP99() - min)][(y / (numReports - 1)) * i].setText("^");
-                    //lblArr[transX(cur.getP99() - min)][(y / (numReports - 1)) * i].setForeground(colArr[3]);
-                } catch (ArrayIndexOutOfBoundsException e)
-                {
-                    lblArr[transX(cur.getP99()) - 1][transY(i + 1)].setOpaque(true);
-                    lblArr[transX(cur.getP99()) - 1][transY(i + 1)].setBackground(colArr[3]);
-                    //lblArr[x - (((int) cur.getP99()) - min) - 1][(y / (numReports - 1)) * i].setText("^");
-                    //lblArr[x - (((int) cur.getP99()) - min) - 1][(y / (numReports - 1)) * i].setForeground(colArr[3]);
-                }
+                lblArr[transX(cur.getP99())][transY(i + 1)].setOpaque(true);
+                lblArr[transX(cur.getP99())][transY(i + 1)].setBackground(colArr[3]);
+                //lblArr[transX(cur.getP99() - min)][(y / (numReports - 1)) * i].setText("^");
+                //lblArr[transX(cur.getP99() - min)][(y / (numReports - 1)) * i].setForeground(colArr[3]);
             }
             if (display[4])
             {
-                try
-                {
-                    lblArr[transX(cur.getMax())][transY(i + 1)].setOpaque(true);
-                    lblArr[transX(cur.getMax())][transY(i + 1)].setBackground(colArr[4]);
-                    //lblArr[x - (((int) cur.getMax()) - min)][(y / (numReports - 1)) * i].setText("^");
-                    //lblArr[x - (((int) cur.getMax()) - min)][(y / (numReports - 1)) * i].setForeground(colArr[4]);
-                } catch (ArrayIndexOutOfBoundsException e)
-                {
-                    lblArr[transX(cur.getMax()) - 1][transY(i + 1)].setOpaque(true);
-                    lblArr[transX(cur.getMax()) - 1][transY(i + 1)].setBackground(colArr[4]);
-                    //lblArr[x - (((int) cur.getMax()) - min) - 1][(y / (numReports - 1)) * i].setText("^");
-                    //lblArr[x - (((int) cur.getMax()) - min) - 1][(y / (numReports - 1)) * i].setForeground(colArr[4]);
-                }
+                lblArr[transX(cur.getMax())][transY(i + 1)].setOpaque(true);
+                lblArr[transX(cur.getMax())][transY(i + 1)].setBackground(colArr[4]);
+                //lblArr[x - (((int) cur.getMax()) - min)][(y / (numReports - 1)) * i].setText("^");
+                //lblArr[x - (((int) cur.getMax()) - min)][(y / (numReports - 1)) * i].setForeground(colArr[4]);
             }
 
         }
@@ -514,15 +456,13 @@ public class Analyser
         //then, calc percentage of (max-min), so (in-min)/(max-min)
         //then, times that into x, so ((in-min)/(max-min))*x
         int r = x - ((int) (((Math.round(in) - min) / (double) (max - min)) * x));
-        if(r < 0)
+        if (r < 0)
         {
             return 0;
-        }
-        else if(r >= x)
+        } else if (r >= x)
         {
-            return x-1;
-        }
-        else
+            return x - 1;
+        } else
         {
             return r;
         }
@@ -574,22 +514,12 @@ public class Analyser
         for (int j = 1; j < dist2; j++)
         {
             //System.out.println((old1 + (dist1 / dist2) * (j)) + " " + (old2 + j));
-            try
-            {
-                lblArr[(int) Math.round(old1 + ((double) dist1 / dist2) * (j))][old2 + j].setOpaque(true);
-                lblArr[(int) Math.round(old1 + ((double) dist1 / dist2) * (j))][old2 + j].setBackground(colArro[caseOf]);
-                //lblArr[old1 + (dist1 / dist2) * (j)][old2 + j].setText("^");
-                //lblArr[old1 + (dist1 / dist2) * (j)][old2 + j].setForeground(colArr[caseOf]);
-                //lblArr[old1 + (dist1 / dist2) * (j)][old2 + j].setVerticalAlignment(SwingConstants.TOP);
+            lblArr[(int) Math.round(old1 + ((double) dist1 / dist2) * (j))][old2 + j].setOpaque(true);
+            lblArr[(int) Math.round(old1 + ((double) dist1 / dist2) * (j))][old2 + j].setBackground(colArro[caseOf]);
+            //lblArr[old1 + (dist1 / dist2) * (j)][old2 + j].setText("^");
+            //lblArr[old1 + (dist1 / dist2) * (j)][old2 + j].setForeground(colArr[caseOf]);
+            //lblArr[old1 + (dist1 / dist2) * (j)][old2 + j].setVerticalAlignment(SwingConstants.TOP);
 
-            } catch (ArrayIndexOutOfBoundsException e)
-            {
-                lblArr[(int) Math.round(old1 + ((double) dist1 / dist2) * (j) - 1)][old2 + j].setOpaque(true);
-                lblArr[(int) Math.round(old1 + ((double) dist1 / dist2) * (j) - 1)][old2 + j].setBackground(colArro[caseOf]);
-                //lblArr[old1 + (dist1 / dist2) * (j) - 1][old2 + j].setText("^");
-                //lblArr[old1 + (dist1 / dist2) * (j) - 1][old2 + j].setForeground(colArr[caseOf]);
-                //lblArr[old1 + (dist1 / dist2) * (j) - 1][old2 + j].setVerticalAlignment(SwingConstants.TOP);
-            }
         }
         //System.out.println("----------------------------");
     }
