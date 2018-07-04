@@ -198,7 +198,7 @@ public class Analyser
                     int d = Integer.parseInt(s.substring(s.indexOf(":") + 2, s.indexOf("s @")));
                     String td = s.substring(s.indexOf("@") + 2);
                     Phase temp = new Phase(pn, d, td);
-                    System.out.println(temp);
+                    //System.out.println(temp);
                     phases.add(temp);
                     numPhases++;
                 }
@@ -288,40 +288,28 @@ public class Analyser
 
     public void drawPhaseLines(JLabel lblArr[][])
     {
-        //int totalPhase = getTotalPhaseTime();
         int totalTime = (numReports - 1) * 10;
-        //System.out.println(totalPhase + " / " + totalTime);
-        int num = y / totalTime; //scale unit / s
-        //System.out.println("unit/s = " + num);
-        //(y / (numReports - 1)) * i is 0, 10, 20, 30
 
         int last = 0;
         for (int i = 0; i < numPhases; i++)
         {
             Phase cur = phases.get(i);
-            //System.out.println("--" + last + " / " + totalTime);
-            int blah = num * last;
-            //System.out.println("=> " + blah);
+            //System.out.print(last + " / " + totalTime + " ==> ");
+            int blah = (int) Math.round((last / (double) totalTime) * y);
+            //System.out.println(blah + " / " + y);
             for (int j = 0; j < x; j++)
             {
-                //System.out.println(j + " " + blah);
                 lblArr[j][blah].setOpaque(true);
                 lblArr[j][blah].setBackground(Color.lightGray);
-                //lblArr[j][blah].setText("^");
-                //lblArr[j][blah].setForeground(Color.gray);
             }
             last += cur.getDuration();
         }
-        //System.out.println("--" + last + " / " + totalTime);
-        int blah = num * last;
-        //System.out.println("=> " + blah);
+        
+        int blah =  (last / totalTime) * y;
         for (int j = 0; j < x; j++)
         {
-            //System.out.println(j + " " + blah);
             lblArr[j][blah].setOpaque(true);
             lblArr[j][blah].setBackground(Color.lightGray);
-            //lblArr[j][blah].setText("^");
-            //lblArr[j][blah].setForeground(Color.gray);
         }
 
     }
@@ -457,6 +445,7 @@ public class Analyser
 
     public int transY(int i)
     {
+        //returns 10s intervals * i
         return (y / (numReports - 1)) * i;
     }
 
