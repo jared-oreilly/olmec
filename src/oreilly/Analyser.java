@@ -223,12 +223,26 @@ public class Analyser
 
         //now, capture all single test
         //System.out.println("THE FOLDER: ../../mayan/Mayan/gen/runs/" + filename);
+        boolean firstSeen = false;
+        boolean averages = false;
         for (File file : new File("../../mayan/Mayan/gen/runs/" + filename).listFiles())
         {
+
             String f = file.getName();
             //System.out.println("CHECKING EQUALS: " + f + "\t" + filename + ".txt");
             if (!f.equals(filename + ".txt"))
             {
+                
+                if (!firstSeen)
+                {
+                    firstSeen = true;
+                    String newF = f.substring(0, f.length()-4);
+                    if(newF.substring(f.length()-4, f.length()-1).equals("___"))
+                    {
+                        averages = true;
+                    }
+                }
+                
                 //System.out.println("\t\tTEST FILE GO!!!!");
                 SingleTest t = new SingleTest(filename, f);
                 //System.out.println("THIS SINGLETEST:\n" + t);
@@ -241,8 +255,71 @@ public class Analyser
 //                System.out.println("\t\tMAIN FILE STOP!!!!!!!");
 //            }
         }
-        
-        parent.appendToFeedback("Reports and phases captured!");
+
+        if(averages)
+        {
+            calcScenarioAverages();
+        }
+
+        {
+            parent.appendToFeedback("Reports and phases captured!");
+        }
+    }
+    
+    public void calcScenarioAverages()
+    {
+        for(int i = 0; i < tests.size(); i++)
+        {
+            //s1 is our thing at i
+            SingleTest s1 = tests.get(i), s2 = null, s3 = null;
+            
+            //get the common name without ___x
+            String commonName = s1.getFilename();
+            commonName = commonName.substring(0, commonName.length()-4);
+            String dir = s1.getDir();
+            
+            //look through the rest of the array for the same commom name without ___x
+            int j;
+            for(j = i + 1; j < tests.size(); j++)
+            {
+                //get the current one
+                SingleTest s = tests.get(j);
+                //extract the name
+                String sName = s.getFilename();
+                sName = sName.substring(0, sName.length()-4);
+                
+                //check if current name is same as common
+                if(commonName.equals(sName))
+                {
+                    s2 = tests.get(j);
+                    tests.remove(j);
+                    j--;
+                }
+            }
+            
+            //check through rest of array for our next one same as common without ___x
+            for(int k = j; k < tests.size(); k++)
+            {
+                //get current one
+                SingleTest s = tests.get(k);
+                //extract the name
+                String sName = s.getFilename();
+                sName = sName.substring(0, sName.length()-4);
+                
+                //check if current name is same as common
+                if(commonName.equals(sName))
+                {
+                    s3 = tests.get(k);
+                    tests.remove(k);
+                    k = tests.size() + 5;
+                }
+            }
+            
+            //now, group those 3 into one, finding averages, assume same size
+            SingleTest s = new SingleTest(dir, commonName);
+            //make this grouped one into pos i
+            
+        }
     }
 
     public void drawGraph1(String s)
@@ -1087,11 +1164,11 @@ public class Analyser
     {
         return reports.get(numReports - 1);
     }
-    
+
     public String getLagReport()
     {
         String b = "";
-        for(int i = 0; i < numTests; i++)
+        for (int i = 0; i < numTests; i++)
         {
             b += tests.get(i).getLagReport();
         }

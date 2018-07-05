@@ -6,6 +6,8 @@ import javax.swing.JOptionPane;
 
 public class OlmecUI extends javax.swing.JFrame
 {
+
+    boolean progress = true;
     Analyser a;
     private String filename;
     public static final Color[] colArr = new Color[]
@@ -319,7 +321,10 @@ public class OlmecUI extends javax.swing.JFrame
 
     public void appendToFeedback(String text)
     {
-        System.out.println(text);
+        if (progress)
+        {
+            System.out.println(text);
+        }
         txaFeedback.setText(txaFeedback.getText() + "\n" + text);
     }
 

@@ -5,7 +5,9 @@
         <group>
             <file>file:/C:/dev/olmec/Olmec/src/oreilly/SingleTest.java</file>
             <file>file:/C:/dev/olmec/Olmec/src/oreilly/Analyser.java</file>
+            <file>file:/C:/dev/olmec/Olmec/src/oreilly/Report.java</file>
             <file>file:/C:/dev/olmec/Olmec/src/oreilly/OlmecUI.java</file>
+            <file>file:/C:/dev/olmec/Olmec/src/oreilly/SingleTestUI.java</file>
         </group>
     </open-files>
 </project-private>

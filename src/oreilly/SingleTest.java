@@ -22,6 +22,7 @@ public class SingleTest
     private int numPhases;
     private String dir;
     private String filename;
+    private final double flagSD = 20.0;
 
     public SingleTest(String dir, String filename)
     {
@@ -198,6 +199,26 @@ public class SingleTest
         }
     }
 
+    public String getFilename()
+    {
+        return filename;
+    }
+
+    public void setFilename(String filename)
+    {
+        this.filename = filename;
+    }
+
+    public String getDir()
+    {
+        return dir;
+    }
+
+    public void setDir(String dir)
+    {
+        this.dir = dir;
+    }
+
     @Override
     public String toString()
     {
@@ -219,114 +240,215 @@ public class SingleTest
     public String getLagReport()
     {
         String b = "";
-        b += filename.substring(0, filename.indexOf(".")) + "\t";
-        b += abnormalMessage() + "\n\n";
+        b += filename.substring(0, filename.indexOf(".")) + "\n";
+        b += abnormalMessage() + "\n";
+        System.out.println("--------------------------------------------------------------------------\n");
         return b;
     }
 
     public String abnormalMessage()
     {
-        Report r;
-        int newNumReports = numReports - 1; //ignore summary
+        Report r1;
+        int numDiffs = numReports - 2; //ignore summary
         int numMeasures = 5;
+
+        /*
         double[] minArr = new double[newNumReports], medianArr = new double[newNumReports], p95Arr = new double[newNumReports], p99Arr = new double[newNumReports], maxArr = new double[newNumReports];
         for (int i = 0; i < newNumReports; i++)
         {
-            r = reports.get(i);
-            minArr[i] = r.getMin();
-            medianArr[i] = r.getMedian();
-            p95Arr[i] = r.getP95();
-            p99Arr[i] = r.getP99();
-            maxArr[i] = r.getMax();
+            r1 = reports.get(i);
+            minArr[i] = r1.getMin();
+            medianArr[i] = r1.getMedian();
+            p95Arr[i] = r1.getP95();
+            p99Arr[i] = r1.getP99();
+            maxArr[i] = r1.getMax();
             //System.out.println(r.getMin() + "\t" + r.getMedian() + "\t" + r.getP95() + "\t" + r.getP99() + "\t" + r.getMax());
-            System.out.print(r.getP95() + " ");
+            System.out.print(r1.getP95() + " ");
+        }
+        System.out.println("");
+         */
+        Report r2;
+        double[] minArr = new double[numDiffs], medianArr = new double[numDiffs], p95Arr = new double[numDiffs], p99Arr = new double[numDiffs], maxArr = new double[numDiffs];
+        for (int i = 0; i < numDiffs; i++)
+        {
+            //System.out.println("REPORT " + i + " AND " + (i + 1));
+            r1 = reports.get(i);
+            r2 = reports.get(i + 1);
+            minArr[i] = roundTo(r2.getMin() - r1.getMin(), 2);
+            medianArr[i] = roundTo(r2.getMedian() - r1.getMedian(), 2);
+            p95Arr[i] = roundTo(r2.getP95() - r1.getP95(), 2);
+            p99Arr[i] = roundTo(r2.getP99() - r1.getP99(), 2);
+            maxArr[i] = roundTo(r2.getMax() - r1.getMax(), 2);
+            //System.out.println("Min\tMed\tP95\tP99\tMax");
+            //System.out.println(r2.getMin() + "\t" + r2.getMedian() + "\t" + r2.getP95() + "\t" + r2.getP99() + "\t" + r2.getMax());
+            //System.out.println("-\t-\t-\t-\t-");
+            //System.out.println(r1.getMin() + "\t" + r1.getMedian() + "\t" + r1.getP95() + "\t" + r1.getP99() + "\t" + r1.getMax());
+            //System.out.println("=\t=\t=\t=\t=");
+            //System.out.println(minArr[i] + "\t" + medianArr[i] + "\t" + p95Arr[i] + "\t" + p99Arr[i] + "\t" + maxArr[i]);
+            //System.out.println("");
         }
         System.out.println("");
 
         double[] sdArr = new double[numMeasures];
-        sdArr[0] = calcSD(minArr, true);
-        sdArr[1] = calcSD(medianArr, true);
-        sdArr[2] = calcSD(p95Arr, false);
-        sdArr[3] = calcSD(p99Arr, false);
-        sdArr[4] = calcSD(maxArr, false);
+        sdArr[0] = calcSD(minArr, false, false);
+        //sdArr[1] = calcSD(minArr, true, true);
+        sdArr[1] = calcSD(medianArr, false, false);
+        sdArr[2] = calcSD(p95Arr, false, false);
+        //sdArr[3] = calcSD(p95Arr, true, true);
+        sdArr[3] = calcSD(p99Arr, false, false);
+        sdArr[4] = calcSD(maxArr, false, false);
 
-        System.out.println(sdArr[2]);
-        
-        if(sdArr[1] > 12.0)
+        System.out.println("Min\tMed\tP95\tP99\tMax");
+        System.out.println(sdArr[0] + "\t" + sdArr[1] + "\t" + sdArr[2] + "\t" + sdArr[3] + "\t" + sdArr[4]);
+
+        String s = "";
+
+        if (sdArr[0] > flagSD)
         {
-            return "ABNORMAL: Median deviates!";
+            s += "\tABNORMAL: Min deviates!\n";
         }
-        
-        if(sdArr[2] > 12.0)
+
+        if (sdArr[1] > flagSD)
         {
-            return "ABNORMAL: P95 deviates!";
+            s += "\tABNORMAL: Median deviates!\n";
         }
-        
-        
-        return "-";
+
+        if (sdArr[2] > flagSD)
+        {
+            s += "\tABNORMAL: P95 deviates!\n";
+        }
+
+        if (sdArr[3] > flagSD)
+        {
+            s += "\tABNORMAL: P99 deviates!\n";
+        }
+
+        if (sdArr[4] > flagSD)
+        {
+            s += "\tABNORMAL: Max deviates!\n";
+        }
+
+        if (s.equals(""))
+        {
+            s = "\t-\n";
+        }
+        return s;
     }
 
-    public double calcSD(double arr[], boolean useTopOutlier)
+    public double calcSD(double arr[], boolean useFirst, boolean useLast)
     {
         double sd;
-        if (useTopOutlier)
+
+        int firstI;
+        if (useFirst)
         {
-            double sum = 0;
-            for (int i = 0; i < arr.length; i++)
-            {
-                sum += arr[i];
-            }
-            double avg = sum / arr.length;
-
-            double top = 0;
-            double diff;
-            for (int i = 0; i < arr.length; i++)
-            {
-                diff = arr[i] - avg;
-                top += Math.pow(diff, 2);
-            }
-
-            double frac = top / arr.length;
-            sd = Math.sqrt(frac);
+            firstI = 0;
         } else
         {
-            //while going through, find max
-            double sum = 0;
-            sum += arr[0];
-            double max = arr[0];
-            int maxI = 0;
-            for (int i = 1; i < arr.length; i++)
+            //firstI = 1;
+            firstI = 2;
+        }
+
+        int end;
+        if (useLast)
+        {
+            end = arr.length;
+        } else
+        {
+            //end = arr.length - 1;
+            end = arr.length - 2;
+        }
+
+        double sum = 0;
+        int extra = 0;
+        //
+        for (int i = 0; i < firstI; i++)
+        {
+            if (arr[i] >= 0)
             {
                 sum += arr[i];
-                if (arr[i] > max)
-                {
-                    max = arr[i];
-                    maxI = i;
-                }
+                extra++;
+                System.out.print(arr[i] + "\t");
+            } else
+            {
+                System.out.print("(" + arr[i] + ")\t");
             }
-            //calculate average without max
-            double avg = (sum - max) / (arr.length - 1);
-            //replace max with average
-            arr[maxI] = avg;
-            //System.out.println("MAX: " + max + "\tAVG: " + avg);
+        }
+        //
 
-            double top = 0;
-            double diff;
-            for (int i = 0; i < arr.length; i++)
+        for (int i = firstI; i < end; i++)
+        {
+            System.out.print(arr[i] + "\t");
+            sum += arr[i];
+        }
+
+        //
+        for (int i = end; i < arr.length; i++)
+        {
+            if (arr[i] >= 0)
+            {
+                sum += arr[i];
+                extra++;
+                System.out.print(arr[i] + "\t");
+            } else
+            {
+                System.out.print("(" + arr[i] + ")\t");
+            }
+        }
+        //
+
+        System.out.println("");
+        //calculate average
+        double avg = sum / ((end - firstI) + extra);
+
+        double top = 0;
+        double diff;
+        extra = 0;
+        //
+        for (int i = 0; i < firstI; i++)
+        {
+            if (arr[i] >= 0)
             {
                 diff = arr[i] - avg;
                 top += Math.pow(diff, 2);
+                extra++;
             }
+        }
+        //
 
-            double frac = top / arr.length;
-            sd = Math.sqrt(frac);
+        for (int i = firstI; i < end; i++)
+        {
+            diff = arr[i] - avg;
+            top += Math.pow(diff, 2);
         }
 
-        sd *= 100;
-        sd = Math.round(sd);
-        sd /= 100;
+        //
+        for (int i = end; i < arr.length; i++)
+        {
+            if (arr[i] >= 0)
+            {
+                diff = arr[i] - avg;
+                top += Math.pow(diff, 2);
+                extra++;
+            }
+        }
+        //
+
+        double frac = top / ((end - firstI) + extra);
+        sd = Math.sqrt(frac);
+
+        sd = roundTo(sd, 2);
 
         return sd;
 
+    }
+
+    public double roundTo(double num, int dec)
+    {
+        int toTimesBy = (int) Math.pow(10, dec);
+        num *= toTimesBy;
+        num = Math.round(num);
+        num /= toTimesBy;
+        return num;
     }
 }
