@@ -36,6 +36,10 @@ public class Analyser
     private boolean[] display2;
     private final int numDisplayOptions2 = 3;
 
+    private String toDisplay3;
+    private boolean[] display3;
+    private final int numDisplayOptions3 = 5;
+
     public static final Color[] colArr = new Color[]
     {
         Color.red, Color.blue, new Color(0, 153, 0), new Color(255, 102, 0), new Color(102, 0, 153), Color.orange
@@ -70,7 +74,7 @@ public class Analyser
         }
         scFile.close();
 
-        parent.appendToFeedback("Starting report and phase capture:");
+        parent.appendToFeedback("Starting report and phase capture...\t");
 
         //extract report info
         for (int i = 0; i < compArr.size(); i++)
@@ -264,7 +268,7 @@ public class Analyser
 //                System.out.println("\t\tMAIN FILE STOP!!!!!!!");
 //            }
         }
-
+        parent.appendToFeedback("\t\t\tdone\n");
         //System.out.println(numTests);
         if (averages)
         {
@@ -278,15 +282,12 @@ public class Analyser
             System.out.println("---------------------------------------------------------------------------------------------");
         }*/
 
-        {
-            parent.appendToFeedback("Reports and phases captured!");
-        }
     }
 
     public void convertToAverages()
     {
         //System.out.println("//////////////////////////////////////////////////////////////////////////////////////////\n");
-
+        parent.appendToFeedback("Converting to averages...\t");
         for (int i = 0; i < tests.size(); i++)
         {
             /*
@@ -436,6 +437,7 @@ public class Analyser
 
         System.out.println("//////////////////////////////////////////////////////////////////////////////////////////\n");
          */
+        parent.appendToFeedback("\t\t\t\tdone\n");
     }
 
     public double avg3(double n1, double n2, double n3)
@@ -457,7 +459,7 @@ public class Analyser
             }
         }
 
-        parent.appendToFeedback("Initializing graph and grid:");
+        parent.appendToFeedback("Initializing graph and grid for overall times...\t");
         //create frame with settings
         JFrame frame = new JFrame("Graph");
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -499,17 +501,17 @@ public class Analyser
             }
         }
 
-        parent.appendToFeedback("Graph and grid initialized!");
+        parent.appendToFeedback("\tdone\n");
 
         drawPhaseLines1(lblArr);
 
         drawGraph1(lblArr);
 
-        parent.appendToFeedback("Rendering graph (please be patient):");
+        parent.appendToFeedback("Rendering graph overall times graph(please be patient)...\t");
         //show frame
         //frame.setResizable(false);
         frame.setVisible(true);
-        parent.appendToFeedback("Graph rendered!");
+        parent.appendToFeedback("done\n");
         //frame.pack();
         //System.out.println("hi");
     }
@@ -544,7 +546,7 @@ public class Analyser
 
     public void drawGraph1(JLabel lblArr[][])
     {
-        parent.appendToFeedback("Starting to draw graph:");
+        parent.appendToFeedback("Starting to draw overall times graph...\t");
 
         Report cur = reports.get(0);
         //draw first point if need to display
@@ -645,7 +647,7 @@ public class Analyser
             }
 
         }
-        parent.appendToFeedback("Graph drawn!");
+        parent.appendToFeedback("\t\t\tdone\n");
         //lblArr[0][0].setText("^");
     }
 
@@ -808,7 +810,7 @@ public class Analyser
                 }
 
         }
-        System.out.print("-" + min + " + ");
+        //System.out.print("-" + min + " + ");
         return min;
 
     }
@@ -891,7 +893,7 @@ public class Analyser
                     }
                 }
         }
-        System.out.println(max + " = ");
+        //System.out.println(max + " = ");
         return max;
     }
 
@@ -919,7 +921,7 @@ public class Analyser
             }
         }
 
-        parent.appendToFeedback("Initializing graph and grid:");
+        parent.appendToFeedback("Initializing overall scenarios and reqs graph and grid...\t");
         //create frame with settings
         JFrame frame = new JFrame("Graph");
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -961,17 +963,17 @@ public class Analyser
             }
         }
 
-        parent.appendToFeedback("Graph and grid initialized!");
+        parent.appendToFeedback("done\n");
 
         drawPhaseLines2(lblArr);
 
         drawGraph2(lblArr);
 
-        parent.appendToFeedback("Rendering graph (please be patient):");
+        parent.appendToFeedback("Rendering overall scens and reqs graph (please be patient)...\t");
         //show frame
         //frame.setResizable(false);
         frame.setVisible(true);
-        parent.appendToFeedback("Graph rendered!");
+        parent.appendToFeedback("done\n");
         //frame.pack();
         //System.out.println("hi");
     }
@@ -1006,7 +1008,7 @@ public class Analyser
 
     public void drawGraph2(JLabel lblArr[][])
     {
-        parent.appendToFeedback("Starting to draw graph:");
+        parent.appendToFeedback("Starting to draw overall scenarios and requests graph...\t");
 
         Report cur = reports.get(0);
         //draw first point if need to display
@@ -1081,7 +1083,7 @@ public class Analyser
             }
 
         }
-        parent.appendToFeedback("Graph drawn!");
+        parent.appendToFeedback("done\n");
         //lblArr[0][0].setText("^");
     }
 
@@ -1216,7 +1218,7 @@ public class Analyser
                 }
 
         }
-        System.out.print("-" + min + " + ");
+        //System.out.print("-" + min + " + ");
         return min;
 
     }
@@ -1277,7 +1279,7 @@ public class Analyser
                     }
                 }
         }
-        System.out.println(max + " = ");
+        //System.out.println(max + " = ");
         return max;
     }
 
@@ -1294,11 +1296,11 @@ public class Analyser
             if (showSome)
             {
                 String check = tests.get(i).getLagReport();
-                if(!check.substring(check.length()-2, check.length()).equals("-\n"))
+                if (!check.substring(check.length() - 2, check.length()).equals("-\n"))
                 {
                     b += check;
                 }
-                
+
             } else
             {
                 b += tests.get(i).getLagReport();
@@ -1314,6 +1316,477 @@ public class Analyser
         num = Math.round(num);
         num /= toTimesBy;
         return num;
+    }
+
+    public void drawGraph3(String s, String filename)
+    {
+        int find = 0;
+        while (!tests.get(find).getFilename().equals(filename))
+        {
+            find++;
+        }
+        SingleTest report = tests.get(find);
+
+        //decide what to display
+        toDisplay3 = s;
+        display3 = new boolean[numDisplayOptions3];
+        for (int i = 0; i < numDisplayOptions3; i++)
+        {
+            display3[i] = false;
+            if (toDisplay3.contains(i + ""))
+            {
+                display3[i] = true;
+            }
+        }
+
+        parent.appendToFeedback("Initializing individual test graph and grid...\t");
+        //create frame with settings
+        JFrame frame = new JFrame("Graph");
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.setSize(1300, 700);
+
+        //add x and y axes
+        min = (int) getMinFromReports3(report);
+        max = (int) getMaxFromReports3(report);
+        //JLabel n2 = new JLabel("Time in ms");
+        //frame.add(n2, BorderLayout.WEST);
+        JLabel n1 = new JLabel(min + "");
+        frame.add(n1, BorderLayout.PAGE_END);
+        JLabel n3 = new JLabel(max + "");
+        frame.add(n3, BorderLayout.PAGE_START);
+
+        //create panel and gridlayout with it
+        //int x = max - min, y = numReports - 1;
+        //int x = max - min, y = 200;
+        //x = max - min;
+        JPanel panel = new JPanel();
+        panel.setBackground(Color.white);
+        panel.setSize(900, 700);
+        panel.setBounds(0, 0, 900, 1100);
+        panel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        panel.setLayout(new GridLayout(x, y));
+
+        //panel.getLayout().
+        frame.add(panel);
+        //frame.pack();
+
+        //make label array to fill the grid, empty cells
+        JLabel lblArr[][] = new JLabel[x][y];
+        for (int i = 0; i < x; i++)
+        {
+            for (int j = 0; j < y; j++)
+            {
+                lblArr[i][j] = new JLabel("");
+                panel.add(lblArr[i][j]);
+            }
+        }
+
+        parent.appendToFeedback("\t\tdone\n");
+
+        drawPhaseLines3(lblArr, report);
+
+        drawGraph3(lblArr, report);
+
+        parent.appendToFeedback("Rendering individual test graph (please be patient)...\t");
+        //show frame
+        //frame.setResizable(false);
+        frame.setVisible(true);
+        parent.appendToFeedback("\tdone\n");
+        //frame.pack();
+        //System.out.println("hi");
+    }
+
+    public void drawPhaseLines3(JLabel lblArr[][], SingleTest report)
+    {
+        int totalTime = (report.getNumReports() - 1) * 10;
+
+        int last = 0;
+        SingleTest first = tests.get(0);
+        for (int i = 0; i < report.getNumPhases(); i++)
+        {
+            Phase cur = first.getPhases().get(i);
+            //System.out.print(last + " / " + totalTime + " ==> ");
+            int blah = (int) Math.round((last / (double) totalTime) * y);
+            //System.out.println(blah + " / " + y);
+            for (int j = 0; j < x; j++)
+            {
+                lblArr[j][blah].setOpaque(true);
+                lblArr[j][blah].setBackground(Color.lightGray);
+            }
+            last += cur.getDuration();
+        }
+
+        int blah = (int) Math.round((last / (double) totalTime) * y);
+        for (int j = 0; j < x; j++)
+        {
+            lblArr[j][blah].setOpaque(true);
+            lblArr[j][blah].setBackground(Color.lightGray);
+        }
+
+    }
+
+    public void drawGraph3(JLabel lblArr[][], SingleTest report)
+    {
+        parent.appendToFeedback("Starting to draw individual test graph...\t");
+
+        Report cur = report.getReports().get(0);
+        //draw first point if need to display
+        if (display3[0])
+        {
+            //System.out.println("(" + cur.getMin() + ", 1) -> (" + transX(cur.getMin()) + "," + transY(1) + ")");
+            lblArr[transX3(cur.getMin())][transY3(1, report)].setOpaque(true);
+            lblArr[transX3(cur.getMin())][transY3(1, report)].setBackground(colArr[0]);
+            lblArr[transX3(cur.getMin())][transY3(1, report)].addMouseListener(new MouseAdapter()
+            {
+                @Override
+                public void mouseClicked(MouseEvent e)
+                {
+                    System.out.println("Yay you clicked me");
+                }
+            });
+        }
+        if (display3[1])
+        {
+            lblArr[transX3(cur.getMedian())][transY3(1, report)].setOpaque(true);
+            lblArr[transX3(cur.getMedian())][transY3(1, report)].setBackground(colArr[1]);
+            //lblArr[transX(cur.getMedian())][0].setText("^");
+            //lblArr[transX(cur.getMedian())][0].setForeground(colArr[1]);
+        }
+        if (display3[2])
+        {
+            //System.out.println(transX(cur.getP95()) + " " + transY(1));
+            lblArr[transX3(cur.getP95())][transY3(1, report)].setOpaque(true);
+            lblArr[transX3(cur.getP95())][transY3(1, report)].setBackground(colArr[2]);
+            //lblArr[transX(cur.getP95()][0].setText("^");
+            //lblArr[transX(cur.getP95()][0].setForeground(colArr[2]);
+        }
+        if (display3[3])
+        {
+            lblArr[transX3(cur.getP99())][transY3(1, report)].setOpaque(true);
+            lblArr[transX3(cur.getP99())][transY3(1, report)].setBackground(colArr[3]);
+            //lblArr[transX(cur.getP99()][0].setText("^");
+            //lblArr[transX(cur.getP99()][0].setForeground(colArr[3]);
+        }
+        if (display3[4])
+        {
+            lblArr[transX3(cur.getMax())][transY3(1, report)].setOpaque(true);
+            lblArr[transX3(cur.getMax())][transY3(1, report)].setBackground(colArr[4]);
+            //lblArr[transX(cur.getMax())][0].setText("^");
+            //lblArr[transX(cur.getMax())][0].setForeground(colArr[4]);
+        }
+
+        //for each report, draw the lines if they should be drawn
+        for (int i = 1; i < report.getNumReports() - 1; i++)
+        {
+            cur = report.getReports().get(i);
+            //draw a connecting line
+            for (int j = 0; j < numDisplayOptions3; j++)
+            {
+                if (display3[j])
+                {
+                    drawLine3(lblArr, i, j, report);
+                }
+            }
+
+            //draw the next point
+            if (display3[0])
+            {
+                lblArr[transX3(cur.getMin())][transY3(i + 1, report)].setOpaque(true);
+                lblArr[transX3(cur.getMin())][transY3(i + 1, report)].setBackground(colArr[0]);
+                //lblArr[x - (((int) cur.getMin()) - min)][(y / (numReports - 1)) * i].setText("^");
+                //lblArr[x - (((int) cur.getMin()) - min)][(y / (numReports - 1)) * i].setForeground(colArr[0]);
+            }
+            if (display3[1])
+            {
+                //System.out.println("MEDIAN: (" + cur.getMedian() + ", " + (i + 1) + ") -> (" + transX(cur.getMedian()) + "," + transY(i + 1) + ")");
+                lblArr[transX3(cur.getMedian())][transY3(i + 1, report)].setOpaque(true);
+                lblArr[transX3(cur.getMedian())][transY3(i + 1, report)].setBackground(colArr[1]);
+                //lblArr[x - (((int) cur.getMedian()) - min)][(y / (numReports - 1)) * i].setText("^");
+                //lblArr[x - (((int) cur.getMedian()) - min)][(y / (numReports - 1)) * i].setForeground(colArr[1]);
+            }
+            if (display3[2])
+            {
+                //System.out.println("P95: (" + cur.getP95() + ", " + (i + 1) + ") -> (" + transX(cur.getP95()) + "," + transY(i + 1) + ")");
+                lblArr[transX3(cur.getP95())][transY3(i + 1, report)].setOpaque(true);
+                lblArr[transX3(cur.getP95())][transY3(i + 1, report)].setBackground(colArr[2]);
+                //lblArr[transX(cur.getP95() - min)][(y / (numReports - 1)) * i].setText("^");
+                //lblArr[transX(cur.getP95() - min)][(y / (numReports - 1)) * i].setForeground(colArr[2]);
+            }
+            if (display3[3])
+            {
+                lblArr[transX3(cur.getP99())][transY3(i + 1, report)].setOpaque(true);
+                lblArr[transX3(cur.getP99())][transY3(i + 1, report)].setBackground(colArr[3]);
+                //lblArr[transX(cur.getP99() - min)][(y / (numReports - 1)) * i].setText("^");
+                //lblArr[transX(cur.getP99() - min)][(y / (numReports - 1)) * i].setForeground(colArr[3]);
+            }
+            if (display3[4])
+            {
+                lblArr[transX3(cur.getMax())][transY3(i + 1, report)].setOpaque(true);
+                lblArr[transX3(cur.getMax())][transY3(i + 1, report)].setBackground(colArr[4]);
+                //lblArr[x - (((int) cur.getMax()) - min)][(y / (numReports - 1)) * i].setText("^");
+                //lblArr[x - (((int) cur.getMax()) - min)][(y / (numReports - 1)) * i].setForeground(colArr[4]);
+            }
+
+        }
+        parent.appendToFeedback("\t\tdone\n");
+        //lblArr[0][0].setText("^");
+    }
+
+    public int transX3(double in)
+    {
+        //old = return x - (((int) in) - min);
+        //System.out.println("--" + in);
+        //in is the ms
+        //to get it to right level, in - min
+        //then, calc percentage of (max-min), so (in-min)/(max-min)
+        //then, times that into x, so ((in-min)/(max-min))*x
+        int r = x - ((int) (((Math.round(in) - min) / (double) (max - min)) * x));
+        if (r < 0)
+        {
+            return 0;
+        } else if (r >= x)
+        {
+            return x - 1;
+        } else
+        {
+            return r;
+        }
+
+    }
+
+    public int transY3(int i, SingleTest report)
+    {
+        //returns 10s intervals * i
+        int r = (y / (report.getNumReports() - 1)) * i;
+        if (r < 0)
+        {
+            r = 0;
+        } else if (r >= y)
+        {
+            r = y - 1;
+        }
+        return r;
+    }
+
+    public void drawLine3(JLabel lblArr[][], int i, int caseOf, SingleTest report)
+    {
+        int old1, new1;
+        switch (caseOf)
+        {
+            case 0:
+                old1 = transX3(report.getReports().get(i - 1).getMin());
+                new1 = transX3(Math.round(report.getReports().get(i).getMin()));
+                break;
+            case 1:
+                old1 = transX3(report.getReports().get(i - 1).getMedian());
+                new1 = transX3(report.getReports().get(i).getMedian());
+                break;
+            case 2:
+                old1 = transX3(report.getReports().get(i - 1).getP95());
+                new1 = transX3(report.getReports().get(i).getP95());
+                break;
+            case 3:
+                old1 = transX3(report.getReports().get(i - 1).getP99());
+                new1 = transX3(report.getReports().get(i).getP99());
+                break;
+            case 4:
+                old1 = transX3(report.getReports().get(i - 1).getMax());
+                new1 = transX3(report.getReports().get(i).getMax());
+                break;
+            default:
+                old1 = transX3(report.getReports().get(i - 1).getMedian());
+                new1 = transX3(report.getReports().get(i).getMedian());
+        }
+
+        int old2 = (int) ((y / (report.getNumReports() - 1)) + (double) y / (report.getNumReports() - 1) * (i - 1));
+        int new2 = (int) ((y / (report.getNumReports() - 1)) + (double) y / (report.getNumReports() - 1) * i);
+        //System.out.println("(" + old1 + "," + old2 + ") to (" + new1 + "," + new2 + ")");
+
+        int dist1 = (new1 - old1);
+        int dist2 = new2 - old2;
+        //System.out.println("d1: " + dist1 + " d2: " + dist2);
+        for (int j = 1; j < dist2; j++)
+        {
+            //System.out.println((old1 + (dist1 / dist2) * (j)) + " " + (old2 + j));
+            lblArr[(int) Math.round(old1 + ((double) dist1 / dist2) * (j))][old2 + j].setOpaque(true);
+            lblArr[(int) Math.round(old1 + ((double) dist1 / dist2) * (j))][old2 + j].setBackground(colArro[caseOf]);
+            //lblArr[old1 + (dist1 / dist2) * (j)][old2 + j].setText("^");
+            //lblArr[old1 + (dist1 / dist2) * (j)][old2 + j].setForeground(colArr[caseOf]);
+            //lblArr[old1 + (dist1 / dist2) * (j)][old2 + j].setVerticalAlignment(SwingConstants.TOP);
+
+        }
+        //System.out.println("----------------------------");
+    }
+
+    public double getMinFromReports3(SingleTest report)
+    {
+
+        //find lowest needed
+        int j = 0;
+        while (!display3[j])
+        {
+            j++;
+        }
+        //j is at thing we should use for min
+        double min = 0;
+        switch (j)
+        {
+            case 0:
+                min = report.getReports().get(0).getMin();
+                for (int i = 1; i < report.getNumReports() - 1; i++)
+                {
+                    if (min > report.getReports().get(i).getMin())
+                    {
+                        min = report.getReports().get(i).getMin();
+                    }
+                }
+                break;
+            case 1:
+                min = report.getReports().get(0).getMedian();
+                for (int i = 1; i < report.getNumReports() - 1; i++)
+                {
+                    if (min > report.getReports().get(i).getMedian())
+                    {
+                        min = report.getReports().get(i).getMedian();
+                    }
+                }
+                break;
+            case 2:
+                min = report.getReports().get(0).getP95();
+                for (int i = 1; i < report.getNumReports() - 1; i++)
+                {
+                    if (min > report.getReports().get(i).getP95())
+                    {
+                        min = report.getReports().get(i).getP95();
+                    }
+                }
+                break;
+            case 3:
+                min = report.getReports().get(0).getP99();
+                for (int i = 1; i < report.getNumReports() - 1; i++)
+                {
+                    if (min > report.getReports().get(i).getP99())
+                    {
+                        min = report.getReports().get(i).getP99();
+                    }
+                }
+                break;
+            case 4:
+                min = report.getReports().get(0).getMax();
+                for (int i = 1; i < report.getNumReports() - 1; i++)
+                {
+                    if (min > report.getReports().get(i).getMax())
+                    {
+                        min = report.getReports().get(i).getMax();
+                    }
+                }
+                break;
+            default:
+                min = report.getReports().get(0).getMin();
+                for (int i = 1; i < report.getNumReports() - 1; i++)
+                {
+                    if (min > report.getReports().get(i).getMin())
+                    {
+                        min = report.getReports().get(i).getMin();
+                    }
+                }
+
+        }
+        //System.out.print("-" + min + " + ");
+        return min;
+
+    }
+
+    public double getMaxFromReports3(SingleTest report)
+    {
+        //find lowest needed
+        int j = display3.length - 1;
+        while (!display3[j])
+        {
+            j--;
+        }
+        //j is at thing we should use for min
+        double max = 0;
+        switch (j)
+        {
+            case 4:
+                max = report.getReports().get(0).getMax();
+                //(0);
+                for (int i = 1; i < report.getNumReports() - 1; i++)
+                {
+                    if (max < report.getReports().get(i).getMax())
+                    {
+                        max = report.getReports().get(i).getMax();
+                    }
+                }
+                break;
+            case 3:
+                max = report.getReports().get(0).getP99();
+                //System.out.println(0);
+                for (int i = 1; i < report.getNumReports() - 1; i++)
+                {
+                    if (max < report.getReports().get(i).getP99())
+                    {
+                        max = report.getReports().get(i).getP99();
+                    }
+                }
+                break;
+            case 2:
+                max = report.getReports().get(0).getP95();
+                //System.out.println(0);
+                for (int i = 1; i < report.getNumReports() - 1; i++)
+                {
+                    if (max < report.getReports().get(i).getP95())
+                    {
+                        max = report.getReports().get(i).getP95();
+                    }
+                }
+                break;
+            case 1:
+                max = report.getReports().get(0).getMedian();
+                //System.out.println(0);
+                for (int i = 1; i < report.getNumReports() - 1; i++)
+                {
+                    if (max < report.getReports().get(i).getMedian())
+                    {
+                        max = report.getReports().get(i).getMedian();
+                    }
+                }
+                break;
+            case 0:
+                max = report.getReports().get(0).getMin();
+                //System.out.println(0);
+                for (int i = 1; i < report.getNumReports() - 1; i++)
+                {
+                    if (max < report.getReports().get(i).getMin())
+                    {
+                        max = report.getReports().get(i).getMin();
+                    }
+                }
+                break;
+            default:
+                max = report.getReports().get(0).getMax();
+                //System.out.println(0);
+                for (int i = 1; i < report.getNumReports() - 1; i++)
+                {
+                    if (max < report.getReports().get(i).getMax())
+                    {
+                        max = report.getReports().get(i).getMax();
+                    }
+                }
+        }
+        //System.out.println(max + " = ");
+        return max;
+    }
+
+    public String[] getScenNames()
+    {
+        String[] names = new String[numTests];
+        for (int i = 0; i < numTests; i++)
+        {
+            names[i] = tests.get(i).getFilename();
+        }
+        return names;
     }
 
 }
