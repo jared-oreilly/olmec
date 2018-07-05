@@ -20,7 +20,7 @@ public class OlmecUI extends javax.swing.JFrame
         initComponents();
         this.filename = filename;
         lblDesc.setText("The report for the main Artillery run (" + filename + ".txt)");
-        lblDesc1.setText("The individual tests for each scenario (of " + filename + ")");
+        lblDesc1.setText("Individual scenario tests");
         a = new Analyser(filename, this);
     }
 
@@ -57,6 +57,7 @@ public class OlmecUI extends javax.swing.JFrame
         btnShow1 = new javax.swing.JButton();
         jLabel9 = new javax.swing.JLabel();
         lblDesc1 = new javax.swing.JLabel();
+        cbxOnlyShow = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -153,6 +154,9 @@ public class OlmecUI extends javax.swing.JFrame
 
         lblDesc1.setText("jLabel2");
 
+        cbxOnlyShow.setSelected(true);
+        cbxOnlyShow.setText("Only show scenarios with lag");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -187,6 +191,10 @@ public class OlmecUI extends javax.swing.JFrame
                         .addGap(24, 24, 24)
                         .addComponent(btnGraphResponseTimes, javax.swing.GroupLayout.DEFAULT_SIZE, 80, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
+                        .addComponent(lblDesc)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnShow, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel5)
                             .addComponent(jLabel6)
@@ -196,11 +204,9 @@ public class OlmecUI extends javax.swing.JFrame
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(lblDesc1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnShow1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(lblDesc)
+                        .addComponent(cbxOnlyShow)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnShow, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(btnShow1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -239,7 +245,8 @@ public class OlmecUI extends javax.swing.JFrame
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnShow1)
-                    .addComponent(lblDesc1))
+                    .addComponent(lblDesc1)
+                    .addComponent(cbxOnlyShow))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 283, Short.MAX_VALUE)
                 .addContainerGap())
@@ -316,7 +323,7 @@ public class OlmecUI extends javax.swing.JFrame
 
     private void btnShow1ActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_btnShow1ActionPerformed
     {//GEN-HEADEREND:event_btnShow1ActionPerformed
-        new SingleTestUI(a.getLagReport()).setVisible(true);
+        new SingleTestUI(a.getLagReport(cbxOnlyShow.isSelected())).setVisible(true);
     }//GEN-LAST:event_btnShow1ActionPerformed
 
     public void appendToFeedback(String text)
@@ -336,6 +343,7 @@ public class OlmecUI extends javax.swing.JFrame
     private javax.swing.JCheckBox cbxMax;
     private javax.swing.JCheckBox cbxMedian;
     private javax.swing.JCheckBox cbxMin;
+    private javax.swing.JCheckBox cbxOnlyShow;
     private javax.swing.JCheckBox cbxP95;
     private javax.swing.JCheckBox cbxP99;
     private javax.swing.JCheckBox cbxRC;

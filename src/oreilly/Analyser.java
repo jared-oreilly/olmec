@@ -242,7 +242,7 @@ public class Analyser
                         newF = newF.substring(newF.length() - 4, newF.length() - 1);
                         if (newF.equals("___"))
                         {
-                            System.out.println("AVERAGES!");
+                            //System.out.println("AVERAGES!");
                             averages = true;
                         }
                     } catch (StringIndexOutOfBoundsException e)
@@ -265,18 +265,18 @@ public class Analyser
 //            }
         }
 
-        System.out.println(numTests);
+        //System.out.println(numTests);
         if (averages)
         {
             convertToAverages();
         }
-        System.out.println(numTests);
-        System.out.println("---------------------------------------------------------------------------------------------");
-        for (int i = 0; i < numTests; i++)
+        //System.out.println(numTests);
+        //System.out.println("---------------------------------------------------------------------------------------------");
+        /*for (int i = 0; i < numTests; i++)
         {
             System.out.println(tests.get(i));
             System.out.println("---------------------------------------------------------------------------------------------");
-        }
+        }*/
 
         {
             parent.appendToFeedback("Reports and phases captured!");
@@ -1286,13 +1286,23 @@ public class Analyser
         return reports.get(numReports - 1);
     }
 
-    public String getLagReport()
+    public String getLagReport(boolean showSome)
     {
         String b = "";
-        System.out.println(numTests);
         for (int i = 0; i < numTests; i++)
         {
-            b += tests.get(i).getLagReport();
+            if (showSome)
+            {
+                String check = tests.get(i).getLagReport();
+                if(!check.substring(check.length()-2, check.length()).equals("-\n"))
+                {
+                    b += check;
+                }
+                
+            } else
+            {
+                b += tests.get(i).getLagReport();
+            }
         }
         return b;
     }

@@ -16,13 +16,15 @@ import java.util.*;
 public class SingleTest
 {
 
+    private boolean debug = false;
+
     private ArrayList<Report> reports;
     private ArrayList<Phase> phases;
     private int numReports;
     private int numPhases;
     private String dir;
     private String filename;
-    private final double flagSD = 20.0;
+    private final double flagSD = 15.0;
 
     public SingleTest(String dir, String filename)
     {
@@ -198,34 +200,34 @@ public class SingleTest
             //System.out.println("File not found for some reason: " + e);
         }
     }
-    
+
     public void addReport(Report r)
     {
         reports.add(r);
         numReports++;
     }
-    
+
     public void addPhase(Phase p)
     {
         phases.add(p);
         numPhases++;
     }
-    
+
     public ArrayList<Phase> getPhases()
     {
         return phases;
     }
-    
+
     public ArrayList<Report> getReports()
     {
         return reports;
     }
-    
+
     public int getNumPhases()
     {
         return numPhases;
     }
-    
+
     public int getNumReports()
     {
         return numReports;
@@ -271,26 +273,31 @@ public class SingleTest
 
     public String getLagReport()
     {
-        System.out.println(filename);
+        if (debug)
+        {
+            System.out.println(filename);
+        }
         String b = "";
         try
         {
             b += filename.substring(0, filename.indexOf(".")) + "\n";
-        }
-        catch(StringIndexOutOfBoundsException e)
+        } catch (StringIndexOutOfBoundsException e)
         {
             b += filename + "\n";
         }
-        
+
         b += abnormalMessage() + "\n";
-        System.out.println("--------------------------------------------------------------------------\n");
+        if (debug)
+        {
+            System.out.println("--------------------------------------------------------------------------\n");
+        }
         return b;
     }
 
     public String abnormalMessage()
     {
-        Report r1;
-        int numDiffs = numReports - 2; //ignore summary
+        Report r;
+        int numNonSReports = numReports - 1; //ignore summary
         int numMeasures = 5;
 
         /*
@@ -309,96 +316,84 @@ public class SingleTest
         System.out.println("");
          */
         Report r2;
-        double[] minArr = new double[numDiffs], medianArr = new double[numDiffs], p95Arr = new double[numDiffs], p99Arr = new double[numDiffs], maxArr = new double[numDiffs];
-        for (int i = 0; i < numDiffs; i++)
+        double[] minArr = new double[numNonSReports], medianArr = new double[numNonSReports], p95Arr = new double[numNonSReports], p99Arr = new double[numNonSReports], maxArr = new double[numNonSReports];
+
+        for (int i = 0; i < numNonSReports; i++)
         {
             //System.out.println("REPORT " + i + " AND " + (i + 1));
-            r1 = reports.get(i);
-            r2 = reports.get(i + 1);
-            minArr[i] = roundTo(r2.getMin() - r1.getMin(), 2);
-            medianArr[i] = roundTo(r2.getMedian() - r1.getMedian(), 2);
-            p95Arr[i] = roundTo(r2.getP95() - r1.getP95(), 2);
-            p99Arr[i] = roundTo(r2.getP99() - r1.getP99(), 2);
-            maxArr[i] = roundTo(r2.getMax() - r1.getMax(), 2);
-            //System.out.println("Min\tMed\tP95\tP99\tMax");
-            //System.out.println(r2.getMin() + "\t" + r2.getMedian() + "\t" + r2.getP95() + "\t" + r2.getP99() + "\t" + r2.getMax());
-            //System.out.println("-\t-\t-\t-\t-");
-            //System.out.println(r1.getMin() + "\t" + r1.getMedian() + "\t" + r1.getP95() + "\t" + r1.getP99() + "\t" + r1.getMax());
-            //System.out.println("=\t=\t=\t=\t=");
-            //System.out.println(minArr[i] + "\t" + medianArr[i] + "\t" + p95Arr[i] + "\t" + p99Arr[i] + "\t" + maxArr[i]);
-            //System.out.println("");
+            r = reports.get(i);
+
+            minArr[i] = r.getMin();
+
+            medianArr[i] = r.getMedian();
+
+            p95Arr[i] = r.getP95();
+
+            p99Arr[i] = r.getP99();
+
+            maxArr[i] = r.getMax();
         }
-        System.out.println("");
-
-        double[] sdArr = new double[numMeasures];
-        sdArr[0] = calcSD(minArr, false, false);
-        //sdArr[1] = calcSD(minArr, true, true);
-        sdArr[1] = calcSD(medianArr, false, false);
-        sdArr[2] = calcSD(p95Arr, false, false);
-        //sdArr[3] = calcSD(p95Arr, true, true);
-        sdArr[3] = calcSD(p99Arr, false, false);
-        sdArr[4] = calcSD(maxArr, false, false);
-
-        System.out.println("Min\tMed\tP95\tP99\tMax");
-        System.out.println(sdArr[0] + "\t" + sdArr[1] + "\t" + sdArr[2] + "\t" + sdArr[3] + "\t" + sdArr[4]);
 
         String s = "";
-
-        if (sdArr[0] > flagSD)
+        String[] tags = new String[]
         {
-            s += "\tABNORMAL: Min deviates!\n";
-        }
-
-        if (sdArr[1] > flagSD)
+            "Min", "Median", "P95", "P99", "Max"
+        };
+        double[][] arrays = new double[][]
         {
-            s += "\tABNORMAL: Median deviates!\n";
-        }
+            minArr, medianArr, p95Arr, p99Arr, maxArr
+        };
 
-        if (sdArr[2] > flagSD)
+        for (int i = 0; i < numMeasures; i++)
         {
-            s += "\tABNORMAL: P95 deviates!\n";
-        }
+            double[] gradArr = calcGrads(arrays[i]);
+            //double sd = calcSD(gradArr, 1, 2);
+            double sd = calcSD(gradArr, 1, 2);
+            if (sd > flagSD)
+            {
+                String buildUp = "\t" + tags[i] + " deviates from linear, ";
+                double[] grad2Arr = calcGrads(gradArr);
+                double newSd = calcSD(grad2Arr, 1, 1);
+                if (newSd > flagSD)
+                {
+                    buildUp = "\tDANGER:\t" + buildUp + "and deviates from quadratic!\n";
+                } else if (newSd < (flagSD / 2.0))
+                {
+                    buildUp = "\tPROBLEM:\t" + buildUp + "but is very quadratic\n";
+                } else
+                {
+                    buildUp = "\tABNORMAL:\t" + buildUp + "but is reasonably quadratic\n";
+                }
+                s += buildUp;
 
-        if (sdArr[3] > flagSD)
-        {
-            s += "\tABNORMAL: P99 deviates!\n";
-        }
-
-        if (sdArr[4] > flagSD)
-        {
-            s += "\tABNORMAL: Max deviates!\n";
+            } else if (sd < (flagSD / 2.0))
+            {
+                s += "\t" + tags[i] + " is very linear\n";
+            } else
+            {
+                s += "\t" + tags[i] + " is reasonably linear\n";
+            }
+            if (debug)
+            {
+                System.out.println("---------------------------");
+            }
         }
 
         if (s.equals(""))
         {
             s = "\t-\n";
         }
+
         return s;
     }
 
-    public double calcSD(double arr[], boolean useFirst, boolean useLast)
+    public double calcSD(double arr[], int n1, int n2)
     {
+
         double sd;
 
-        int firstI;
-        if (useFirst)
-        {
-            firstI = 0;
-        } else
-        {
-            //firstI = 1;
-            firstI = 2;
-        }
-
-        int end;
-        if (useLast)
-        {
-            end = arr.length;
-        } else
-        {
-            //end = arr.length - 1;
-            end = arr.length - 2;
-        }
+        int firstI = n1;
+        int end = arr.length - n2;
 
         double sum = 0;
         int extra = 0;
@@ -407,19 +402,32 @@ public class SingleTest
         {
             if (arr[i] >= 0)
             {
+                if (debug)
+                {
+                    System.out.print("+");
+                }
                 sum += arr[i];
                 extra++;
-                System.out.print(arr[i] + "\t");
+                if (debug)
+                {
+                    System.out.print(arr[i] + "\t");
+                }
             } else
             {
-                System.out.print("(" + arr[i] + ")\t");
+                if (debug)
+                {
+                    System.out.print("(" + arr[i] + ")\t");
+                }
             }
         }
         //
 
         for (int i = firstI; i < end; i++)
         {
-            System.out.print(arr[i] + "\t");
+            if (debug)
+            {
+                System.out.print(arr[i] + "\t");
+            }
             sum += arr[i];
         }
 
@@ -428,17 +436,30 @@ public class SingleTest
         {
             if (arr[i] >= 0)
             {
+                if (debug)
+                {
+                    System.out.print("+");
+                }
                 sum += arr[i];
                 extra++;
-                System.out.print(arr[i] + "\t");
+                if (debug)
+                {
+                    System.out.print(arr[i] + "\t");
+                }
             } else
             {
-                System.out.print("(" + arr[i] + ")\t");
+                if (debug)
+                {
+                    System.out.print("(" + arr[i] + ")\t");
+                }
             }
         }
         //
 
-        System.out.println("");
+        if (debug)
+        {
+            System.out.println("");
+        }
         //calculate average
         double avg = sum / ((end - firstI) + extra);
 
@@ -472,6 +493,7 @@ public class SingleTest
                 top += Math.pow(diff, 2);
                 extra++;
             }
+
         }
         //
 
@@ -492,4 +514,15 @@ public class SingleTest
         num /= toTimesBy;
         return num;
     }
+
+    public double[] calcGrads(double arr[])
+    {
+        double[] grads = new double[arr.length - 1];
+        for (int i = 0; i < grads.length; i++)
+        {
+            grads[i] = roundTo(arr[i + 1] - arr[i], 2);
+        }
+        return grads;
+    }
+
 }
