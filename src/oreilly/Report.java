@@ -20,7 +20,9 @@ public class Report
     private double rpsSent;
     private double min, max, median, p95, p99;
     private ArrayList<String> scenarioCounts;
+    private String scenarioCountsString;
     private ArrayList<String> codes;
+    private String codesString;
 
     public Report(String header, int scenariosLaunched, int scenariosCompleted, int requestsCompleted, double rpsSent, double min, double max, double median, double p95, double p99, String scenarioCounts, String codes)
     {
@@ -36,6 +38,8 @@ public class Report
         this.median = median;
         this.p95 = p95;
         this.p99 = p99;
+        this.scenarioCountsString = scenarioCounts;
+        this.codesString = codes;
 
         this.scenarioCounts = new ArrayList<String>();
         Scanner scScenarios = new Scanner(scenarioCounts).useDelimiter(",");
@@ -66,6 +70,7 @@ public class Report
         this.median = median;
         this.p95 = p95;
         this.p99 = p99;
+        this.codesString = codes;
 
         this.codes = new ArrayList<String>();
         Scanner scCodes = new Scanner(codes).useDelimiter(",");
@@ -73,6 +78,26 @@ public class Report
         {
             this.codes.add(scCodes.next());
         }
+    }
+
+    public String getScenarioCountsString()
+    {
+        return scenarioCountsString;
+    }
+
+    public void setScenarioCountsString(String scenarioCountsString)
+    {
+        this.scenarioCountsString = scenarioCountsString;
+    }
+
+    public String getCodesString()
+    {
+        return codesString;
+    }
+
+    public void setCodesString(String codesString)
+    {
+        this.codesString = codesString;
     }
 
     public String getCodeAt(int i)
@@ -204,7 +229,7 @@ public class Report
     {
         this.p99 = p99;
     }
-    
+
     public double getAverageRequestsPerScenario()
     {
         double d = requestsCompleted / (double) scenariosCompleted;

@@ -232,22 +232,31 @@ public class Analyser
             //System.out.println("CHECKING EQUALS: " + f + "\t" + filename + ".txt");
             if (!f.equals(filename + ".txt"))
             {
-                
+
                 if (!firstSeen)
                 {
                     firstSeen = true;
-                    String newF = f.substring(0, f.length()-4);
-                    if(newF.substring(f.length()-4, f.length()-1).equals("___"))
+                    try
                     {
-                        averages = true;
+                        String newF = f.substring(0, f.length() - 4);
+                        newF = newF.substring(newF.length() - 4, newF.length() - 1);
+                        if (newF.equals("___"))
+                        {
+                            System.out.println("AVERAGES!");
+                            averages = true;
+                        }
+                    } catch (StringIndexOutOfBoundsException e)
+                    {
                     }
                 }
-                
+
                 //System.out.println("\t\tTEST FILE GO!!!!");
+                //System.out.println("-------------------------------");
                 SingleTest t = new SingleTest(filename, f);
                 //System.out.println("THIS SINGLETEST:\n" + t);
                 tests.add(t);
                 numTests++;
+                //System.out.println(t);
 
             }
 //            else
@@ -256,70 +265,182 @@ public class Analyser
 //            }
         }
 
-        if(averages)
+        System.out.println(numTests);
+        if (averages)
         {
-            calcScenarioAverages();
+            convertToAverages();
+        }
+        System.out.println(numTests);
+        System.out.println("---------------------------------------------------------------------------------------------");
+        for (int i = 0; i < numTests; i++)
+        {
+            System.out.println(tests.get(i));
+            System.out.println("---------------------------------------------------------------------------------------------");
         }
 
         {
             parent.appendToFeedback("Reports and phases captured!");
         }
     }
-    
-    public void calcScenarioAverages()
+
+    public void convertToAverages()
     {
-        for(int i = 0; i < tests.size(); i++)
+        //System.out.println("//////////////////////////////////////////////////////////////////////////////////////////\n");
+
+        for (int i = 0; i < tests.size(); i++)
         {
+            /*
+            System.out.println("//////////////////////////////////////////////////////////////////////////////////////////\n");
+
+            for (int q = 0; q < tests.size(); q++)
+            {
+                System.out.println(tests.get(q).getFilename());
+            }
+
+            System.out.println("//////////////////////////////////////////////////////////////////////////////////////////\n");
+             */
+
             //s1 is our thing at i
             SingleTest s1 = tests.get(i), s2 = null, s3 = null;
-            
+
+            //System.out.println("i=" + i + "\t" + s1.getFilename() + "<----");
             //get the common name without ___x
             String commonName = s1.getFilename();
-            commonName = commonName.substring(0, commonName.length()-4);
+            commonName = commonName.substring(0, commonName.length() - 4);
+            commonName = commonName.substring(0, commonName.length() - 4);
+            //System.out.println(commonName);
             String dir = s1.getDir();
-            
+
             //look through the rest of the array for the same commom name without ___x
             int j;
-            for(j = i + 1; j < tests.size(); j++)
+            boolean found = false;
+            for (j = i + 1; j < tests.size() && !found; j++)
             {
+
                 //get the current one
                 SingleTest s = tests.get(j);
                 //extract the name
                 String sName = s.getFilename();
-                sName = sName.substring(0, sName.length()-4);
-                
+                sName = sName.substring(0, sName.length() - 4);
+                sName = sName.substring(0, sName.length() - 4);
+                //System.out.println(sName);
+
+                //System.out.println("j=" + j + "\t" + s.getFilename());
                 //check if current name is same as common
-                if(commonName.equals(sName))
+                if (commonName.equals(sName))
                 {
+                    //System.out.println("FOUND!");
+                    found = true;
                     s2 = tests.get(j);
                     tests.remove(j);
+                    numTests--;
                     j--;
                 }
             }
-            
+
             //check through rest of array for our next one same as common without ___x
-            for(int k = j; k < tests.size(); k++)
+            found = false;
+            for (int k = j; k < tests.size() && !found; k++)
             {
                 //get current one
                 SingleTest s = tests.get(k);
                 //extract the name
                 String sName = s.getFilename();
-                sName = sName.substring(0, sName.length()-4);
-                
+                sName = sName.substring(0, sName.length() - 4);
+                sName = sName.substring(0, sName.length() - 4);
+                //System.out.println(sName);
+
+                //System.out.println("k=" + k + "\t" + s.getFilename());
                 //check if current name is same as common
-                if(commonName.equals(sName))
+                if (commonName.equals(sName))
                 {
+                    //System.out.println("FOUND!");
+                    found = true;
                     s3 = tests.get(k);
                     tests.remove(k);
-                    k = tests.size() + 5;
+                    numTests--;
                 }
             }
-            
+
             //now, group those 3 into one, finding averages, assume same size
-            SingleTest s = new SingleTest(dir, commonName);
+            SingleTest s = new SingleTest(dir, commonName); //this will throw exception
+            //add phases
+            for (int x = 0; x < s1.getNumPhases(); x++)
+            {
+                Phase copy = s1.getPhases().get(x);
+                Phase p = new Phase(copy.getPhaseNum(), copy.getDuration(), copy.getTimedate());
+                s.addPhase(p);
+            }
+            //add reports with averages
+            for (int x = 0; x < s1.getNumReports() && x < s2.getNumReports() && x < s3.getNumReports(); x++)
+            {
+                Report copy1 = s1.getReports().get(x);
+                Report copy2 = s2.getReports().get(x);
+                Report copy3 = s3.getReports().get(x);
+
+                String h = copy3.getHeader();
+                int sl = (int) Math.round(avg3(copy1.getScenariosLaunched(), copy2.getScenariosLaunched(), copy3.getScenariosLaunched()));
+                int sc = (int) Math.round(avg3(copy1.getScenariosCompleted(), copy2.getScenariosCompleted(), copy3.getScenariosCompleted()));
+                int rc = (int) Math.round(avg3(copy1.getRequestsCompleted(), copy2.getRequestsCompleted(), copy3.getRequestsCompleted()));
+                double rps = roundTo(avg3(copy1.getRpsSent(), copy2.getRpsSent(), copy3.getRpsSent()), 2);
+                double min = roundTo(avg3(copy1.getMin(), copy2.getMin(), copy3.getMin()), 2);
+                double max = roundTo(avg3(copy1.getMax(), copy2.getMax(), copy3.getMax()), 2);
+                double median = roundTo(avg3(copy1.getMedian(), copy2.getMedian(), copy3.getMedian()), 2);
+                double p95 = roundTo(avg3(copy1.getP95(), copy2.getP95(), copy3.getP95()), 2);
+                double p99 = roundTo(avg3(copy1.getP99(), copy2.getP99(), copy3.getP99()), 2);
+                String scenarioCounts = "";
+                boolean isSummary = false;
+                if (copy1.isSummary())
+                {
+                    isSummary = true;
+                    scenarioCounts = copy1.getScenarioCountsString();
+                } else if (copy2.isSummary())
+                {
+                    isSummary = true;
+                    scenarioCounts = copy2.getScenarioCountsString();
+                } else if (copy3.isSummary())
+                {
+                    isSummary = true;
+                    scenarioCounts = copy3.getScenarioCountsString();
+                }
+
+                String codes = copy3.getCodesString();
+
+                Report r;
+                if (isSummary)
+                {
+                    r = new Report(h, sl, sc, rc, rps, min, max, median, p95, p99, scenarioCounts, codes);
+                } else
+                {
+                    r = new Report(h, sl, sc, rc, rps, min, max, median, p95, p99, codes);
+                }
+
+                s.addReport(r);
+            }
             //make this grouped one into pos i
-            
+            //System.out.println(i);
+            //System.out.println(s);
+            tests.remove(i);
+            numTests--;
+            tests.add(i, s);
+            numTests++;
         }
+
+        /*
+        System.out.println("//////////////////////////////////////////////////////////////////////////////////////////\n");
+
+        for (int q = 0; q < tests.size(); q++)
+        {
+            System.out.println(tests.get(q).getFilename());
+        }
+
+        System.out.println("//////////////////////////////////////////////////////////////////////////////////////////\n");
+         */
+    }
+
+    public double avg3(double n1, double n2, double n3)
+    {
+        return (n1 + n2 + n3) / 3.0;
     }
 
     public void drawGraph1(String s)
@@ -1168,11 +1289,21 @@ public class Analyser
     public String getLagReport()
     {
         String b = "";
+        System.out.println(numTests);
         for (int i = 0; i < numTests; i++)
         {
             b += tests.get(i).getLagReport();
         }
         return b;
+    }
+
+    public double roundTo(double num, int dec)
+    {
+        int toTimesBy = (int) Math.pow(10, dec);
+        num *= toTimesBy;
+        num = Math.round(num);
+        num /= toTimesBy;
+        return num;
     }
 
 }

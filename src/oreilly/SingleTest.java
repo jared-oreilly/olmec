@@ -195,8 +195,40 @@ public class SingleTest
             }
         } catch (IOException e)
         {
-            System.out.println("File not found for some reason: " + e);
+            //System.out.println("File not found for some reason: " + e);
         }
+    }
+    
+    public void addReport(Report r)
+    {
+        reports.add(r);
+        numReports++;
+    }
+    
+    public void addPhase(Phase p)
+    {
+        phases.add(p);
+        numPhases++;
+    }
+    
+    public ArrayList<Phase> getPhases()
+    {
+        return phases;
+    }
+    
+    public ArrayList<Report> getReports()
+    {
+        return reports;
+    }
+    
+    public int getNumPhases()
+    {
+        return numPhases;
+    }
+    
+    public int getNumReports()
+    {
+        return numReports;
     }
 
     public String getFilename()
@@ -239,8 +271,17 @@ public class SingleTest
 
     public String getLagReport()
     {
+        System.out.println(filename);
         String b = "";
-        b += filename.substring(0, filename.indexOf(".")) + "\n";
+        try
+        {
+            b += filename.substring(0, filename.indexOf(".")) + "\n";
+        }
+        catch(StringIndexOutOfBoundsException e)
+        {
+            b += filename + "\n";
+        }
+        
         b += abnormalMessage() + "\n";
         System.out.println("--------------------------------------------------------------------------\n");
         return b;

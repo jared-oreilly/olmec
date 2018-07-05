@@ -42,7 +42,7 @@ public class StartUI extends javax.swing.JFrame
             }
         });
 
-        txfFilename.setText("uct");
+        txfFilename.setText("uct2");
 
         jLabel2.setText(".txt");
 
