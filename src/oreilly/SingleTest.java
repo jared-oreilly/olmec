@@ -192,28 +192,141 @@ public class SingleTest
 
                 }
             }
-        }
-        catch(IOException e)
+        } catch (IOException e)
         {
             System.out.println("File not found for some reason: " + e);
         }
     }
-    
+
     @Override
     public String toString()
     {
         String b = "";
         b += dir + "/" + filename + "\n";
         b += "REPORTS (" + numReports + "):\n";
-        for(int i = 0; i < numReports; i++)
+        for (int i = 0; i < numReports; i++)
         {
             b += reports.get(i) + "\n";
         }
         b += "PHASES (" + numPhases + "):\n";
-        for(int i = 0; i < numPhases; i++)
+        for (int i = 0; i < numPhases; i++)
         {
             b += phases.get(i) + "\n";
         }
         return b;
+    }
+
+    public String getLagReport()
+    {
+        String b = "";
+        b += filename.substring(0, filename.indexOf(".")) + "\t";
+        b += abnormalMessage() + "\n\n";
+        return b;
+    }
+
+    public String abnormalMessage()
+    {
+        Report r;
+        int newNumReports = numReports - 1; //ignore summary
+        int numMeasures = 5;
+        double[] minArr = new double[newNumReports], medianArr = new double[newNumReports], p95Arr = new double[newNumReports], p99Arr = new double[newNumReports], maxArr = new double[newNumReports];
+        for (int i = 0; i < newNumReports; i++)
+        {
+            r = reports.get(i);
+            minArr[i] = r.getMin();
+            medianArr[i] = r.getMedian();
+            p95Arr[i] = r.getP95();
+            p99Arr[i] = r.getP99();
+            maxArr[i] = r.getMax();
+            //System.out.println(r.getMin() + "\t" + r.getMedian() + "\t" + r.getP95() + "\t" + r.getP99() + "\t" + r.getMax());
+            System.out.print(r.getP95() + " ");
+        }
+        System.out.println("");
+
+        double[] sdArr = new double[numMeasures];
+        sdArr[0] = calcSD(minArr, true);
+        sdArr[1] = calcSD(medianArr, true);
+        sdArr[2] = calcSD(p95Arr, false);
+        sdArr[3] = calcSD(p99Arr, false);
+        sdArr[4] = calcSD(maxArr, false);
+
+        System.out.println(sdArr[2]);
+        
+        if(sdArr[1] > 12.0)
+        {
+            return "ABNORMAL: Median deviates!";
+        }
+        
+        if(sdArr[2] > 12.0)
+        {
+            return "ABNORMAL: P95 deviates!";
+        }
+        
+        
+        return "-";
+    }
+
+    public double calcSD(double arr[], boolean useTopOutlier)
+    {
+        double sd;
+        if (useTopOutlier)
+        {
+            double sum = 0;
+            for (int i = 0; i < arr.length; i++)
+            {
+                sum += arr[i];
+            }
+            double avg = sum / arr.length;
+
+            double top = 0;
+            double diff;
+            for (int i = 0; i < arr.length; i++)
+            {
+                diff = arr[i] - avg;
+                top += Math.pow(diff, 2);
+            }
+
+            double frac = top / arr.length;
+            sd = Math.sqrt(frac);
+        } else
+        {
+            //while going through, find max
+            double sum = 0;
+            sum += arr[0];
+            double max = arr[0];
+            int maxI = 0;
+            for (int i = 1; i < arr.length; i++)
+            {
+                sum += arr[i];
+                if (arr[i] > max)
+                {
+                    max = arr[i];
+                    maxI = i;
+                }
+            }
+            //calculate average without max
+            double avg = (sum - max) / (arr.length - 1);
+            //replace max with average
+            arr[maxI] = avg;
+            //System.out.println("MAX: " + max + "\tAVG: " + avg);
+
+            double top = 0;
+            double diff;
+            for (int i = 0; i < arr.length; i++)
+            {
+                diff = arr[i] - avg;
+                top += Math.pow(diff, 2);
+            }
+
+            double frac = top / arr.length;
+            sd = Math.sqrt(frac);
+        }
+
+        sd *= 100;
+        sd = Math.round(sd);
+        sd /= 100;
+
+        return sd;
+
     }
 }

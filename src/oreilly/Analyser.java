@@ -1091,8 +1091,10 @@ public class Analyser
     public String getLagReport()
     {
         String b = "";
-        b += "Awe bru";
-        
+        for(int i = 0; i < numTests; i++)
+        {
+            b += tests.get(i).getLagReport();
+        }
         return b;
     }
 
