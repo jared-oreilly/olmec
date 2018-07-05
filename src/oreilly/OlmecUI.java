@@ -17,7 +17,8 @@ public class OlmecUI extends javax.swing.JFrame
     {
         initComponents();
         this.filename = filename;
-        lblDesc.setText("The overall report for the entire Artillery run of " + filename + ".txt");
+        lblDesc.setText("The report for the main Artillery run (" + filename + ".txt)");
+        lblDesc1.setText("The individual tests for each scenario (of " + filename + ")");
         a = new Analyser(filename, this);
     }
 
@@ -51,6 +52,9 @@ public class OlmecUI extends javax.swing.JFrame
         btnShow = new javax.swing.JButton();
         jLabel8 = new javax.swing.JLabel();
         lblDesc = new javax.swing.JLabel();
+        btnShow1 = new javax.swing.JButton();
+        jLabel9 = new javax.swing.JLabel();
+        lblDesc1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -134,6 +138,19 @@ public class OlmecUI extends javax.swing.JFrame
 
         lblDesc.setText("jLabel2");
 
+        btnShow1.setText("Show");
+        btnShow1.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
+                btnShow1ActionPerformed(evt);
+            }
+        });
+
+        jLabel9.setText("SCENARIO TESTS");
+
+        lblDesc1.setText("jLabel2");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -144,39 +161,44 @@ public class OlmecUI extends javax.swing.JFrame
                     .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jScrollPane1)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel4)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(cbxMin)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(cbxMedian)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(cbxP95)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(cbxP99)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(cbxMax))
-                            .addComponent(jLabel5)
-                            .addComponent(jLabel6)
-                            .addComponent(jLabel8))
-                        .addGap(0, 0, Short.MAX_VALUE))
+                        .addComponent(jLabel7)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cbxSL)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cbxSC)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cbxRC)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnGraphScenReq, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel4)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cbxMin)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cbxMedian)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cbxP95)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cbxP99)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cbxMax)
+                        .addGap(24, 24, 24)
+                        .addComponent(btnGraphResponseTimes, javax.swing.GroupLayout.DEFAULT_SIZE, 80, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel7)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(cbxSL)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(cbxSC)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(cbxRC))
-                            .addComponent(lblDesc))
+                            .addComponent(jLabel5)
+                            .addComponent(jLabel6)
+                            .addComponent(jLabel8)
+                            .addComponent(jLabel9))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(lblDesc1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btnShow, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btnGraphResponseTimes, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 80, Short.MAX_VALUE)
-                            .addComponent(btnGraphScenReq, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addComponent(btnShow1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(lblDesc)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnShow, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -211,6 +233,12 @@ public class OlmecUI extends javax.swing.JFrame
                     .addComponent(btnShow)
                     .addComponent(lblDesc))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel9)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnShow1)
+                    .addComponent(lblDesc1))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 283, Short.MAX_VALUE)
                 .addContainerGap())
         );
@@ -284,6 +312,11 @@ public class OlmecUI extends javax.swing.JFrame
         new SummaryUI(a.getSummaryReport(), filename).setVisible(true);
     }//GEN-LAST:event_btnShowActionPerformed
 
+    private void btnShow1ActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_btnShow1ActionPerformed
+    {//GEN-HEADEREND:event_btnShow1ActionPerformed
+        new SingleTestUI(a.getLagReport()).setVisible(true);
+    }//GEN-LAST:event_btnShow1ActionPerformed
+
     public void appendToFeedback(String text)
     {
         System.out.println(text);
@@ -294,6 +327,7 @@ public class OlmecUI extends javax.swing.JFrame
     private javax.swing.JButton btnGraphResponseTimes;
     private javax.swing.JButton btnGraphScenReq;
     private javax.swing.JButton btnShow;
+    private javax.swing.JButton btnShow1;
     private javax.swing.JCheckBox cbxMax;
     private javax.swing.JCheckBox cbxMedian;
     private javax.swing.JCheckBox cbxMin;
@@ -308,8 +342,10 @@ public class OlmecUI extends javax.swing.JFrame
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblDesc;
+    private javax.swing.JLabel lblDesc1;
     private javax.swing.JTextArea txaFeedback;
     // End of variables declaration//GEN-END:variables
 }

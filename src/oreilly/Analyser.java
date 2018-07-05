@@ -24,25 +24,28 @@ public class Analyser
     private int numReports;
     private int numPhases;
     private OlmecUI parent;
-    
+
+    private ArrayList<SingleTest> tests;
+    private int numTests;
+
     private String toDisplay1;
     private boolean[] display1;
     private final int numDisplayOptions1 = 5;
-    
+
     private String toDisplay2;
     private boolean[] display2;
     private final int numDisplayOptions2 = 3;
-    
+
     public static final Color[] colArr = new Color[]
     {
         Color.red, Color.blue, new Color(0, 153, 0), new Color(255, 102, 0), new Color(102, 0, 153), Color.orange
     };
-    
+
     public static final Color[] colArro = new Color[]
     {
         new Color(255, 0, 0, 50), new Color(0, 0, 255, 50), new Color(0, 153, 0, 50), new Color(255, 102, 0, 50), new Color(102, 0, 153, 50), Color.orange
     };
-    
+
     private final int x = 200, y = 200;
     private int min, max;
 
@@ -54,8 +57,12 @@ public class Analyser
         numPhases = 0;
         parent = g;
 
-        //put file into arraylist
+        tests = new ArrayList<SingleTest>();
+        numTests = 0;
+
+        //put main file into arraylist
         Scanner scFile = new Scanner(new File("../../mayan/Mayan/gen/runs/" + filename + "/" + filename + ".txt"));
+        //Scanner scFile = new Scanner(new File("../../mayan/Mayan/gen/runs/" + filename + "/" + "Test0" + ".txt"));
         ArrayList<String> compArr = new ArrayList<String>();
         while (scFile.hasNextLine())
         {
@@ -214,8 +221,28 @@ public class Analyser
             }
         }
 
-        parent.appendToFeedback("Reports and phases captured!");
+        //now, capture all single test
+        //System.out.println("THE FOLDER: ../../mayan/Mayan/gen/runs/" + filename);
+        for (File file : new File("../../mayan/Mayan/gen/runs/" + filename).listFiles())
+        {
+            String f = file.getName();
+            //System.out.println("CHECKING EQUALS: " + f + "\t" + filename + ".txt");
+            if (!f.equals(filename + ".txt"))
+            {
+                //System.out.println("\t\tTEST FILE GO!!!!");
+                SingleTest t = new SingleTest(filename, f);
+                //System.out.println("THIS SINGLETEST:\n" + t);
+                tests.add(t);
+                numTests++;
 
+            }
+//            else
+//            {
+//                System.out.println("\t\tMAIN FILE STOP!!!!!!!");
+//            }
+        }
+        
+        parent.appendToFeedback("Reports and phases captured!");
     }
 
     public void drawGraph1(String s)
@@ -308,14 +335,12 @@ public class Analyser
             last += cur.getDuration();
         }
 
-        
         int blah = (int) Math.round((last / (double) totalTime) * y);
         for (int j = 0; j < x; j++)
         {
             lblArr[j][blah].setOpaque(true);
             lblArr[j][blah].setBackground(Color.lightGray);
         }
-        
 
     }
 
@@ -452,13 +477,12 @@ public class Analyser
     {
         //returns 10s intervals * i
         int r = (y / (numReports - 1)) * i;
-        if(r < 0)
+        if (r < 0)
         {
             r = 0;
-        }
-        else if(r >= y)
+        } else if (r >= y)
         {
-            r = y-1;
+            r = y - 1;
         }
         return r;
     }
@@ -773,14 +797,12 @@ public class Analyser
             last += cur.getDuration();
         }
 
-        
         int blah = (int) Math.round((last / (double) totalTime) * y);
         for (int j = 0; j < x; j++)
         {
             lblArr[j][blah].setOpaque(true);
             lblArr[j][blah].setBackground(Color.lightGray);
         }
-        
 
     }
 
@@ -891,13 +913,12 @@ public class Analyser
     {
         //returns 10s intervals * i
         int r = (y / (numReports - 1)) * i;
-        if(r < 0)
+        if (r < 0)
         {
             r = 0;
-        }
-        else if(r >= y)
+        } else if (r >= y)
         {
-            r = y-1;
+            r = y - 1;
         }
         return r;
     }
@@ -1061,10 +1082,18 @@ public class Analyser
         System.out.println(max + " = ");
         return max;
     }
-    
+
     public Report getSummaryReport()
     {
-        return reports.get(numReports-1);
+        return reports.get(numReports - 1);
+    }
+    
+    public String getLagReport()
+    {
+        String b = "";
+        b += "Awe bru";
+        
+        return b;
     }
 
 }
