@@ -42,8 +42,6 @@ public class StartUI extends javax.swing.JFrame
             }
         });
 
-        txfFilename.setText("uct2");
-
         jLabel2.setText(".txt");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());

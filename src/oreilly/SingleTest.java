@@ -24,7 +24,7 @@ public class SingleTest
     private int numPhases;
     private String dir;
     private String filename;
-    private final double flagSD = 15.0;
+    private final double flagSD = 20.0;
 
     public SingleTest(String dir, String filename)
     {
