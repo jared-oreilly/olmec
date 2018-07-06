@@ -7,8 +7,8 @@ import javax.swing.JOptionPane;
 public class OlmecUI extends javax.swing.JFrame
 {
 
-    boolean progress = true;
-    Analyser a;
+    boolean debug = true;
+    Analyser analyser;
     private String filename;
     public static final Color[] colArr = new Color[]
     {
@@ -21,8 +21,8 @@ public class OlmecUI extends javax.swing.JFrame
         this.filename = filename;
         lblDesc.setText("The report for the main Artillery run (" + filename + ".txt)");
         lblDesc1.setText("Individual scenario tests");
-        a = new Analyser(filename, this);
-        String[] scenNames = a.getScenNames();
+        analyser = new Analyser(filename, this);
+        String[] scenNames = analyser.getScenNames();
         cbxPickScenario.removeAllItems();
         for(int i = 0; i < scenNames.length; i++)
         {
@@ -335,111 +335,111 @@ public class OlmecUI extends javax.swing.JFrame
 
     private void btnGraphResponseTimesActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_btnGraphResponseTimesActionPerformed
     {//GEN-HEADEREND:event_btnGraphResponseTimesActionPerformed
-        String s = "";
+        String sendText = "";
         if (cbxMin.isSelected())
         {
-            s += "0,";
+            sendText += "0,";
         }
         if (cbxMedian.isSelected())
         {
-            s += "1,";
+            sendText += "1,";
         }
         if (cbxP95.isSelected())
         {
-            s += "2,";
+            sendText += "2,";
         }
         if (cbxP99.isSelected())
         {
-            s += "3,";
+            sendText += "3,";
         }
         if (cbxMax.isSelected())
         {
-            s += "4,";
+            sendText += "4,";
         }
-        if (s.equals(""))
+        if (sendText.equals(""))
         {
             JOptionPane.showMessageDialog(null, "Select at least one aspect to graph!");
         } else
         {
-            s = s.substring(0, s.length() - 1);
+            sendText = sendText.substring(0, sendText.length() - 1);
         }
 
-        a.drawGraph1(s);
+        analyser.drawGraph1(sendText);
     }//GEN-LAST:event_btnGraphResponseTimesActionPerformed
 
     private void btnGraphScenReqActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_btnGraphScenReqActionPerformed
     {//GEN-HEADEREND:event_btnGraphScenReqActionPerformed
-        String s = "";
+        String sendText = "";
         if (cbxSL.isSelected())
         {
-            s += "0,";
+            sendText += "0,";
         }
         if (cbxSC.isSelected())
         {
-            s += "1,";
+            sendText += "1,";
         }
         if (cbxRC.isSelected())
         {
-            s += "2,";
+            sendText += "2,";
         }
-        if (s.equals(""))
+        if (sendText.equals(""))
         {
             JOptionPane.showMessageDialog(null, "Select at least one aspect to graph!");
         } else
         {
-            s = s.substring(0, s.length() - 1);
+            sendText = sendText.substring(0, sendText.length() - 1);
         }
 
-        a.drawGraph2(s);
+        analyser.drawGraph2(sendText);
     }//GEN-LAST:event_btnGraphScenReqActionPerformed
 
     private void btnShowActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_btnShowActionPerformed
     {//GEN-HEADEREND:event_btnShowActionPerformed
-        new SummaryUI(a.getSummaryReport(), filename).setVisible(true);
+        new SummaryUI(analyser.getSummaryReport(), filename).setVisible(true);
     }//GEN-LAST:event_btnShowActionPerformed
 
     private void btnShow1ActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_btnShow1ActionPerformed
     {//GEN-HEADEREND:event_btnShow1ActionPerformed
-        new SingleTestUI(a.getLagReport(cbxOnlyShow.isSelected())).setVisible(true);
+        new SingleTestUI(analyser.getLagReport(cbxOnlyShow.isSelected())).setVisible(true);
     }//GEN-LAST:event_btnShow1ActionPerformed
 
     private void btnGraphResponseTimes1ActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_btnGraphResponseTimes1ActionPerformed
     {//GEN-HEADEREND:event_btnGraphResponseTimes1ActionPerformed
-        String s = "";
+        String sendText = "";
         if (cbxMin1.isSelected())
         {
-            s += "0,";
+            sendText += "0,";
         }
         if (cbxMedian1.isSelected())
         {
-            s += "1,";
+            sendText += "1,";
         }
         if (cbxP96.isSelected())
         {
-            s += "2,";
+            sendText += "2,";
         }
         if (cbxP100.isSelected())
         {
-            s += "3,";
+            sendText += "3,";
         }
         if (cbxMax1.isSelected())
         {
-            s += "4,";
+            sendText += "4,";
         }
-        if (s.equals(""))
+        if (sendText.equals(""))
         {
             JOptionPane.showMessageDialog(null, "Select at least one aspect to graph!");
         } else
         {
-            s = s.substring(0, s.length() - 1);
+            sendText = sendText.substring(0, sendText.length() - 1);
         }
 
-        a.drawGraph3(s, (String) cbxPickScenario.getSelectedItem());
+        analyser.drawGraph3(sendText, (String) cbxPickScenario.getSelectedItem());
     }//GEN-LAST:event_btnGraphResponseTimes1ActionPerformed
 
     public void appendToFeedback(String text)
     {
-        if (progress)
+        if (debug)
         {
             System.out.print(text);
         }

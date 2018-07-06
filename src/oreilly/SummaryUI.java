@@ -3,12 +3,12 @@ package oreilly;
 public class SummaryUI extends javax.swing.JFrame
 {
 
-    public SummaryUI(Report r, String filename)
+    public SummaryUI(Report report, String filename)
     {
         initComponents();
-        txfHeader.setText(filename + ".txt\t\t" + r.getHeader());
-        txaReport.setText(r.printSummaryReport(false));
-        txaScenCounts.setText(r.printScenCounts());
+        txfHeader.setText(filename + ".txt\t\t" + report.getHeader());
+        txaReport.setText(report.printSummaryReport(false));
+        txaScenCounts.setText(report.printScenCounts());
     }
 
     /**

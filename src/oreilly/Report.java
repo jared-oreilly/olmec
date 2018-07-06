@@ -1,16 +1,7 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package oreilly;
 
 import java.util.*;
 
-/**
- *
- * @author jared.oreilly
- */
 public class Report
 {
 
@@ -232,79 +223,78 @@ public class Report
 
     public double getAverageRequestsPerScenario()
     {
-        double d = requestsCompleted / (double) scenariosCompleted;
-        d *= 100;
-        d = (int) Math.round(d);
-        d /= 100.0;
-        return d;
+        double averageRPS = requestsCompleted / (double) scenariosCompleted;
+        averageRPS *= 100;
+        averageRPS = (int) Math.round(averageRPS);
+        averageRPS /= 100.0;
+        return averageRPS;
     }
 
+    @Override
     public String toString()
     {
-        String b = "";
-        b += "Is summary: " + summary + "\n";
-        b += header + "\n";
-        b += "sl, sc, rc: " + scenariosLaunched + ", " + scenariosCompleted + ", " + requestsCompleted + "\n";
-        b += "rpsSent: " + rpsSent + "\n";
-        b += "min, median, p95, p99, max: " + min + ", " + median + ", " + p95 + ", " + p99 + ", " + max + "\n";
-        b += "scenarioCounts: " + scenarioCounts + "\n";
-        b += "codes: " + codes + "\n";
-        return b;
+        String buildUp = "";
+        buildUp += "Is summary: " + summary + "\n";
+        buildUp += header + "\n";
+        buildUp += "sl, sc, rc: " + scenariosLaunched + ", " + scenariosCompleted + ", " + requestsCompleted + "\n";
+        buildUp += "rpsSent: " + rpsSent + "\n";
+        buildUp += "min, median, p95, p99, max: " + min + ", " + median + ", " + p95 + ", " + p99 + ", " + max + "\n";
+        buildUp += "scenarioCounts: " + scenarioCounts + "\n";
+        buildUp += "codes: " + codes + "\n";
+        return buildUp;
     }
 
     public String printSummaryReport(boolean printScenCounts)
     {
-        String b = "";
-        //b += header + "\n";
-        //b += "\n";
+        String buildUp = "";
 
-        b += "SCENARIOS AND REQUESTS\n";
-        b += "Scenarios Launched:\t\t" + scenariosLaunched + "\n";
-        b += "Scenarios Completed:\t\t" + scenariosCompleted + "\n";
-        b += "Requests Completed:\t\t" + requestsCompleted + "\n";
-        b += "Average Requests per Scenario:\t" + getAverageRequestsPerScenario() + "\n";
-        b += "Requests sent per second (RPS):\t" + rpsSent + "\n";
-        b += "\n";
+        buildUp += "SCENARIOS AND REQUESTS\n";
+        buildUp += "Scenarios Launched:\t\t" + scenariosLaunched + "\n";
+        buildUp += "Scenarios Completed:\t\t" + scenariosCompleted + "\n";
+        buildUp += "Requests Completed:\t\t" + requestsCompleted + "\n";
+        buildUp += "Average Requests per Scenario:\t" + getAverageRequestsPerScenario() + "\n";
+        buildUp += "Requests sent per second (RPS):\t" + rpsSent + "\n";
+        buildUp += "\n";
 
-        b += "RESPONSE TIMES (ms)\n";
-        b += "Minimum:\t\t" + min + "\n";
-        b += "Median:\t\t" + median + "\n";
-        b += "95th %ile:\t\t" + p95 + "\n";
-        b += "99th %ile:\t\t" + p99 + "\n";
-        b += "Maximum:\t\t" + max + "\n";
-        b += "\n";
+        buildUp += "RESPONSE TIMES (ms)\n";
+        buildUp += "Minimum:\t\t" + min + "\n";
+        buildUp += "Median:\t\t" + median + "\n";
+        buildUp += "95th %ile:\t\t" + p95 + "\n";
+        buildUp += "99th %ile:\t\t" + p99 + "\n";
+        buildUp += "Maximum:\t\t" + max + "\n";
+        buildUp += "\n";
 
-        b += "CODES\n";
+        buildUp += "CODES\n";
         for (int i = 0; i < codes.size(); i++)
         {
-            String cur = codes.get(i);
-            b += cur.substring(0, cur.indexOf(":") + 1) + "\t" + cur.substring(cur.indexOf(":") + 2) + "\n";
+            String currentCode = codes.get(i);
+            buildUp += currentCode.substring(0, currentCode.indexOf(":") + 1) + "\t" + currentCode.substring(currentCode.indexOf(":") + 2) + "\n";
         }
-        b += "\n";
+        buildUp += "\n";
 
         if (printScenCounts)
         {
-            b += "SCENARIO COUNTS\n";
+            buildUp += "SCENARIO COUNTS\n";
             for (int i = 0; i < scenarioCounts.size(); i++)
             {
-                String cur = scenarioCounts.get(i);
-                b += cur.substring(0, cur.indexOf(":") + 1) + "\t" + cur.substring(cur.indexOf(":") + 2, cur.indexOf("(") - 1) + "\t" + cur.substring(cur.indexOf("(") + 1, cur.indexOf(")")) + "\n";
+                String currentScenario = scenarioCounts.get(i);
+                buildUp += currentScenario.substring(0, currentScenario.indexOf(":") + 1) + "\t" + currentScenario.substring(currentScenario.indexOf(":") + 2, currentScenario.indexOf("(") - 1) + "\t" + currentScenario.substring(currentScenario.indexOf("(") + 1, currentScenario.indexOf(")")) + "\n";
             }
         }
 
-        return b;
+        return buildUp;
     }
 
     public String printScenCounts()
     {
-        String b = "";
-        b += "SCENARIO COUNTS\n";
+        String buildUp = "";
+        buildUp += "SCENARIO COUNTS\n";
         for (int i = 0; i < scenarioCounts.size(); i++)
         {
             String cur = scenarioCounts.get(i);
-            b += cur.substring(cur.indexOf(":") + 2, cur.indexOf("(") - 1) + "\t" + cur.substring(cur.indexOf("(") + 1, cur.indexOf(")")) + "\t" + cur.substring(0, cur.indexOf(":")) + "\n";
+            buildUp += cur.substring(cur.indexOf(":") + 2, cur.indexOf("(") - 1) + "\t" + cur.substring(cur.indexOf("(") + 1, cur.indexOf(")")) + "\t" + cur.substring(0, cur.indexOf(":")) + "\n";
         }
-        return b;
+        return buildUp;
     }
 
 }

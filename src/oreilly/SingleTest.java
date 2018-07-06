@@ -38,155 +38,151 @@ public class SingleTest
         try
         {
             //put file into arraylist
-            //System.out.println("IN SINGLE TEST, FILE IS ../../mayan/Mayan/gen/runs/" + dir + "/" + filename);
-            Scanner scFile = new Scanner(new File("../../mayan/Mayan/gen/runs/" + dir + "/" + filename));
-            ArrayList<String> compArr = new ArrayList<String>();
-            while (scFile.hasNextLine())
+            Scanner scannerFile = new Scanner(new File("../../mayan/Mayan/gen/runs/" + dir + "/" + filename));
+            ArrayList<String> componentArr = new ArrayList<String>();
+            while (scannerFile.hasNextLine())
             {
-                compArr.add(scFile.nextLine());
+                componentArr.add(scannerFile.nextLine());
             }
-            scFile.close();
+            scannerFile.close();
 
             //extract report info
-            for (int i = 0; i < compArr.size(); i++)
+            for (int i = 0; i < componentArr.size(); i++)
             {
                 try
                 {
-                    if (compArr.get(i).substring(0, 6).equals("Report"))
+                    if (componentArr.get(i).substring(0, 6).equals("Report"))
                     {
-                        String h = compArr.get(i).trim();
+                        String header = componentArr.get(i).trim();
                         i++;
 
-                        String sl = compArr.get(i).trim();
-                        sl = sl.substring(21);
+                        String scenariosLaunched = componentArr.get(i).trim();
+                        scenariosLaunched = scenariosLaunched.substring(21);
                         i++;
 
-                        String sc = compArr.get(i).trim();
-                        sc = sc.substring(21);
+                        String scenariosCompleted = componentArr.get(i).trim();
+                        scenariosCompleted = scenariosCompleted.substring(21);
                         i++;
 
-                        String rc = compArr.get(i).trim();
-                        rc = rc.substring(21);
+                        String requestsCompleted = componentArr.get(i).trim();
+                        requestsCompleted = requestsCompleted.substring(21);
                         i++;
 
-                        String rps = compArr.get(i).trim();
+                        String rps = componentArr.get(i).trim();
                         rps = rps.substring(10);
                         i++;
                         i++;
 
-                        String min = compArr.get(i).trim();
+                        String min = componentArr.get(i).trim();
                         min = min.substring(5);
                         i++;
 
-                        String max = compArr.get(i).trim();
+                        String max = componentArr.get(i).trim();
                         max = max.substring(5);
                         i++;
 
-                        String med = compArr.get(i).trim();
+                        String med = componentArr.get(i).trim();
                         med = med.substring(8);
                         i++;
 
-                        String p95 = compArr.get(i).trim();
+                        String p95 = componentArr.get(i).trim();
                         p95 = p95.substring(5);
                         i++;
 
-                        String p99 = compArr.get(i).trim();
+                        String p99 = componentArr.get(i).trim();
                         p99 = p99.substring(5);
                         i++;
 
                         String codes = "";
                         i++;
-                        String nextLine = compArr.get(i).trim();
+                        String nextLine = componentArr.get(i).trim();
                         while (!nextLine.equals(""))
                         {
                             codes += nextLine + ",";
                             i++;
-                            nextLine = compArr.get(i).trim();
+                            nextLine = componentArr.get(i).trim();
                         }
                         codes = codes.substring(0, codes.length() - 1);
 
-                        Report temp = new Report(h, Integer.parseInt(sl), Integer.parseInt(sc), Integer.parseInt(rc), Double.parseDouble(rps), Double.parseDouble(min), Double.parseDouble(max), Double.parseDouble(med), Double.parseDouble(p95), Double.parseDouble(p99), codes);
-                        //System.out.println(temp);
-                        reports.add(temp);
+                        Report report = new Report(header, Integer.parseInt(scenariosLaunched), Integer.parseInt(scenariosCompleted), Integer.parseInt(requestsCompleted), Double.parseDouble(rps), Double.parseDouble(min), Double.parseDouble(max), Double.parseDouble(med), Double.parseDouble(p95), Double.parseDouble(p99), codes);
+                        reports.add(report);
                         numReports++;
 
-                    } else if (compArr.get(i).substring(0, 14).equals("Summary report"))
+                    } else if (componentArr.get(i).substring(0, 14).equals("Summary report"))
                     {
-                        String h = compArr.get(i).trim();
+                        String header = componentArr.get(i).trim();
                         i++;
 
-                        String sl = compArr.get(i).trim();
-                        sl = sl.substring(21);
+                        String scenariosLaunched = componentArr.get(i).trim();
+                        scenariosLaunched = scenariosLaunched.substring(21);
                         i++;
 
-                        String sc = compArr.get(i).trim();
-                        sc = sc.substring(21);
+                        String scenariosCompleted = componentArr.get(i).trim();
+                        scenariosCompleted = scenariosCompleted.substring(21);
                         i++;
 
-                        String rc = compArr.get(i).trim();
-                        rc = rc.substring(21);
+                        String requestsCompleted = componentArr.get(i).trim();
+                        requestsCompleted = requestsCompleted.substring(21);
                         i++;
 
-                        String rps = compArr.get(i).trim();
+                        String rps = componentArr.get(i).trim();
                         rps = rps.substring(10);
                         i++;
                         i++;
 
-                        String min = compArr.get(i).trim();
+                        String min = componentArr.get(i).trim();
                         min = min.substring(5);
                         i++;
 
-                        String max = compArr.get(i).trim();
+                        String max = componentArr.get(i).trim();
                         max = max.substring(5);
                         i++;
 
-                        String med = compArr.get(i).trim();
+                        String med = componentArr.get(i).trim();
                         med = med.substring(8);
                         i++;
 
-                        String p95 = compArr.get(i).trim();
+                        String p95 = componentArr.get(i).trim();
                         p95 = p95.substring(5);
                         i++;
 
-                        String p99 = compArr.get(i).trim();
+                        String p99 = componentArr.get(i).trim();
                         p99 = p99.substring(5);
                         i++;
 
                         String scenarioCounts = "";
                         i++;
-                        String nextLineScen = compArr.get(i).trim();
+                        String nextLineScen = componentArr.get(i).trim();
                         while (!nextLineScen.equals("Codes:"))
                         {
                             scenarioCounts += nextLineScen + ",";
                             i++;
-                            nextLineScen = compArr.get(i).trim();
+                            nextLineScen = componentArr.get(i).trim();
                         }
                         scenarioCounts = scenarioCounts.substring(0, scenarioCounts.length() - 1);
 
                         String codes = "";
                         i++;
-                        String nextLineCodes = compArr.get(i).trim();
+                        String nextLineCodes = componentArr.get(i).trim();
                         while (!nextLineCodes.equals(""))
                         {
                             codes += nextLineCodes + ",";
                             i++;
-                            nextLineCodes = compArr.get(i).trim();
+                            nextLineCodes = componentArr.get(i).trim();
                         }
                         codes = codes.substring(0, codes.length() - 1);
 
-                        Report temp = new Report(h, Integer.parseInt(sl), Integer.parseInt(sc), Integer.parseInt(rc), Double.parseDouble(rps), Double.parseDouble(min), Double.parseDouble(max), Double.parseDouble(med), Double.parseDouble(p95), Double.parseDouble(p99), scenarioCounts, codes);
-                        //System.out.println(temp);
-                        reports.add(temp);
+                        Report report = new Report(header, Integer.parseInt(scenariosLaunched), Integer.parseInt(scenariosCompleted), Integer.parseInt(requestsCompleted), Double.parseDouble(rps), Double.parseDouble(min), Double.parseDouble(max), Double.parseDouble(med), Double.parseDouble(p95), Double.parseDouble(p99), scenarioCounts, codes);
+                        reports.add(report);
                         numReports++;
 
-                    } else if (compArr.get(i).substring(0, 7).equals("Started"))
+                    } else if (componentArr.get(i).substring(0, 7).equals("Started"))
                     {
-                        String s = compArr.get(i);
+                        String s = componentArr.get(i);
                         int pn = Integer.parseInt(s.substring(14, s.indexOf(",")));
                         int d = Integer.parseInt(s.substring(s.indexOf(":") + 2, s.indexOf("s @")));
                         String td = s.substring(s.indexOf("@") + 2);
                         Phase temp = new Phase(pn, d, td);
-                        //System.out.println(temp);
                         phases.add(temp);
                         numPhases++;
                     }
@@ -197,7 +193,6 @@ public class SingleTest
             }
         } catch (IOException e)
         {
-            //System.out.println("File not found for some reason: " + e);
         }
     }
 
@@ -256,19 +251,19 @@ public class SingleTest
     @Override
     public String toString()
     {
-        String b = "";
-        b += dir + "/" + filename + "\n";
-        b += "REPORTS (" + numReports + "):\n";
+        String buildUp = "";
+        buildUp += dir + "/" + filename + "\n";
+        buildUp += "REPORTS (" + numReports + "):\n";
         for (int i = 0; i < numReports; i++)
         {
-            b += reports.get(i) + "\n";
+            buildUp += reports.get(i) + "\n";
         }
-        b += "PHASES (" + numPhases + "):\n";
+        buildUp += "PHASES (" + numPhases + "):\n";
         for (int i = 0; i < numPhases; i++)
         {
-            b += phases.get(i) + "\n";
+            buildUp += phases.get(i) + "\n";
         }
-        return b;
+        return buildUp;
     }
 
     public String getLagReport()
@@ -277,61 +272,44 @@ public class SingleTest
         {
             System.out.println(filename);
         }
-        String b = "";
+        String buildUp = "";
         try
         {
-            b += filename.substring(0, filename.indexOf(".")) + "\n";
+            buildUp += filename.substring(0, filename.indexOf(".")) + "\n";
         } catch (StringIndexOutOfBoundsException e)
         {
-            b += filename + "\n";
+            buildUp += filename + "\n";
         }
 
-        b += abnormalMessage() + "\n";
+        buildUp += abnormalMessage() + "\n";
         if (debug)
         {
             System.out.println("--------------------------------------------------------------------------\n");
         }
-        return b;
+        return buildUp;
     }
 
     public String abnormalMessage()
     {
-        Report r;
-        int numNonSReports = numReports - 1; //ignore summary
+        Report report;
+        int numNonSummaryReports = numReports - 1; //ignore summary
         int numMeasures = 5;
 
-        /*
-        double[] minArr = new double[newNumReports], medianArr = new double[newNumReports], p95Arr = new double[newNumReports], p99Arr = new double[newNumReports], maxArr = new double[newNumReports];
-        for (int i = 0; i < newNumReports; i++)
+        double[] minArr = new double[numNonSummaryReports], medianArr = new double[numNonSummaryReports], p95Arr = new double[numNonSummaryReports], p99Arr = new double[numNonSummaryReports], maxArr = new double[numNonSummaryReports];
+
+        for (int i = 0; i < numNonSummaryReports; i++)
         {
-            r1 = reports.get(i);
-            minArr[i] = r1.getMin();
-            medianArr[i] = r1.getMedian();
-            p95Arr[i] = r1.getP95();
-            p99Arr[i] = r1.getP99();
-            maxArr[i] = r1.getMax();
-            //System.out.println(r.getMin() + "\t" + r.getMedian() + "\t" + r.getP95() + "\t" + r.getP99() + "\t" + r.getMax());
-            System.out.print(r1.getP95() + " ");
-        }
-        System.out.println("");
-         */
-        Report r2;
-        double[] minArr = new double[numNonSReports], medianArr = new double[numNonSReports], p95Arr = new double[numNonSReports], p99Arr = new double[numNonSReports], maxArr = new double[numNonSReports];
+            report = reports.get(i);
 
-        for (int i = 0; i < numNonSReports; i++)
-        {
-            //System.out.println("REPORT " + i + " AND " + (i + 1));
-            r = reports.get(i);
+            minArr[i] = report.getMin();
 
-            minArr[i] = r.getMin();
+            medianArr[i] = report.getMedian();
 
-            medianArr[i] = r.getMedian();
+            p95Arr[i] = report.getP95();
 
-            p95Arr[i] = r.getP95();
+            p99Arr[i] = report.getP99();
 
-            p99Arr[i] = r.getP99();
-
-            maxArr[i] = r.getMax();
+            maxArr[i] = report.getMax();
         }
 
         String s = "";
@@ -346,14 +324,13 @@ public class SingleTest
 
         for (int i = 0; i < numMeasures; i++)
         {
-            double[] gradArr = calcGrads(arrays[i]);
-            //double sd = calcSD(gradArr, 1, 2);
-            double sd = calcSD(gradArr, 1, 2);
+            double[] gradientArr = calcGrads(arrays[i]);
+            double sd = calcSD(gradientArr, 1, 2);
             if (sd > flagSD)
             {
                 String buildUp = "\t" + tags[i] + " deviates from linear, ";
-                double[] grad2Arr = calcGrads(gradArr);
-                double newSd = calcSD(grad2Arr, 1, 1);
+                double[] gradient2ndArr = calcGrads(gradientArr);
+                double newSd = calcSD(gradient2ndArr, 1, 1);
                 if (newSd > flagSD)
                 {
                     buildUp = "\tDANGER:\t" + buildUp + "and deviates from quadratic!\n";
@@ -392,13 +369,14 @@ public class SingleTest
 
         double sd;
 
-        int firstI = n1;
-        int end = arr.length - n2;
+        int firstMiddlePos = n1;
+        int lastMiddlePos = arr.length - n2;
 
+        
+        //conditionally add the front ones
         double sum = 0;
         int extra = 0;
-        //
-        for (int i = 0; i < firstI; i++)
+        for (int i = 0; i < firstMiddlePos; i++)
         {
             if (arr[i] >= 0)
             {
@@ -420,9 +398,9 @@ public class SingleTest
                 }
             }
         }
-        //
-
-        for (int i = firstI; i < end; i++)
+        
+        //add all middles
+        for (int i = firstMiddlePos; i < lastMiddlePos; i++)
         {
             if (debug)
             {
@@ -431,8 +409,8 @@ public class SingleTest
             sum += arr[i];
         }
 
-        //
-        for (int i = end; i < arr.length; i++)
+        //conditionally add end ones
+        for (int i = lastMiddlePos; i < arr.length; i++)
         {
             if (arr[i] >= 0)
             {
@@ -454,20 +432,22 @@ public class SingleTest
                 }
             }
         }
-        //
+        
 
         if (debug)
         {
             System.out.println("");
         }
+        
         //calculate average
-        double avg = sum / ((end - firstI) + extra);
+        double avg = sum / ((lastMiddlePos - firstMiddlePos) + extra);
 
         double top = 0;
         double diff;
         extra = 0;
-        //
-        for (int i = 0; i < firstI; i++)
+        
+        //conditionally add front ones
+        for (int i = 0; i < firstMiddlePos; i++)
         {
             if (arr[i] >= 0)
             {
@@ -476,16 +456,16 @@ public class SingleTest
                 extra++;
             }
         }
-        //
 
-        for (int i = firstI; i < end; i++)
+        //add all middles
+        for (int i = firstMiddlePos; i < lastMiddlePos; i++)
         {
             diff = arr[i] - avg;
             top += Math.pow(diff, 2);
         }
 
-        //
-        for (int i = end; i < arr.length; i++)
+        //conditionally add end ones
+        for (int i = lastMiddlePos; i < arr.length; i++)
         {
             if (arr[i] >= 0)
             {
@@ -495,9 +475,8 @@ public class SingleTest
             }
 
         }
-        //
 
-        double frac = top / ((end - firstI) + extra);
+        double frac = top / ((lastMiddlePos - firstMiddlePos) + extra);
         sd = Math.sqrt(frac);
 
         sd = roundTo(sd, 2);

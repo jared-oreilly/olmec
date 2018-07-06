@@ -1,21 +1,10 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package oreilly;
 
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.io.*;
 import java.util.*;
 import javax.swing.*;
 
-/**
- *
- * @author jared.oreilly
- */
 public class Analyser
 {
 
@@ -132,7 +121,7 @@ public class Analyser
                         nextLine = componentArr.get(i).trim();
                     }
                     codes = codes.substring(0, codes.length() - 1);
-                    
+
                     Report temp = new Report(header, Integer.parseInt(scenariosLaunched), Integer.parseInt(scenariosCompleted), Integer.parseInt(requestsCompleted), Double.parseDouble(rps), Double.parseDouble(min), Double.parseDouble(max), Double.parseDouble(med), Double.parseDouble(p95), Double.parseDouble(p99), codes);
                     reports.add(temp);
                     numReports++;
@@ -200,9 +189,9 @@ public class Analyser
                         nextLineCodes = componentArr.get(i).trim();
                     }
                     codes = codes.substring(0, codes.length() - 1);
-                    
+
                     Report temp = new Report(header, Integer.parseInt(scenariosLaunched), Integer.parseInt(scenariosCompleted), Integer.parseInt(requestsCompleted), Double.parseDouble(rps), Double.parseDouble(min), Double.parseDouble(max), Double.parseDouble(med), Double.parseDouble(p95), Double.parseDouble(p99), scenarioCounts, codes);
-                    
+
                     reports.add(temp);
                     numReports++;
 
@@ -323,7 +312,7 @@ public class Analyser
             }
 
             //now, group those 3 into one, finding averages, assume same size
-            SingleTest test =  new SingleTest(dir, commonName); //this will throw exception
+            SingleTest test = new SingleTest(dir, commonName); //this will throw exception
             //add phases
             for (int x = 0; x < test1.getNumPhases(); x++)
             {
@@ -377,7 +366,7 @@ public class Analyser
 
                 test.addReport(newReport);
             }
-            
+
             //make this grouped one into pos i
             tests.remove(i);
             numTests--;
@@ -408,7 +397,7 @@ public class Analyser
         }
 
         parent.appendToFeedback("Initializing graph and grid for overall times...\t");
-        
+
         //create frame with settings
         JFrame frame = new JFrame("Graph");
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -452,10 +441,10 @@ public class Analyser
         drawGraph1(lblArr);
 
         parent.appendToFeedback("Rendering graph overall times graph(please be patient)...\t");
-        
+
         //show frame
         frame.setVisible(true);
-        
+
         parent.appendToFeedback("done\n");
     }
 
@@ -579,7 +568,7 @@ public class Analyser
 
     public int transY1(int i)
     {
-        int toReturn =  (y / (numReports - 1)) * i;
+        int toReturn = (y / (numReports - 1)) * i;
         if (toReturn < 0)
         {
             toReturn = 0;
@@ -853,10 +842,10 @@ public class Analyser
         drawGraph2(lblArr);
 
         parent.appendToFeedback("Rendering overall scens and reqs graph (please be patient)...\t");
-        
+
         //show frame
         frame.setVisible(true);
-        
+
         parent.appendToFeedback("done\n");
     }
 
@@ -1217,10 +1206,10 @@ public class Analyser
         drawGraph3(lblArr, report);
 
         parent.appendToFeedback("Rendering individual test graph (please be patient)...\t");
-        
+
         //show frame
         frame.setVisible(true);
-        
+
         parent.appendToFeedback("\tdone\n");
     }
 

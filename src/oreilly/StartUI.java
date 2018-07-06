@@ -84,12 +84,12 @@ public class StartUI extends javax.swing.JFrame
 
     private void btnAnalyseActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_btnAnalyseActionPerformed
     {//GEN-HEADEREND:event_btnAnalyseActionPerformed
-        String t = txfFilename.getText().trim();
-        if(!t.equals(""))
+        String filename = txfFilename.getText().trim();
+        if(!filename.equals(""))
         {
             try
             {
-                new OlmecUI(t).setVisible(true);
+                new OlmecUI(filename).setVisible(true);
             } catch (IOException e)
             {
                 JOptionPane.showMessageDialog(null, "No file with that name!");
