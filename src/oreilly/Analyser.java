@@ -126,14 +126,14 @@ public class Analyser
                     String codes = "";
                     i++;
                     String nextLine = compArr.get(i).trim();
-                    while (!nextLine.equals(""))
+                    while (!nextLine.equals("") && !nextLine.equals("Errors"))
                     {
                         codes += nextLine + ",";
                         i++;
                         nextLine = compArr.get(i).trim();
                     }
                     codes = codes.substring(0, codes.length() - 1);
-
+                    
                     Report temp = new Report(h, Integer.parseInt(sl), Integer.parseInt(sc), Integer.parseInt(rc), Double.parseDouble(rps), Double.parseDouble(min), Double.parseDouble(max), Double.parseDouble(med), Double.parseDouble(p95), Double.parseDouble(p99), codes);
                     //System.out.println(temp);
                     reports.add(temp);
@@ -195,14 +195,14 @@ public class Analyser
                     String codes = "";
                     i++;
                     String nextLineCodes = compArr.get(i).trim();
-                    while (!nextLineCodes.equals(""))
+                    while (!nextLineCodes.equals("") && !nextLineCodes.equals("Errors:"))
                     {
                         codes += nextLineCodes + ",";
                         i++;
                         nextLineCodes = compArr.get(i).trim();
                     }
                     codes = codes.substring(0, codes.length() - 1);
-
+                    
                     Report temp = new Report(h, Integer.parseInt(sl), Integer.parseInt(sc), Integer.parseInt(rc), Double.parseDouble(rps), Double.parseDouble(min), Double.parseDouble(max), Double.parseDouble(med), Double.parseDouble(p95), Double.parseDouble(p99), scenarioCounts, codes);
                     //System.out.println(temp);
                     reports.add(temp);

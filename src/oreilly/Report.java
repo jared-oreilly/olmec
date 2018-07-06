@@ -302,7 +302,7 @@ public class Report
         for (int i = 0; i < scenarioCounts.size(); i++)
         {
             String cur = scenarioCounts.get(i);
-            b += cur.substring(0, cur.indexOf(":") + 1) + "\t" + cur.substring(cur.indexOf(":") + 2, cur.indexOf("(") - 1) + "\t" + cur.substring(cur.indexOf("(") + 1, cur.indexOf(")")) + "\n";
+            b += cur.substring(cur.indexOf(":") + 2, cur.indexOf("(") - 1) + "\t" + cur.substring(cur.indexOf("(") + 1, cur.indexOf(")")) + "\t" + cur.substring(0, cur.indexOf(":")) + "\n";
         }
         return b;
     }
